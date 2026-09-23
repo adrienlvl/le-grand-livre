@@ -1,0 +1,25 @@
+{
+  "name": "Le Grand Livre — Prépa Titre Pro Comptable assistant",
+  "short_name": "Le Grand Livre",
+  "description": "Préparation au Titre professionnel Comptable assistant (niveau 4) et au BTS CG, hors ligne.",
+  "start_url": "./le-grand-livre-compta.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EAEEF4",
+  "theme_color": "#0E7490",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Crect%20width='512'%20height='512'%20rx='112'%20fill='%230E7490'/%3E%3Ctext%20x='256'%20y='344'%20font-family='Georgia,serif'%20font-size='250'%20font-weight='700'%20fill='%23fff'%20text-anchor='middle'%3EGL%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
