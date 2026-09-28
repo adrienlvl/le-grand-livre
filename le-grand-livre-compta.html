@@ -10325,6 +10325,7 @@ function trainReadDOM(){
 }
 
 function trainVerify(exo,userRows){
+  userRows=(userRows||[]).filter(function(r){return r.acc||r.amt;});
   /* For each sol line, find a matching user row */
   var matched=[];
   var details=exo.sol.map(function(s){
@@ -10368,12 +10369,15 @@ function exoEnonce(exo){
 }
 
 /* ---- Input table ---- */
+var _trainCurExo=null;
 function trainInputTable(exo){
-  var nRows=exo.sol.length;
+  /* Comme à l'examen, le nombre de lignes n'est pas donné : 2 au départ, bouton pour en ajouter. */
+  _trainCurExo=exo;
+  var nRows=Math.max(2,(exo.userRows||[]).length);
   var rows='';
   var pre=exo.userRows||[];
   for(var i=0;i<nRows;i++){
-    var pv=pre[i]||{acc:'',side:'D',amt:''};
+    var pv=pre[i]||{acc:'',side:i===0?'D':'C',amt:''};
     rows+='<tr class="train-row">'+
       '<td><input class="tr-acc" list="cab-accts" autocomplete="off" aria-label="Compte, ligne '+(i+1)+' (tape son nom)" value="'+escHtml(pv.acc)+'" placeholder="Nom du compte…"><span class="cab-lib">'+escHtml(pcLib(pv.acc))+'</span></td>'+
       '<td><select class="tr-side" aria-label="Sens, ligne '+(i+1)+'">'+
@@ -10383,7 +10387,7 @@ function trainInputTable(exo){
       '<td><input class="tr-amt" aria-label="Montant, ligne '+(i+1)+'" value="'+escHtml(pv.amt===''?'':String(pv.amt))+'" placeholder="0,00"></td>'+
     '</tr>';
   }
-  return cabDatalist()+'<table class="train-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+  return cabDatalist()+'<table class="train-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+(nRows<10?'<button class="btn-sm cab-add" data-action="train-addrow">+ Ajouter une ligne</button>':'')+
     '<p class="kbd-hint" style="margin-top:6px">Tape le nom du compte et choisis dans la liste, le numéro s\'inscrit tout seul. Entrée dans un montant vérifie l\'écriture.</p>';
 }
 
@@ -10621,7 +10625,7 @@ function viewTrainMission(){
     '<div style="font-size:13px;color:var(--ink2);margin-bottom:10px">Opération '+(ms.opi+1)+' / '+ms.ops.length+'</div>'+
     '<div class="train-exo-panel"><div class="train-enonce">'+escHtml(op.label)+'</div>';
   if(!showResult){
-    html+='<div style="font-size:13px;color:var(--ink2);margin:8px 0 10px">Saisis l\'écriture ('+op.sol.length+' lignes attendues) :</div>'+trainInputTable(op)+
+    html+='<div style="font-size:13px;color:var(--ink2);margin:8px 0 10px">Saisis l\'écriture :</div>'+trainInputTable(op)+
       '<div class="row"><button class="btn btn-pri" data-action="train-mission-verify">'+SVG.check+' Vérifier</button></div>';
   }else{
     html+=(op.result.ok?'<div class="quiz-fb ok">'+SVG.check+'&nbsp; Écriture juste et équilibrée.</div>':'<div class="quiz-fb ko">'+SVG.x+'&nbsp; Pas tout à fait. Voici la correction :</div>')+
@@ -10978,6 +10982,7 @@ document.addEventListener('click',function(e){
   else if(a==='day-card'){var _dp=ui.dayplan;if(_dp){var _cur=_dp.items[_dp.i],_kn=t.dataset.known==='1';reviewCard(_cur.id,_kn);_dp.res.cards++;if(_kn)_dp.res.cardsKnown++;_dp.i++;_dp.revealed=false;}render();announceDayNext();}
   else if(a==='day-pick'){var _dq=ui.dayplan;if(_dq&&_dq.picked===null){var _pk=parseInt(t.dataset.i,10);_dq.picked=_pk;var _cq=_dq.items[_dq.i];_dq.res.q++;if(_pk===_cq.c)_dq.res.qok++;else _dq.res.errMods[_cq.mod]=true;errTrack(_cq,_pk===_cq.c,'Session du jour');}render();}
   else if(a==='day-next'){var _dn=ui.dayplan;if(_dn){_dn.i++;_dn.picked=null;}render();announceDayNext();}
+  else if(a==='train-addrow'){if(_trainCurExo){var _tr0=trainReadDOM()||[];_tr0.push({acc:'',side:'C',amt:''});_trainCurExo.userRows=_tr0;var _ty=window.scrollY;render();window.scrollTo(0,_ty);var _ti=document.querySelectorAll('.train-row .tr-acc');if(_ti.length)_ti[_ti.length-1].focus();}}
   else if(a==='day-exo-verify'){var _dv=ui.dayplan;if(_dv){var _it=_dv.items[_dv.i];if(_it&&_it.kind==='exo'&&!_it.exo.result){var _rows=trainReadDOM();var _r=trainVerify(_it.exo,_rows);_it.exo.userRows=_rows;_it.exo.result=_r;_dv.res.exos++;if(_r.ok)_dv.res.exosOk++;if(!state.train)state.train={history:[]};if(!state.train.history)state.train.history=[];state.train.history.push({type:_it.exo.type,ok:_r.ok,ts:Date.now()});save();announce(_r.ok?'Écriture juste et équilibrée.':'Écriture incorrecte, la correction est affichée.');}}render();}
   else if(a==='day-quit'){var _dpq=ui.dayplan;if(_dpq&&_dpq.items&&_dpq.i>0&&_dpq.i<_dpq.items.length&&!confirm('Quitter la session du jour ? Ta progression dans cette séance sera perdue.'))return;ui.dayplan=null;render();}
   else if(a==='day-finish'){ui.dayplan=null;render();}
