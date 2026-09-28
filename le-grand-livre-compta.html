@@ -4112,6 +4112,7 @@ function prioritesPanel(){
     // 7) Dernières semaines : relire la fiche du CCP le moins prêt
     try{var _dx=Math.ceil((isoToDate(getExamDate())-new Date())/DAY);if(_dx>=0&&_dx<=42){var _lw=TP_CCP.map(function(c,ci){return {c:c,r:readinessOf({code:c.code,mods:c.mods,themes:c.themes,tpIndex:ci}).pct};}).sort(function(a,b){return a.r-b.r;})[0];items.unshift({ic:SVG.book,label:'Fiche récapitulative '+_lw.c.code,sub:'Session dans '+_dx+' jour'+(_dx>1?'s':'')+' : relis l\'essentiel du CCP le moins prêt ('+_lw.r+' %)',act:'tp-fiche-go',data:'data-k="'+_lw.c.code+'"',cta:'Relire'});}}catch(e){}
   }
+  try{var _ne=errList().length;if(_ne>=5)items.splice(1,0,{ic:SVG.list,label:'Carnet d\'erreurs',sub:_ne+' questions ratées à retravailler',act:'err-replay',data:'',cta:'Rejouer'});}catch(e){}
   items=items.slice(0,5);
   if(!items.length)return '';
   var rows=items.map(function(it){return '<div class="prio-row"><span class="prio-ic">'+it.ic+'</span><div class="prio-main"><div class="prio-label">'+escHtml(it.label)+'</div><div class="prio-sub">'+escHtml(it.sub)+'</div></div><button class="btn-sm" data-action="'+it.act+'" '+it.data+'>'+it.cta+'</button></div>';}).join('');
@@ -4899,6 +4900,7 @@ function viewDayplan(){
 }
 function viewExam(){
   if(ui.exam)return ui.exam.done?viewExamResult():viewExamRun();
+  if(ui.errBook)return viewErrBook();
   var catList={all:'Toutes les catégories',adaptive:'Adaptatif'};if(isTP()){catList.ccp1='CCP1 · Quotidien';catList.ccp2='CCP2 · Périodique';catList.ccp3='CCP3 · Fin d\'exercice';}CAT_ORDER.forEach(function(c){catList[c]=CATS[c];});
   var lenList={'10':'10 questions','20':'20 questions','all':'Long (50 q.)'};
   var isAdaptive=ui.examCat==='adaptive';
@@ -4920,7 +4922,8 @@ function viewExam(){
     '<div class="eyebrow" style="margin-bottom:10px">Longueur</div>'+chips(lenList,String(ui.examLen),'elen')+
     '<div class="eyebrow" style="margin-bottom:10px">Mode</div>'+chips(modeList,ui.examTimed?'chrono':'libre','emode')+
     '<div class="row"><button class="btn btn-pri" data-action="exam-start">'+SVG.exam+' Démarrer l\'examen</button>'+
-    '<span class="pcount" style="align-self:center">'+availTxt+'</span></div>'+estim+examStatsHTML()+examHistoryHTML();
+    '<span class="pcount" style="align-self:center">'+availTxt+'</span></div>'+estim+
+    (function(){var n=errList().length;return '<div class="panel" style="margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><b>Carnet d\'erreurs</b><div class="tool-sub" style="margin:2px 0 0">'+(n?n+' question'+(n>1?'s':'')+' ratée'+(n>1?'s':'')+' à retravailler'+(isTP()?', plus les étapes de dossiers et les ateliers':''):'Tes erreurs (examens, quiz, session du jour, dossiers) arriveront ici')+'</div></div><button class="btn-sm" data-action="err-open">'+SVG.list+' Ouvrir le carnet</button>'+(n?'<button class="btn btn-pri" data-action="err-replay">'+SVG.refresh+' Rejouer mes erreurs</button>':'')+'</div>';})()+examStatsHTML()+examHistoryHTML();
 }
 function viewExamRun(){
   var ex=ui.exam,cur=ex.items[ex.i],sel=ex.answers[ex.i];
@@ -5128,6 +5131,7 @@ var NAV_ITEMS=[
   {label:'Excel comptable',sub:'Terrain — formules et fonctions',go:function(){navTerrain('excel');}},
   {label:'Agenda',sub:'Calendrier, périodes, notes, compétences, carnet',go:function(){ui.tab='agenda';ui.agendaSub='today';}},
   {label:'Dossiers cabinet',sub:'Clients fictifs à traiter de bout en bout, par CCP : pièces, écritures, calculs, courriels',go:function(){navTerrain('cabinet');}},
+  {label:'Carnet d\'erreurs',sub:'Questions ratées, étapes de dossiers et ateliers à reprendre, au même endroit',go:function(){ui.tab='exam';ui.exam=null;ui.errBook=true;}},
   {label:'Mon bilan de progression',sub:'Bilan imprimable par CCP pour le formateur ou le tuteur de stage',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='bilan';}},
   {label:'Fiches récapitulatives par CCP',sub:'Une page par CCP à imprimer : écritures types, calculs clés, méthode le jour J',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='fiches';}},
   {label:'Plan de formation',sub:'De la rentrée à la session du titre : étapes, rythme, objectifs de la semaine',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='plan';}},
@@ -8284,6 +8288,7 @@ function cabAction(a,t){
   if(a==='cab-open'){var id=t.dataset.id;if(!cabById(id))return;ui.tab='terrain';ui.terrainTab='cabinet';ui.cab={id:id};var c0=cabState(id);if(c0.done&&Object.keys(c0.r).length===d0Len(id)){ui.cab.bilan=true;}render();focusMain();return;}
   if(a==='cab-list'){ui.cab=null;render();return;}
   if(cabSessAction(a,t))return;
+  if(a==='cab-open-step'){var oid=t.dataset.id;if(!cabById(oid))return;var ocs=cabState(oid),od=cabById(oid);ocs.i=Math.max(0,Math.min(od.steps.length-1,parseInt(t.dataset.i,10)||0));delete ocs.r[ocs.i];ui.errBook=false;ui.tab='terrain';ui.terrainTab='cabinet';ui.cab={id:oid};save();render();focusMain();return;}
   if(a==='cab-gen'){var gk=parseInt(t.dataset.k,10)||1,gid='g'+gk+'-'+Math.floor(Math.random()*2e9).toString(36),gl=cabGenIds();gl.unshift(gid);while(gl.length>9){var old=gl.pop();if(state.tp.cab)delete state.tp.cab[old];}save();ui.tab='terrain';ui.terrainTab='cabinet';ui.cab={id:gid};render();focusMain();announce('Nouveau dossier CCP'+gk+' : '+cabById(gid).client+'.');return;}
   if(a==='cab-gen-del'){var did=t.dataset.id,gl2=cabGenIds(),ix=gl2.indexOf(did);if(ix>=0)gl2.splice(ix,1);if(state.tp.cab)delete state.tp.cab[did];save();render();return;}
   if(!d)return;
@@ -8299,7 +8304,7 @@ function cabAction(a,t){
     run.draft=null;save();render();window.scrollTo(0,y);return;
   }
   if(a==='cab-skip'){cs.r[cs.i]={v:1,ok:false,skip:true,det:st.type==='ecr'?st.sol.map(function(){return false;}):{},u:st.type==='ecr'?[]:{}};run.draft=null;save();render();window.scrollTo(0,y);return;}
-  if(a==='cab-pick'){if(st.type!=='qcm'||(cs.r[cs.i]&&cs.r[cs.i].v))return;var k=parseInt(t.dataset.k,10);cs.r[cs.i]={v:1,ok:k===st.c,pick:k};save();render();window.scrollTo(0,y);announce(k===st.c?'Bonne réponse.':'Réponse inexacte, l\'explication est affichée.');return;}
+  if(a==='cab-pick'){if(st.type!=='qcm'||(cs.r[cs.i]&&cs.r[cs.i].v))return;var k=parseInt(t.dataset.k,10);cs.r[cs.i]={v:1,ok:k===st.c,pick:k};errTrack({q:st.q,o:st.o,c:st.c,e:st.e,mod:d.client},k===st.c,'Dossier cabinet');save();render();window.scrollTo(0,y);announce(k===st.c?'Bonne réponse.':'Réponse inexacte, l\'explication est affichée.');return;}
   if(a==='cab-model'){run.showModel=true;render();window.scrollTo(0,y);return;}
   if(a==='cab-redac-done'){var cks=document.querySelectorAll('.cab-ck'),arr=[];for(var j=0;j<cks.length;j++)arr[parseInt(cks[j].dataset.k,10)]=!!cks[j].checked;var nOk=arr.filter(Boolean).length;cs.r[cs.i]={v:1,ok:nOk>=st.crit.length-1,crit:arr,u:typeof run.draft==='string'?run.draft:''};run.draft=null;run.showModel=false;save();render();window.scrollTo(0,y);return;}
   if(a==='cab-erp'){
@@ -10830,7 +10835,7 @@ document.addEventListener('click',function(e){
   else if(a==='day-start'){ui.dayplan=buildDayplan(t.dataset.len);render();}
   else if(a==='day-flip'){if(ui.dayplan){ui.dayplan.revealed=true;}render();if(ui.dayplan){var _di=ui.dayplan.items[ui.dayplan.i];if(_di&&_di.kind==='card'){var _dc=CARDS.find(function(x){return x.id===_di.id;});if(_dc)announce('Réponse : '+_dc.a);}}}
   else if(a==='day-card'){var _dp=ui.dayplan;if(_dp){var _cur=_dp.items[_dp.i],_kn=t.dataset.known==='1';reviewCard(_cur.id,_kn);_dp.res.cards++;if(_kn)_dp.res.cardsKnown++;_dp.i++;_dp.revealed=false;}render();announceDayNext();}
-  else if(a==='day-pick'){var _dq=ui.dayplan;if(_dq&&_dq.picked===null){var _pk=parseInt(t.dataset.i,10);_dq.picked=_pk;var _cq=_dq.items[_dq.i];_dq.res.q++;if(_pk===_cq.c)_dq.res.qok++;else _dq.res.errMods[_cq.mod]=true;}render();}
+  else if(a==='day-pick'){var _dq=ui.dayplan;if(_dq&&_dq.picked===null){var _pk=parseInt(t.dataset.i,10);_dq.picked=_pk;var _cq=_dq.items[_dq.i];_dq.res.q++;if(_pk===_cq.c)_dq.res.qok++;else _dq.res.errMods[_cq.mod]=true;errTrack(_cq,_pk===_cq.c,'Session du jour');}render();}
   else if(a==='day-next'){var _dn=ui.dayplan;if(_dn){_dn.i++;_dn.picked=null;}render();announceDayNext();}
   else if(a==='day-exo-verify'){var _dv=ui.dayplan;if(_dv){var _it=_dv.items[_dv.i];if(_it&&_it.kind==='exo'&&!_it.exo.result){var _rows=trainReadDOM();var _r=trainVerify(_it.exo,_rows);_it.exo.userRows=_rows;_it.exo.result=_r;_dv.res.exos++;if(_r.ok)_dv.res.exosOk++;if(!state.train)state.train={history:[]};if(!state.train.history)state.train.history=[];state.train.history.push({type:_it.exo.type,ok:_r.ok,ts:Date.now()});save();announce(_r.ok?'Écriture juste et équilibrée.':'Écriture incorrecte, la correction est affichée.');}}render();}
   else if(a==='day-quit'){var _dpq=ui.dayplan;if(_dpq&&_dpq.items&&_dpq.i>0&&_dpq.i<_dpq.items.length&&!confirm('Quitter la session du jour ? Ta progression dans cette séance sera perdue.'))return;ui.dayplan=null;render();}
@@ -10839,7 +10844,7 @@ document.addEventListener('click',function(e){
   else if(a==='onboard-done'){try{localStorage.setItem('legl.onboarded','1');}catch(e){}var _ob=document.getElementById('onb-back');if(_ob&&_ob.parentNode)_ob.parentNode.removeChild(_ob);focusMain();}
   else if(a==='tab-parcours'){ui.tab='parcours';if(route.name!=='module')route={name:'home'};render();focusMain();}
   else if(a==='tab-cards'){ui.tab='cards';ui.session=null;ui.ficheOpen=false;render();focusMain();}
-  else if(a==='tab-exam'){clearExamTimer();ui.tab='exam';ui.exam=null;render();focusMain();}
+  else if(a==='tab-exam'){clearExamTimer();ui.tab='exam';ui.exam=null;ui.errBook=false;render();focusMain();}
   else if(a==='tab-outils'){ui.tab='outils';if(ui.tool==='tpca'&&isTP())ui.tool='plan';render();focusMain();}
   else if(a==='tab-terrain'){ui.tab='terrain';render();focusMain();}
   else if(a==='tab-cabinet'){ui.tab='terrain';ui.terrainTab='cabinet';ui.cab=null;render();focusMain();}
@@ -11060,7 +11065,7 @@ document.addEventListener('click',function(e){
   else if(a==='pfilter'){ui.parcoursFilter=t.dataset.k;render();}
   else if(a==='open'){ui.tab='parcours';route={name:'module',mi:parseInt(t.dataset.mi,10),step:0};ui.quiz=null;render();}
   else if(a==='step'){route.step=parseInt(t.dataset.i,10);render();}
-  else if(a==='quiz-pick'){var q=ui.quiz,cur=MODULES[q.mi].quiz[q.i];if(q.picked!==null)return;q.picked=parseInt(t.dataset.i,10);q.marks.push(q.picked===cur.c);render();}
+  else if(a==='quiz-pick'){var q=ui.quiz,cur=MODULES[q.mi].quiz[q.i];if(q.picked!==null)return;q.picked=parseInt(t.dataset.i,10);q.marks.push(q.picked===cur.c);errTrack({q:cur.q,o:cur.o,c:cur.c,e:cur.e,mod:MODULES[q.mi].title},q.picked===cur.c,'Quiz du cours');save();render();}
   else if(a==='quiz-next'){var q2=ui.quiz,m=MODULES[q2.mi];if(q2.i+1<m.quiz.length){q2.i++;q2.picked=null;}else{q2.done=true;var qpassed=q2.marks.filter(Boolean).length>=passFor(m);if(qpassed&&!state.passed[m.id]){state.passed[m.id]=true;addPoints(20,m.id,true);celebrate();}else{recordAttempt(m.id,qpassed);}}render();}
   else if(a==='quiz-restart'){ui.quiz=null;render();}
   else if(a==='exo-verify'){exoVerify();}
@@ -11089,6 +11094,9 @@ document.addEventListener('click',function(e){
   else if(a==='mycard-del'){var _id=t.dataset.id;state.tp.mycards=myCards().filter(function(c){return c.id!==_id;});delete state.cards[_id];mergeMyCards();save();ui.myOpen=true;var _yq=window.scrollY;render();window.scrollTo(0,_yq);}
   else if(a==='quick-start'){startQuick();render();focusMain();}
   else if(a==='exam-start'||a==='exam-retry'){clearExamTimer();startExam();if(ui.examTimed){ui.exam.dur=ui.exam.items.length*90;ui.exam.deadline=Date.now()+ui.exam.dur*1000;startExamTimer();}render();}
+  else if(a==='err-open'){clearExamTimer();ui.exam=null;ui.tab='exam';ui.errBook=true;render();focusMain();}
+  else if(a==='err-close'){ui.errBook=false;render();}
+  else if(a==='err-replay'){var _el=shuffle(errList().slice()).slice(0,20);if(!_el.length)return;clearExamTimer();ui.errBook=false;ui.tab='exam';ui.examTimed=false;ui.exam={items:_el.map(function(e){return {q:e.q,o:e.o.slice(),c:e.c,e:e.e,mod:e.mod};}),i:0,answers:[],done:false,review:true};render();focusMain();}
   else if(a==='exam-pick'){ui.exam.answers[ui.exam.i]=parseInt(t.dataset.i,10);render();}
   else if(a==='exam-next'){var ex=ui.exam;if(ex.i+1<ex.items.length)ex.i++;else{ex.done=true;if(ex.deadline){ex.usedSec=ex.dur-Math.max(0,Math.round((ex.deadline-Date.now())/1000));}clearExamTimer();recordExam(ex);var _cok=ex.items.filter(function(it,idx){return ex.answers[idx]===it.c;}).length;if(ex.items.length&&_cok/ex.items.length>=0.7)celebrate();}render();}
   else if(a==='exam-prev'){if(ui.exam.i>0)ui.exam.i--;render();}
@@ -11253,10 +11261,34 @@ function focusWidget(){
       '<button class="btn-sm" data-action="focus-skip" title="Phase suivante">'+SVG.arR+'</button>'+
     '</div></div>';
 }
+/* ==== Carnet d'erreurs : questions ratées (sortent après 2 réussites d'affilée), étapes de dossiers et ateliers à reprendre ==== */
+function errKey(q){return String(q||'').replace(/<[^>]*>/g,'').trim().toLowerCase().slice(0,160);}
+function errList(){if(!state.tp||typeof state.tp!=='object')state.tp={crit:{},dp:{},oral:{}};if(!Array.isArray(state.tp.errq))state.tp.errq=[];return state.tp.errq;}
+function errLog(it,src){if(!it||!it.o||typeof it.c!=='number')return;var L=errList(),k=errKey(it.q),e=null;for(var i=0;i<L.length;i++){if(L[i].k===k){e=L[i];break;}}
+  if(!e){e={k:k,q:it.q,o:it.o.slice(),c:it.c,e:it.e||'',mod:it.mod||'',src:src,n:0,ok:0};L.unshift(e);}else{e.o=it.o.slice();e.c=it.c;}
+  e.n++;e.ok=0;e.last=todayStr();if(L.length>200)L.length=200;}
+function errOk(it){var L=errList(),k=errKey(it&&it.q);for(var i=0;i<L.length;i++){if(L[i].k===k){L[i].ok++;if(L[i].ok>=2)L.splice(i,1);return;}}}
+function errTrack(it,right,src){if(right)errOk(it);else errLog(it,src);}
+function errCabSteps(){var out=[],ids=CAB_DOSSIERS.map(function(d){return d.id;}).concat(Array.isArray(state.tp.gen)?state.tp.gen:[]);
+  ids.forEach(function(id){var cs=state.tp.cab&&state.tp.cab[id];if(!cs||!cs.r)return;var d=cabById(id);if(!d)return;d.steps.forEach(function(st,i){var r=cs.r[i];if(r&&r.v&&cabStepScore(st,r)<0.8)out.push({id:id,i:i,d:d,st:st});});});return out;}
+function viewErrBook(){
+  var L=errList(),cab=isTP()?errCabSteps():[],ats=isTP()?TP_AT.filter(function(a){var s=state.tp.at&&state.tp.at[a[0]];return s&&s.n>0&&!(s.ok>0);}):[];
+  var tot=L.length+cab.length+ats.length;
+  var qH=L.length?'<div class="row" style="margin:0 0 10px"><button class="btn btn-pri" data-action="err-replay">'+SVG.refresh+' Rejouer mes erreurs ('+Math.min(20,L.length)+' questions)</button></div>'+
+    L.slice(0,12).map(function(e){return '<details class="suj-cor"><summary>'+(e.n>1?'<span class="cab-st mid" style="margin-right:6px;white-space:nowrap">'+e.n+' fois</span>':'')+e.q+'</summary><div class="suj-cor-body"><p style="margin:0 0 6px"><b>Bonne réponse</b> : '+e.o[e.c]+'</p>'+(e.e?'<p style="margin:0;color:var(--ink2)">'+e.e+'</p>':'')+'</div></details>';}).join('')+
+    (L.length>12?'<p class="tool-sub" style="margin:6px 0 0">et '+(L.length-12)+' autres, toutes reprises quand tu rejoues tes erreurs.</p>':''):'<p class="tool-sub" style="margin:0">Aucune question ratée en attente. Les QCM que tu rates (examens blancs, quiz des cours, session du jour, dossiers) arrivent ici, et en sortent quand tu les réussis deux fois de suite.</p>';
+  var cH=cab.length?cab.slice(0,10).map(function(x){return '<div class="dp-jr"><div><span class="mono" style="font-size:11px">'+x.d.ccp+'</span> <b>'+escHtml(x.d.client)+'</b> · '+escHtml(x.st.titre)+'</div><button class="btn-sm" data-action="cab-open-step" data-id="'+x.id+'" data-i="'+x.i+'">Reprendre</button></div>';}).join('')+(cab.length>10?'<p class="tool-sub" style="margin:6px 0 0">et '+(cab.length-10)+' autres étapes.</p>':''):'<p class="tool-sub" style="margin:0">Aucune étape de dossier ratée.</p>';
+  var aH=ats.length?'<div class="chips" style="margin:0">'+ats.map(function(a){var s=state.tp.at[a[0]];return '<button class="chip" data-action="plan-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px">'+s.best+' %</span></button>';}).join('')+'</div>':'<p class="tool-sub" style="margin:0">Tous les ateliers tentés sont réussis sans faute.</p>';
+  return '<button class="back" data-action="err-close">'+SVG.arL+' Examen blanc</button><div class="page-head"><h1>Carnet d\'erreurs</h1><p>'+(tot?tot+' point'+(tot>1?'s':'')+' à retravailler, rassemblés au même endroit':'Rien à retravailler pour le moment')+'</p></div>'+
+    '<div class="panel"><span class="eyebrow">Questions ratées · '+L.length+'</span><div style="margin-top:10px">'+qH+'</div></div>'+
+    (isTP()?'<div class="panel" style="margin-top:16px"><span class="eyebrow">Étapes de dossiers à reprendre · '+cab.length+'</span><div class="dp-from" style="border:0;padding-top:6px">'+cH+'</div></div>'+
+    '<div class="panel" style="margin-top:16px"><span class="eyebrow">Ateliers pas encore réussis sans faute · '+ats.length+'</span><div style="margin-top:10px">'+aH+'</div></div>':'');
+}
 function recordExam(ex){
   if(ex._recorded)return;ex._recorded=true;
   if(!state.exams)state.exams=[];
-  var sc=0;ex.items.forEach(function(it,k){if(ex.answers[k]===it.c)sc++;});
+  var sc=0;ex.items.forEach(function(it,k){if(ex.answers[k]===it.c)sc++;errTrack(it,ex.answers[k]===it.c,'Examen blanc');});
+  if(ex.review){logSession('exam','Rejeu du carnet d\'erreurs',{n:sc,d:ex.items.length});save();return;}
   var n=ex.items.length,pct=n?Math.round(sc/n*100):0;
   state.exams.push({date:todayStr(),cat:ui.examCat,n:n,score:sc,pct:pct,timed:!!ex.deadline,secondes:(typeof ex.usedSec==='number'?ex.usedSec:0)});
   if(state.exams.length>20)state.exams=state.exams.slice(-20);
