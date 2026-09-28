@@ -4954,7 +4954,7 @@ var GLOSSAIRE=[
 ];
 
 /* ---- Outils ---- */
-var APP_VERSION='1.9.0';
+var APP_VERSION='2.0.0';
 var ACCENTS=[['','Selon l\'ambiance'],['ocean','Océan'],['emeraude','Émeraude'],['sapin','Sapin'],['indigo','Indigo'],['violet','Violet'],['rose','Rose'],['bordeaux','Bordeaux'],['ambre','Ambre']];
 /* Apparence : chaque option est stockée dans localStorage (legl.<clé>) et posée en attribut data-<clé> sur <html>. */
 var AMBIANCES=[
@@ -10641,7 +10641,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : ton plan de formation, 9 dossiers cabinet guidés, 6 ambiances dont Lorient, un accueil à ta façon et l\'import de ton emploi du temps (bouton palette et Agenda). '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 9 dossiers cabinet, 9 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
