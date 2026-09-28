@@ -3613,7 +3613,8 @@ var ui={tab:'accueil',quiz:null,cardsFilter:'all',session:null,parcoursFilter:'a
 function cardState(id){return state.cards[id]||{box:1,due:0};}
 function isDue(id){return cardState(id).due<=Date.now();}
 function reviewCard(id,known){var _isNew=!state.cards[id];var cs=cardState(id);if(_isNew)cs.f=todayStr();if(known){cs.box=Math.min(cs.box+1,5);cs.due=Date.now()+BOX_DAYS[cs.box]*DAY;}else{cs.box=1;cs.due=Date.now()+600000;}state.cards[id]=cs;save();}
-function deck(f){return CARDS.filter(function(c){return f==='all'||c.t===f;});}
+var CARD_CCP={ccp1:'CCP1 · Quotidien',ccp2:'CCP2 · Périodique',ccp3:'CCP3 · Fin d\'exercice'};
+function deck(f){if(CARD_CCP[f]){var th=TP_CCP[+f.slice(-1)-1].themes;return CARDS.filter(function(c){return th.indexOf(c.t)>=0;});}return CARDS.filter(function(c){return f==='all'||c.t===f;});}
 /* Nouvelles cartes par jour (réglage legl.newPerDay, 20 par défaut, 0 = illimité) : les révisions dues passent toujours,
    les cartes jamais vues sont introduites au compte-gouttes pour garder des sessions courtes et régulières. */
 var NEW_PER_DAY_OPTS=[10,20,30,50,0];
@@ -4294,7 +4295,7 @@ function viewAccueil(){
     act('','data-action="dash-review"',SVG.refresh,'Réviser les cartes dues',due>0?due+' carte'+(due>1?'s':'')+' en attente':'Rien à réviser pour l\'instant',due===0)+
     (_nx!==null?act('','data-action="open" data-mi="'+_nx+'"',SVG.book,'Continuer : '+escHtml(MODULES[_nx].title),'Module '+MODULES[_nx].num+' &middot; cours, mémo, quiz'):'')+
     (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
-      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','9 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
+      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','12 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
     act('','data-action="quick-start"',SVG.exam,'Quiz éclair · 3 min','5 questions sur ton étape en cours du plan')+
   '</div></section>';
@@ -4419,7 +4420,8 @@ function leitnerPanel(f){
 function viewFiche(){
   var f=ui.cardsFilter||'all';
   var cards=deck(f),isAll=(f==='all'||!THEMES[f]);
-  var title=isAll?'Fiche de révision complète':'Fiche de révision — '+(THEMES[f]||f);
+  var title=CARD_CCP[f]?'Fiche de révision — '+CARD_CCP[f]:(isAll?'Fiche de révision complète':'Fiche de révision — '+(THEMES[f]||f));
+  if(CARD_CCP[f])isAll=false;
   var sections=Object.keys(THEMES).filter(function(k){return k!=='all';}).map(function(t){
     var cs=cards.filter(function(c){return c.t===t;});
     if(!cs.length)return '';
@@ -4471,7 +4473,7 @@ function viewCards(){
     '<div class="fc-stats"><div class="stat"><div class="v mono">'+CARDS.length+'</div><div class="k">cartes au total</div></div>'+
     '<div class="stat"><div class="v mono" style="color:var(--credit)">'+dueCount('all')+'</div><div class="k">à réviser aujourd\'hui <span class="npd-sub">'+_revDue+' révision'+(_revDue>1?'s':'')+' + '+Math.min(_nAv,_nLeft)+' nouvelle'+(Math.min(_nAv,_nLeft)>1?'s':'')+'</span></div></div>'+
     '<div class="stat"><div class="v mono" style="color:var(--valid)">'+masteredCount()+'</div><div class="k">cartes maîtrisées</div></div></div>'+
-    npdChips+'<div class="eyebrow" style="margin-bottom:10px">Filtrer par thème</div>'+chips(THEMES,f,'cfilter')+
+    npdChips+(isTP()?'<div class="eyebrow" style="margin-bottom:10px">Par CCP</div>'+chips(CARD_CCP,f,'cfilter'):'')+'<div class="eyebrow" style="margin-bottom:10px">Filtrer par thème</div>'+chips(THEMES,f,'cfilter')+
     '<div class="row" style="margin-top:4px"><button class="btn btn-pri" data-action="start" data-mode="due" '+(due===0?'disabled':'')+'>'+SVG.cards+' Réviser les cartes dues'+(due>0?' ('+due+')':'')+'</button>'+
     '<button class="btn btn-gh" data-action="start" data-mode="all">'+SVG.refresh+' Réviser tout le thème ('+total+')</button>'+
     (err>0?'<button class="btn btn-gh" data-action="start" data-mode="errors" style="border-color:var(--credit);color:var(--credit)">'+SVG.warn+' Refaire mes erreurs ('+err+')</button>':'')+'</div>'+
@@ -6091,7 +6093,7 @@ function tpMsp(){
     '<div style="margin-top:16px">'+cards+'</div>';
 }
 /* ==== Ateliers pratiques Titre Pro : générateurs purs (testés par verif.mjs) ==== */
-var TP_AT=[['fac','Facture et réductions','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['tdb','Tableau de bord','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['aff','Affectation du résultat','CCP3']];
+var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['tdb','Tableau de bord','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['aff','Affectation du résultat','CCP3']];
 var TP_MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 var TP_BA_TR=['Non échu','Retard de 1 à 30 jours','Retard de 31 à 60 jours','Retard de plus de 60 jours'];
 var TP_BA_AC=['Aucune action (suivi)','Relance amiable (appel ou courriel)','Lettre de relance avec rappel des pénalités','Mise en demeure (recommandé AR)'];
@@ -6163,6 +6165,20 @@ function tpGenAff(){
   var distrib=r2(b+ran-dot),div=Math.round(distrib*(0.3+Math.random()*0.4)/100)*100,autres=r2(distrib-div);
   return {soc:['SARL','SAS','SA'][tpRnd(0,2)]+' '+['Atelier Nova','Maison Colin','Béthune Services','Loire Conseil','Hexa Bois'][tpRnd(0,4)],d:{k:k,rl:rl,ran:ran,b:b,div:div},x:{dot:dot,distrib:distrib,autres:autres}};
 }
+function tpGenLet(){
+  var f1=tpRnd(40,200)*12,f2=tpRnd(40,200)*12,f3=tpRnd(40,200)*12,av=r2(tpRnd(2,Math.floor(f2/24))*12),reg3=r2(tpRnd(1,Math.floor(f3/12)-1)*6);
+  var cl=['Garage Lemaire','Hôtel des Tilleuls','SAS Vitalis','Cabinet Roy','Boulangerie Caron'][tpRnd(0,4)];
+  return {cl:cl,d:{f1:f1,f2:f2,f3:f3,av:av,reg3:reg3},x:{solde:r2(f2-av+f3-reg3),lettre:r2(f1),f2r:r2(f2-av),f3r:r2(f3-reg3)}};
+}
+function tpGenNdf(){
+  var rep_=tpRnd(30,90),train=tpRnd(40,160),hotel=tpRnd(70,160),fourn=tpRnd(10,60);
+  var repHt=r2(rep_/1.1),repT=r2(rep_-repHt),fHt=r2(fourn/1.2),fT=r2(fourn-fHt);
+  return {nom:['Yann Le Gall','Maëlle Tanguy','Erwan Guillou','Nolwenn Le Bris'][tpRnd(0,3)],d:{rep:rep_,train:train,hotel:hotel,fourn:fourn},x:{tot:r2(rep_+train+hotel+fourn),tvar:r2(repT+fT),charges:r2(rep_+train+hotel+fourn-repT-fT)}};
+}
+function tpGenUe(){
+  var ach=tpRnd(20,150)*100,ven=tpRnd(20,150)*100;
+  return {fo:['Nordsee Marine GmbH (Allemagne)','Bouwmaat BV (Pays-Bas)','Ferreira Lda (Portugal)'][tpRnd(0,2)],cl:['Brugge Yachting SPRL (Belgique)','Cantiere Rossi Srl (Italie)','Kiel Boote GmbH (Allemagne)'][tpRnd(0,2)],d:{ach:ach,ven:ven},x:{auto:r2(ach*0.2),dette:ach,coll:0,fact:ven}};
+}
 function tpGenFac(){
   var arts=[['Chaise de bureau',tpRnd(60,180)],['Lampe LED',tpRnd(20,60)],['Caisson à tiroirs',tpRnd(90,240)],['Écran 27 pouces',tpRnd(150,320)],['Tapis ergonomique',tpRnd(15,45)]];
   var a=arts[tpRnd(0,4)],q=tpRnd(4,40),r1=[5,8,10,15][tpRnd(0,3)],r2p=Math.random()<0.4?[2,3,5][tpRnd(0,2)]:0,esc=[0,1,2][tpRnd(0,2)],port=Math.random()<0.5?tpRnd(2,9)*10:0;
@@ -6175,7 +6191,7 @@ function tpGenInv(){
   var a=tpRnd(10,50)*120,m=tpRnd(2,12),fnp=tpRnd(15,90)*10;
   return {cl:cl,d:{si:si,sf:sf,ht:ht,pp:pp,a:a,m:m,fnp:fnp},x:{vs:r2(si-sf),ttc:r2(ht*1.2),dep:r2(ht*pp/100),cca:r2(a*(m-1)/12),fnpTtc:r2(fnp*1.2)}};
 }
-var TP_AT_GEN={fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
+var TP_AT_GEN={let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
 /* ==== fin des générateurs d'ateliers ==== */
 function fmt2(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' €';}
 function tpNum(v){if(v===null||v===undefined)return NaN;var s=String(v).replace(/[\s  €%]/g,'').replace(/[\u2212\u2013]/g,'-').replace(',','.');if(s==='')return NaN;return parseFloat(s);}
@@ -6267,6 +6283,31 @@ function tpAtBody(k){
       '<tr><td><b>Solde rectifié</b></td><td class="mono"><b>'+fmt2(x.rb)+'</b></td><td><b>Solde rectifié</b></td><td class="mono"><b>'+fmt2(x.rc)+'</b></td></tr></tbody></table>'+
       '<h3 class="tpat-h">Écritures de régularisation (côté entreprise uniquement)</h3>'+tpAtEcr([['Services bancaires (627)',d.frais,0],['Charges d\'intérêts (661)',d.agios,0],['Primes d\'assurance (616)',d.prel,0],['Banque (512) — frais, agios, prélèvement',0,x.cred]])+tpAtEcr([['Banque (512)',d.vir,0],['Clients (411) — '+s.client,0,d.vir]])+
       '<p class="tool-sub" style="margin-top:8px">Les chèques non débités et la remise non créditée sont de simples décalages : aucune écriture, ils se dénoueront sur le prochain relevé.</p>';
+  }else if(k==='let'){
+    var rows=[['01/03','Facture F-101',d.f1,0],['05/03','Facture F-108',d.f2,0],['12/03','Avoir A-12 (retour sur F-108)',0,d.av],['28/03','Règlement F-101 par virement',0,d.f1],['02/04','Facture F-115',d.f3,0],['20/04','Acompte sur F-115',0,d.reg3]];
+    en='<p>Extrait du compte du client <b>'+s.cl+'</b> au 30 avril :</p><table class="tpat-ecr"><thead><tr><th>Date</th><th>Libellé</th><th>Débit</th><th>Crédit</th></tr></thead><tbody>'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="mono">'+(r[2]?fmt2(r[2]):'')+'</td><td class="mono">'+(r[3]?fmt2(r[3]):'')+'</td></tr>';}).join('')+'</tbody></table>'+
+      '<p class="tool-sub">Lettre ce qui se solde exactement, puis indique ce qui reste dû, pièce par pièce.</p>';
+    form=tpAtField(k,'solde','Solde du compte client (débiteur)',st)+tpAtField(k,'lettre','Montant de la facture entièrement lettrée',st)+tpAtField(k,'f2r','Reste dû sur la facture F-108',st)+tpAtField(k,'f3r','Reste dû sur la facture F-115',st);
+    cor='<h3 class="tpat-h">Lettrage</h3><p class="tool-sub">Lettre A : F-101 ('+fmt2(d.f1)+') avec le règlement du 28/03 ('+fmt2(d.f1)+') : soldée. F-108 et l\'avoir A-12 se rapprochent partiellement : reste '+fmt2(x.f2r)+'. F-115 et l\'acompte : reste '+fmt2(x.f3r)+'. Solde du compte : '+fmt2(x.f2r)+' + '+fmt2(x.f3r)+' = '+fmt2(x.solde)+'.</p><p class="tool-sub">Un lettrage partiel se note souvent en minuscule (a, b) ; il ne devient définitif que quand la pièce est entièrement soldée. À relancer : les deux restes dus, en commençant par le plus ancien.</p>';
+  }else if(k==='ndf'){
+    en='<p>Note de frais de <b>'+s.nom+'</b>, commercial, pour un déplacement chez des clients (justificatifs fournis) :</p><ul class="tp-ul">'+
+      '<li>Déjeuner de travail avec un client : <b>'+fmt2(d.rep)+'</b> TTC (TVA 10 %)</li><li>Billet de train : <b>'+fmt2(d.train)+'</b> TTC (TVA 10 %)</li>'+
+      '<li>Nuit d\'hôtel du salarié : <b>'+fmt2(d.hotel)+'</b> TTC (TVA 10 %)</li><li>Fournitures achetées pour une démonstration : <b>'+fmt2(d.fourn)+'</b> TTC (TVA 20 %)</li></ul>'+
+      '<p class="tool-sub">Rappels : la TVA sur le transport de personnes et sur l\'hébergement du personnel n\'est pas récupérable. Arrondis au centime.</p>';
+    form=tpAtField(k,'tot','Total à rembourser au salarié',st)+tpAtField(k,'tvar','TVA récupérable',st)+tpAtField(k,'charges','Total passé en charges',st);
+    var rh=r2(d.rep/1.1),fh=r2(d.fourn/1.2);
+    cor='<h3 class="tpat-h">Écriture</h3>'+tpAtEcr([['Réceptions (6257) : repas HT',rh,0],['Voyages et déplacements (6251) : train TTC',d.train,0],['Voyages et déplacements (6256 missions) : hôtel TTC',d.hotel,0],['Fournitures (606) : HT',fh,0],['TVA déductible (44566)',x.tvar,0],['Personnel, rémunérations dues (421) ou compte de frais à rembourser',0,x.tot]])+
+      '<p class="tool-sub">TVA récupérable : repas '+fmt2(r2(d.rep-rh))+' + fournitures '+fmt2(r2(d.fourn-fh))+' = '+fmt2(x.tvar)+'. Le train et l\'hôtel vont en charge pour leur TTC. Une note de frais n\'est pas un salaire : pas de cotisations.</p>';
+  }else if(k==='ue'){
+    en='<p>L\'entreprise (française, assujettie, numéro de TVA intracommunautaire valide) réalise ce mois :</p><ul class="tp-ul">'+
+      '<li>un achat de marchandises à <b>'+s.fo+'</b> pour <b>'+fmt2(d.ach)+'</b> HT, facturé sans TVA ;</li>'+
+      '<li>une vente de marchandises à <b>'+s.cl+'</b>, entreprise assujettie avec un numéro de TVA valide, pour <b>'+fmt2(d.ven)+'</b> HT, marchandises expédiées hors de France.</li></ul>'+
+      '<p class="tool-sub">Taux normal français : 20 %.</p>';
+    form=tpAtField(k,'auto','TVA à autoliquider sur l\'achat (à déclarer et à déduire)',st)+tpAtField(k,'dette','Montant dû au fournisseur',st)+tpAtField(k,'coll','TVA française à facturer au client européen',st)+tpAtField(k,'fact','Montant de la facture au client',st);
+    cor='<h3 class="tpat-h">Acquisition intracommunautaire (autoliquidation)</h3>'+tpAtEcr([['Achats de marchandises (607)',d.ach,0],['TVA déductible intracommunautaire (44566)',x.auto,0],['TVA due intracommunautaire (4452)',0,x.auto],['Fournisseurs (401)',0,d.ach]])+
+      '<p class="tool-sub">L\'acheteur déclare lui-même la TVA française (autoliquidation) et la déduit sur la même déclaration : pas de décaissement si la déduction est totale. Le fournisseur est payé HT.</p>'+
+      '<h3 class="tpat-h">Livraison intracommunautaire (exonérée)</h3>'+tpAtEcr([['Clients (411)',d.ven,0],['Ventes de marchandises (707)',0,d.ven]])+
+      '<p class="tool-sub">Exonérée de TVA française : la facture porte les numéros de TVA des deux parties et la mention « Exonération de TVA, article 262 ter I du CGI ». Le client autoliquide la TVA dans son pays. Ces opérations figurent aussi sur la CA3 et dans l\'état récapitulatif des livraisons.</p>';
   }else if(k==='fac'){
     en='<p>Tu établis la facture de vente au client <b>'+s.cl+'</b> :</p><ul class="tp-ul"><li>'+d.q+' × <b>'+s.art+'</b> à '+fmt2(d.pu)+' HT l\'unité</li>'+
       '<li>Remise de <b>'+d.r1+' %</b>'+(d.r2?' puis remise supplémentaire de <b>'+d.r2+' %</b> (en cascade)':'')+'</li>'+
@@ -6353,7 +6394,7 @@ function tpAteliers(){
   var cur=ui.tpAt||'ca3';
   var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px;opacity:.75">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
-    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, balance âgée et relances, rapprochement bancaire (CCP1) ; déclaration de TVA, bulletin de paie, tableau de bord (CCP2) ; amortissement et cession, travaux d\'inventaire, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
+    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, rapprochement bancaire (CCP1) ; déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, tableau de bord (CCP2) ; amortissement et cession, travaux d\'inventaire, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
     '<div style="margin-top:14px">'+chipsH+'</div>'+tpAtBody(cur);
 }
 function tpAtVerify(){
@@ -6379,9 +6420,9 @@ var FORM_PHASES=[
   {k:'fond',n:'Les fondations',s:'Bases',w:8,d:'Partie double, plan comptable, journal et balance, bilan et compte de résultat. Le socle sur lequel tout le reste s\'appuie.',
     mods:['partie-double','pcg','organisation','bilan','resultat'],at:[],msp:null,ccp:''},
   {k:'ccp1',n:'CCP1 · Le quotidien comptable',s:'CCP1',w:30,d:'Factures clients et fournisseurs, TVA, règlements, banque et rapprochement, suivi de trésorerie.',
-    mods:['tva','ecriture','facture','efacture','reglements','rapprochement','budget'],at:['fac','ba','rap'],msp:'CCP1',ccp:'CCP1'},
+    mods:['tva','ecriture','facture','efacture','reglements','rapprochement','budget'],at:['fac','let','ndf','ba','rap'],msp:'CCP1',ccp:'CCP1'},
   {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
-    mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','paie','tdb'],msp:'CCP2',ccp:'CCP2'},
+    mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','ue','paie','tdb'],msp:'CCP2',ccp:'CCP2'},
   {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
     mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','inv','aff'],msp:'CCP3',ccp:'CCP3'},
   {k:'final',n:'Dossier pro & session',s:'Session',w:14,d:'Finaliser le dossier professionnel, préparer les entretiens, enchaîner les mises en situation complètes.',
@@ -6712,7 +6753,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>12 dossiers cabinet</b>, <b>9 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>12 dossiers cabinet</b>, <b>12 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -7046,7 +7087,10 @@ var CAB_ACCTS_EXTRA=[
   {num:'6226',lib:'Honoraires',cl:6,cat:'Gestion',sens:'D'},
   {num:'44581',lib:'Acomptes, régime simplifié d\'imposition',cl:4,cat:'Bilan',sens:'D'},
   {num:'44587',lib:'TVA sur factures à établir',cl:4,cat:'Bilan',sens:'C'},
-  {num:'7817',lib:'Reprises sur dépréciations des actifs circulants',cl:7,cat:'Gestion',sens:'C'}
+  {num:'7817',lib:'Reprises sur dépréciations des actifs circulants',cl:7,cat:'Gestion',sens:'C'},
+  {num:'4452',lib:'TVA due intracommunautaire',cl:4,cat:'Bilan',sens:'C'},
+  {num:'6251',lib:'Voyages et déplacements',cl:6,cat:'Gestion',sens:'D'},
+  {num:'6256',lib:'Missions',cl:6,cat:'Gestion',sens:'D'}
 ];
 var CAB_DOSSIERS=[
 /* ------------------------------------------------------------------ CCP1 ------------------------------------------------------------------ */
@@ -10945,7 +10989,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 12 dossiers cabinet, 9 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 12 dossiers cabinet, 12 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
