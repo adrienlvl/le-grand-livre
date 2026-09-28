@@ -1460,6 +1460,9 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .bil-h b{flex:1;font-size:15px}
 .bil-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--accent)}
 @media print{.bil .tool-sub{color:#333!important}.bil-ccp,.bil-kpis div{background:#fff!important;border-color:#bbb!important}}
+.mock-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mock-time{font-size:26px;font-weight:700;color:var(--accent)}
+.mock-q{font-size:clamp(20px,2.6vw,26px);line-height:1.35;margin:16px 0 10px}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -5650,6 +5653,12 @@ var TP_CONSEILS={
       "Joins la liste de tes titres, diplômes et attestations de formation, et signe la déclaration sur l'honneur."]
 };
 var ENTRETIEN_TP=[
+  {id:'o35',k:'CCP2',q:"Ta déclaration de TVA fait apparaître un crédit. Que fais-tu ?",p:"Je vérifie d'abord qu'il n'y a pas d'erreur (TVA collectée oubliée, déductible en double, immobilisation mal classée). S'il est justifié (gros achats, investissement, exportations), je le reporte sur la déclaration suivante, ligne 22, via le compte Crédit de TVA à reporter (44567), ou je prépare une demande de remboursement si les conditions sont remplies. Je le signale à mon responsable."},
+  {id:'o36',k:'CCP2',q:"Un salarié est embauché, un autre quitte l'entreprise : quelles formalités prépares-tu ?",p:"À l'embauche : DPAE auprès de l'URSSAF avant la prise de poste, contrat, registre unique du personnel, informations pour la paie (numéro de Sécurité sociale, RIB), mutuelle, visite d'information et de prévention. Au départ : dernier bulletin avec indemnités dues (congés payés, préavis), certificat de travail, reçu pour solde de tout compte, attestation France Travail, puis déclaration dans la DSN."},
+  {id:'o37',k:'CCP2',q:"Comment rédiges-tu le commentaire d'un tableau de bord ?",p:"Court et factuel : je cite les chiffres clés et leur évolution, j'explique les écarts importants (cause probable), je distingue ce qui va bien et le point de vigilance, j'utilise le bon vocabulaire (taux de marge ou de marque) et je termine par une piste d'action. Le lecteur est un dirigeant : pas de jargon inutile."},
+  {id:'o38',k:'CCP3',q:"Pourquoi extourne-t-on certaines écritures d'inventaire au début de l'exercice suivant ?",p:"Les charges à payer, produits à recevoir, charges et produits constatés d'avance sont des régularisations provisoires. En passant l'écriture inverse au 1er jour, on peut ensuite enregistrer la vraie facture ou le vrai paiement normalement, sans double compte : chaque exercice ne supporte que ce qui le concerne."},
+  {id:'o39',k:'CCP3',q:"Comment enregistres-tu la cession d'une immobilisation ?",p:"Trois temps : dotation complémentaire jusqu'à la date de cession ; sortie de l'actif (amortissements au débit, valeur nette comptable en 675, immobilisation au crédit pour sa valeur d'origine) ; constatation du prix (créance ou banque au débit, 775 au crédit, TVA collectée si le bien la supporte). Le résultat de cession est la différence entre 775 et 675."},
+  {id:'o40',k:'final',q:"Quel est ton projet professionnel après le titre ?",p:"Je présente un projet réaliste et argumenté : type de structure visée (cabinet, PME, collectivité), missions qui me motivent, ce que la formation et le stage m'ont confirmé, ce que je veux encore développer (paie, logiciels, facturation électronique), et le cas échéant une évolution possible (poursuite d'études, spécialisation)."},
   {id:'oef1',k:'CCP1',q:"La facturation électronique arrive dans les entreprises. Qu'est-ce que cela change dans ton travail ?",p:"Calendrier : réception obligatoire pour toutes au 1er septembre 2026, émission pour les PME au 1er septembre 2027. Factures structurées (Factur-X, UBL, CII) transmises par une plateforme agréée, nouvelles mentions (SIREN du client, nature de l'opération). Moins de saisie, plus de contrôle : rapprochement avec commandes et livraisons, gestion des rejets et des statuts, e-reporting pour les ventes aux particuliers."},
   {id:'oef2',k:'CCP1',q:"Un fournisseur t'envoie encore une facture en PDF par courriel après la date d'obligation. Que fais-tu ?",p:"Je vérifie si l'obligation d'émission s'applique déjà à lui (taille de l'entreprise, calendrier). Si oui, je lui demande poliment de passer par sa plateforme agréée, en lui rappelant l'annuaire. En attendant, je ne bloque pas le paiement d'une dette réelle sans en parler à mon responsable, et je trace l'échange."},
   {id:'o1',k:'CCP1',q:"Comment t'assures-tu qu'une facture de vente est conforme avant de l'envoyer ?",p:"Rapprochement avec le bon de commande et le bon de livraison ; contrôle des calculs (réductions, TVA) ; mentions obligatoires : numéro unique et chronologique, date, identité et SIREN des parties, désignation, quantités, prix unitaire HT, réductions, taux et montant de TVA, date d'échéance, taux des pénalités de retard et indemnité forfaitaire de 40 euros pour frais de recouvrement."},
@@ -5838,7 +5847,35 @@ function tpDp(){
       '<label class="tp-lbl" for="tpdp-extra-real">Réalisations personnelles (facultatif)</label><textarea class="ag-textarea tp-dp-f" id="tpdp-extra-real" data-k="extra" data-f="real" rows="3">'+escHtml(dip.real||'')+'</textarea>'+
       '<p class="tool-sub" style="margin:10px 0 0">N\'oublie pas la déclaration sur l\'honneur, datée et signée, dans ton dossier définitif.</p></div>';
 }
+/* Entretien blanc : 20 minutes chronométrées, questions tirées au hasard, débriefing à la fin. */
+var MOCK_TIMER=null;
+function oralMockStart(kind){
+  var tech=shuffle(ENTRETIEN_TP.filter(function(q){return q.k!=='final';}));
+  var qs=kind==='final'?shuffle(ENTRETIEN_TP.filter(function(q){return q.k==='final';})).slice(0,6):
+    [tech.filter(function(q){return q.k==='CCP1';})[0],tech.filter(function(q){return q.k==='CCP2';})[0],tech.filter(function(q){return q.k==='CCP3';})[0]].concat(tech.slice(0,8)).filter(function(q,i,a){return q&&a.indexOf(q)===i;}).slice(0,6);
+  ui.oralMock={kind:kind,ids:qs.map(function(q){return q.id;}),i:0,end:Date.now()+20*60000,done:false,rate:{}};
+  oralMockTick();
+}
+function oralMockTick(){
+  if(MOCK_TIMER)clearInterval(MOCK_TIMER);
+  MOCK_TIMER=setInterval(function(){var m=ui.oralMock;if(!m||m.done){clearInterval(MOCK_TIMER);MOCK_TIMER=null;return;}var left=Math.max(0,Math.round((m.end-Date.now())/1000));var el=document.getElementById('mock-time');if(el)el.textContent=fmtTime(left);if(left<=0){m.done=true;render();}},1000);
+}
+function oralMockView(){
+  var m=ui.oralMock,qs=m.ids.map(function(id){return ENTRETIEN_TP.filter(function(q){return q.id===id;})[0];});
+  var label=m.kind==='final'?'Entretien final blanc':'Entretien technique blanc';
+  if(!m.done){
+    var q=qs[m.i],left=Math.max(0,Math.round((m.end-Date.now())/1000));
+    return '<div class="panel mock"><div class="mock-top"><span class="eyebrow">'+label+' · question '+(m.i+1)+' sur '+qs.length+'</span><span class="mock-time mono" id="mock-time">'+fmtTime(left)+'</span></div>'+
+      '<p class="serif mock-q">'+escHtml(q.q)+'</p><p class="tool-sub">Réponds à voix haute, debout si tu peux, en 2 à 3 minutes. Le jury peut rebondir : prépare un exemple tiré de ton stage.</p>'+
+      '<div class="row"><button class="btn btn-pri" data-action="mock-next">'+(m.i<qs.length-1?'Question suivante '+SVG.arR:'Terminer l\'entretien')+'</button><button class="btn-sm" data-action="mock-stop">Arrêter</button></div></div>';
+  }
+  var rows=qs.map(function(q){var r=m.rate[q.id];return '<div class="suj-q"><div class="suj-qh"><span class="suj-num">'+escHtml(q.k==='final'?'EF':q.k.replace('CCP','C'))+'</span><span class="suj-txt">'+escHtml(q.q)+'</span></div><div class="suj-cor-body" style="margin-top:8px">'+escHtml(q.p)+'</div>'+
+    '<div class="acc-chips" style="margin-top:8px"><button class="acc-chip'+(r===1?' on':'')+'" data-action="mock-rate" data-id="'+q.id+'" data-k="1">'+SVG.check+' J\'ai bien répondu</button><button class="acc-chip'+(r===0?' on':'')+'" data-action="mock-rate" data-id="'+q.id+'" data-k="0">À retravailler</button></div></div>';}).join('');
+  return '<div class="panel mock"><span class="eyebrow">'+label+' · débriefing</span><h3 class="serif" style="font-size:24px;margin:8px 0 6px">Compare tes réponses aux pistes</h3><p class="tool-sub">Sois exigeant : as-tu donné un exemple concret, employé le bon vocabulaire, montré ta méthode ? Ton auto-évaluation met à jour ta banque de questions.</p>'+rows+
+    '<div class="row"><button class="btn btn-pri" data-action="mock-start" data-k="'+m.kind+'">'+SVG.refresh+' Nouvel entretien blanc</button><button class="btn-sm" data-action="mock-stop">Revenir à l\'entraînement</button></div></div>';
+}
 function tpOral(){
+  if(ui.oralMock)return oralMockView();
   var kind=ui.tpOralKind||'all';
   var pool=ENTRETIEN_TP.filter(function(q){return kind==='all'||q.k===kind;});
   var chipsH='<div class="chips">'+Object.keys(TP_ORAL_KINDS).map(function(k){return '<button class="chip '+(kind===k?'on':'')+'" data-action="tp-oral-kind" data-k="'+k+'">'+escHtml(TP_ORAL_KINDS[k])+'</button>';}).join('')+'</div>';
@@ -5853,8 +5890,8 @@ function tpOral(){
        :'<div class="row" style="margin-top:0"><button class="btn btn-pri" data-action="tp-oral-reveal">'+SVG.loupe+' Voir les pistes de réponse</button><button class="btn btn-gh" data-action="tp-oral-next">Autre question</button></div>')+
     '</div>';
   }else{
-    stage='<div class="panel tp-oral-stage"><span class="eyebrow">Entraînement</span><p style="color:var(--ink2);margin:12px 0 14px">Tire une question au hasard (en priorité celles que tu n\'as pas encore maîtrisées), réponds à voix haute, puis auto-évalue-toi.</p>'+
-      '<button class="btn btn-pri" data-action="tp-oral-next"'+(pool.length?'':' disabled')+'>'+SVG.star+' Tirer une question</button></div>';
+    stage='<div class="panel tp-oral-stage"><span class="eyebrow">Entraînement</span><p style="color:var(--ink2);margin:12px 0 14px">Tire une question au hasard (en priorité celles que tu n\'as pas encore maîtrisées), réponds à voix haute, puis auto-évalue-toi. Ou mets-toi en conditions avec un entretien blanc de 20 minutes.</p>'+
+      '<div class="row" style="margin-top:0"><button class="btn btn-pri" data-action="tp-oral-next"'+(pool.length?'':' disabled')+'>'+SVG.star+' Tirer une question</button><button class="btn btn-gh" data-action="mock-start" data-k="tech">'+SVG.exam+' Entretien technique blanc (20 min)</button><button class="btn btn-gh" data-action="mock-start" data-k="final">'+SVG.book+' Entretien final blanc (20 min)</button></div></div>';
   }
   var st=tpOralStats();
   var list=pool.map(function(q){
@@ -10127,6 +10164,10 @@ document.addEventListener('click',function(e){
   else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
+  else if(a==='mock-start'){oralMockStart(t.dataset.k==='final'?'final':'tech');render();focusMain();}
+  else if(a==='mock-next'){var _mk=ui.oralMock;if(_mk){if(_mk.i<_mk.ids.length-1)_mk.i++;else _mk.done=true;}render();}
+  else if(a==='mock-stop'){ui.oralMock=null;if(MOCK_TIMER){clearInterval(MOCK_TIMER);MOCK_TIMER=null;}render();}
+  else if(a==='mock-rate'){var _mr=ui.oralMock;if(_mr){var _v=t.dataset.k==='1'?1:0;_mr.rate[t.dataset.id]=_v;state.tp.oral[t.dataset.id]=_v;save();var _yo=window.scrollY;render();window.scrollTo(0,_yo);}}
   else if(a==='tp-oral-kind'){ui.tpOralKind=t.dataset.k||'all';ui.tpOral=null;render();}
   else if(a==='tp-oral-next'){tpOralPick();var _y4=window.scrollY;render();window.scrollTo(0,_y4);}
   else if(a==='tp-oral-reveal'){if(ui.tpOral){ui.tpOral.revealed=true;var _oq=null;ENTRETIEN_TP.forEach(function(q){if(q.id===ui.tpOral.id)_oq=q;});var _y5=window.scrollY;render();window.scrollTo(0,_y5);if(_oq)announce('Pistes : '+_oq.p);}}
