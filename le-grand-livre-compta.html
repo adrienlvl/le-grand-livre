@@ -551,6 +551,9 @@ svg{display:block}
 .viz-tip{position:absolute;top:8px;background:var(--card);border:1px solid var(--edge);border-radius:8px;padding:6px 10px;font-size:12.5px;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:2px;pointer-events:none;min-width:130px}
 .viz-sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}.viz-s1.viz-sw{background:var(--viz-1)}.viz-s2.viz-sw{background:var(--viz-2)}.viz-s3.viz-sw{background:var(--viz-3)}
 @media print{.viz-tip,.viz-cross{display:none}.viz-root details{display:none}}
+.dp-idf{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:14px}.dp-idf .tp-lbl{grid-row:1}@media(max-width:640px){.dp-idf{grid-template-columns:1fr}.dp-idf .tp-lbl{grid-row:auto}}
+.dpp{max-width:760px}.dpp h1{font-family:'Fraunces',serif;font-size:28px;margin:6px 0}.dpp h2{font-family:'Fraunces',serif;font-size:19px;margin:0 0 10px;color:var(--accent)}.dpp h3{font-size:15px;margin:14px 0 8px}.dpp-cover{padding:26px 0 30px;border-bottom:2px solid var(--ink)}.dpp-k{text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--ink2);margin:0}.dpp-id{margin-top:26px;line-height:1.9}.dpp-note{font-size:12.5px;color:var(--ink2)}.dpp-toc,.dpp-at{padding-top:18px;margin-top:18px;border-top:1px solid var(--edge)}.dpp-f{margin:0 0 10px}.dpp-f b{font-size:13.5px}.dpp-f p{margin:4px 0 0;line-height:1.55}.dpp-empty{color:var(--ink2);font-style:italic}
+@media print{body:has(.dpp) .page-head,body:has(.dpp) #app>.print-only,body:has(.dpp)>.print-only{display:none!important}body:has(.dpp) .tools-layout,body:has(.dpp) .panel:has(.dpp){border:0!important;padding:0!important;background:#fff!important}.dpp-cover{border-bottom:0!important;padding-top:120px!important}.dpp h2{color:#000!important}.dpp-at,.dpp-toc{break-before:page;border-top:0}.dpp-ex{break-inside:avoid}}
 .sess-card{border:1px dashed var(--edge);border-radius:12px;padding:12px 14px;background:var(--paper)}.sess-card.on{border:1.5px solid var(--accent);background:var(--card)}.sess-card svg{width:16px;height:16px}
 .at-grp{margin-bottom:10px}.at-grp-h{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin:0 0 6px}.at-grp-h span:nth-child(2){flex:1;min-width:0}.at-grp-n{font-size:12px}.at-grp .chips{margin:0}
 .tpat-mail{margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}.tpat-mail textarea{width:100%;min-height:180px;font:inherit;line-height:1.5}
@@ -5826,6 +5829,7 @@ var TP_CCP=[
 var TP_CRIT_LEVELS=['À travailler','En cours','Acquis'];
 var TP_TABS=[['plan','Plan de formation'],['bilan','Mon bilan'],['fiches','Fiches CCP'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
 var TP_DP_FIELDS=[
+  ['titre',"Intitulé de l'exemple (par exemple : Suivi et relance des comptes clients)"],
   ['desc',"1. Décris les tâches ou opérations que tu as effectuées, et dans quelles conditions"],
   ['moyens',"2. Précise les moyens utilisés (logiciels, documents, procédures)"],
   ['avec',"3. Avec qui as-tu travaillé ?"],
@@ -6143,7 +6147,20 @@ function tpGrille(){
     '<div class="pwrap"><span class="pcount">'+cr.acquis+' / '+cr.total+' critères acquis</span><div class="ptrack"><div class="pfill" style="width:'+(cr.total?Math.round(cr.acquis/cr.total*100):0)+'%"></div></div><span class="pcount">'+cr.rated+' évalués</span></div>'+
     '<div class="row" style="margin-top:12px"><button class="btn-sm" data-action="dl-tp-grille">'+SVG.dl+' Exporter ma grille</button></div></div>'+ccps;
 }
+/* Aperçu imprimable du DP, structuré comme le modèle officiel. */
+function tpDpPrintHTML(){
+  var dip=state.tp.dp.extra&&typeof state.tp.dp.extra==='object'?state.tp.dp.extra:{},P=function(s){return escHtml(String(s||'')).replace(/\n/g,'<br>');};
+  var toc=[],body=TP_CCP.map(function(c,ci){var exs=tpDpEx(c.code);
+    exs.forEach(function(x,n){toc.push('<li>Activité-type '+(ci+1)+', exemple n° '+(n+1)+' : '+escHtml(x.e.titre||'(intitulé à compléter)')+'</li>');});
+    return '<section class="dpp-at"><h2>Activité-type '+(ci+1)+' : '+escHtml(c.titre)+'</h2>'+(exs.length?exs.map(function(x,n){return '<div class="dpp-ex"><h3>Exemple n° '+(n+1)+' : '+escHtml(x.e.titre||'(intitulé à compléter)')+'</h3>'+TP_DP_FIELDS.filter(function(f){return f[0]!=='titre';}).map(function(f){var v=x.e[f[0]];return '<div class="dpp-f"><b>'+escHtml(({desc:'1. Décrivez les tâches ou opérations que vous avez effectuées, et dans quelles conditions',moyens:'2. Précisez les moyens utilisés',avec:'3. Avec qui avez-vous travaillé ?',contexte:'4. Contexte',info:'5. Informations complémentaires (facultatif)'})[f[0]]||f[1])+'</b><p>'+(v?P(v):'<span class="dpp-empty">à compléter</span>')+'</p></div>';}).join('')+'</div>';}).join(''):'<p class="dpp-empty">Aucun exemple rédigé pour cette activité-type.</p>')+'</section>';}).join('');
+  return '<div class="row no-print" style="margin:0 0 12px"><button class="btn-sm" data-action="tp-dp-print-close">'+SVG.arL+' Retour à l\'édition</button><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer ou enregistrer en PDF</button></div>'+
+    '<div class="dpp"><section class="dpp-cover"><p class="dpp-k">Dossier professionnel (DP)</p><h1>Titre professionnel Comptable assistant</h1><p>Niveau 4 · RNCP37121</p><div class="dpp-id"><p><b>Nom et prénom</b> : '+(dip.nom?escHtml(dip.nom):'…………………………')+'</p><p><b>Centre de formation</b> : '+(dip.centre?escHtml(dip.centre):'…………………………')+'</p><p><b>Édité le</b> : '+frDateLong(new Date())+'</p></div><p class="dpp-note no-print">Brouillon préparé avec Le Grand Livre. Reporte-le dans le modèle officiel remis par ton centre si celui-ci l\'exige.</p></section>'+
+    '<section class="dpp-toc"><h2>Sommaire des exemples de pratique professionnelle</h2><ol>'+(toc.join('')||'<li>Aucun exemple pour l\'instant.</li>')+'</ol></section>'+body+
+    '<section class="dpp-at"><h2>Titres, diplômes, CQP, attestations de formation</h2><p>'+(dip.dip?P(dip.dip):'<span class="dpp-empty">à compléter</span>')+'</p>'+(dip.real?'<h2>Réalisations personnelles</h2><p>'+P(dip.real)+'</p>':'')+'</section>'+
+    '<section class="dpp-at"><h2>Déclaration sur l\'honneur</h2><p>Je soussigné(e) '+(dip.nom?escHtml(dip.nom):'……………………………')+', déclare sur l\'honneur que les renseignements fournis dans ce dossier sont exacts et que je suis l\'auteur(e) des réalisations jointes.</p><p>Fait à ……………………………, le ……………………………</p><p>Signature :</p></section></div>';
+}
 function tpDp(){
+  if(ui.tpDpPrint)return tpDpPrintHTML();
   var st=tpDpStatus();
   var ccps=TP_CCP.map(function(c){
     var exs=tpDpEx(c.code);
@@ -6170,7 +6187,8 @@ function tpDp(){
   return '<div class="tool-section"><h2 class="tool-title">Mon dossier professionnel (DP)</h2>'+
     '<p class="tool-sub">Prépare ici le brouillon de ton DP, rubrique par rubrique, comme dans le modèle officiel. Tout est enregistré automatiquement sur cet appareil ; exporte le texte pour le reporter dans ton dossier définitif.</p>'+
     '<div class="pwrap"><span class="pcount">'+st.done+' / '+st.total+' activités types illustrées</span><div class="ptrack"><div class="pfill" style="width:'+Math.round(st.done/st.total*100)+'%"></div></div></div>'+
-    '<div class="row" style="margin-top:12px"><button class="btn-sm" data-action="dl-tp-dp">'+SVG.dl+' Exporter mon DP (texte)</button></div></div>'+
+    '<div class="row" style="margin-top:12px"><button class="btn btn-pri" data-action="tp-dp-print">'+SVG.print+' Aperçu imprimable (PDF)</button><button class="btn-sm" data-action="dl-tp-dp">'+SVG.dl+' Exporter mon DP (texte)</button></div>'+
+    '<div class="dp-idf"><label class="tp-lbl" for="tpdp-extra-nom">Nom et prénom (pour la page de garde)</label><input class="ag-input tp-dp-f" id="tpdp-extra-nom" data-k="extra" data-f="nom" value="'+escHtml((state.tp.dp.extra||{}).nom||'')+'" autocomplete="name"><label class="tp-lbl" for="tpdp-extra-centre">Centre de formation</label><input class="ag-input tp-dp-f" id="tpdp-extra-centre" data-k="extra" data-f="centre" value="'+escHtml((state.tp.dp.extra||{}).centre||'')+'" placeholder="par exemple : GRETA, Lorient"></div></div>'+
     ccps+
     '<div class="tool-section" style="margin-top:16px"><h2 class="tool-title">Titres, diplômes, attestations et réalisations</h2>'+
       '<label class="tp-lbl" for="tpdp-extra-dip">Titres, diplômes, CQP, attestations de formation</label><textarea class="ag-textarea tp-dp-f" id="tpdp-extra-dip" data-k="extra" data-f="dip" rows="3">'+escHtml(dip.dip||'')+'</textarea>'+
@@ -11268,10 +11286,12 @@ document.addEventListener('click',function(e){
   else if(a==='set-cursus'){var _cu=t.dataset.k==='bts'?'bts':'tp';try{localStorage.setItem('legl.cursus',_cu);}catch(e){}applyCursusTitle();_srchIdx=null;render();announce(_cu==='tp'?'Cursus : Titre professionnel Comptable assistant.':'Cursus : BTS Comptabilité et Gestion.');}
   else if(a==='tp-fiche-go'){ui.tab='outils';ui.tool='tpca';ui.tpTab='fiches';ui.tpFiche=t.dataset.k||'CCP1';render();focusMain();}
   else if(a==='tp-fiche'){ui.tpFiche=t.dataset.k||'CCP1';render();}
-  else if(a==='tp-tab'){ui.tpTab=t.dataset.k||'ref';render();}
+  else if(a==='tp-tab'){ui.tpDpPrint=false;ui.tpTab=t.dataset.k||'ref';render();}
   else if(a==='tp-go'){ui.tab='outils';ui.tool='tpca';ui.tpTab=t.dataset.k||'ref';render();focusMain();}
   else if(a==='tp-go-erp'){navTerrain('erp');render();focusMain();}
   else if(a==='tp-crit'){var _tk=t.dataset.k,_tl=parseInt(t.dataset.lvl,10);if(_tk&&_tl>=0&&_tl<=2){var _y=window.scrollY;if(state.tp.crit[_tk]===_tl)delete state.tp.crit[_tk];else state.tp.crit[_tk]=_tl;save();render();window.scrollTo(0,_y);var _tb=document.querySelector('[data-action="tp-crit"][data-k="'+_tk+'"][data-lvl="'+_tl+'"]');if(_tb)try{_tb.focus({preventScroll:true});}catch(e){}}}
+  else if(a==='tp-dp-print'){ui.tpDpPrint=true;render();window.scrollTo(0,0);}
+  else if(a==='tp-dp-print-close'){ui.tpDpPrint=false;render();}
   else if(a==='tp-dp-from-journal'){var _jc=t.dataset.k,_je=null;(state.journal||[]).forEach(function(en){if(en.id===t.dataset.id)_je=en;});var _jn=-1;for(var _ji=0;_ji<3;_ji++){if(!state.tp.dp[_jc+'-'+_ji]){_jn=_ji;break;}}
     if(_je&&_jn>=0){var _acts=(_je.acts||[]).map(function(id){var it=activityById(id);return it?it.label:id;}).join(', ');state.tp.dp[_jc+'-'+_jn]={desc:String(_je.missions||''),moyens:'',avec:'',contexte:'Stage en entreprise, semaine du '+(_je.date?tpFrDate(_je.date):'')+(_acts?' ('+_acts+')':''),info:String(_je.appris||'')};save();var _yj=window.scrollY;render();window.scrollTo(0,_yj);announce('Exemple créé à partir du carnet de bord : complète les moyens utilisés et avec qui tu as travaillé.');}}
   else if(a==='tp-dp-add'){var _dc=t.dataset.k,_dn=-1;for(var _di=0;_di<3;_di++){if(!state.tp.dp[_dc+'-'+_di]){_dn=_di;break;}}if(_dn>=0){state.tp.dp[_dc+'-'+_dn]={desc:'',moyens:'',avec:'',contexte:'',info:''};save();var _y2=window.scrollY;render();window.scrollTo(0,_y2);var _fd=document.getElementById('tpdp-'+_dc+'-'+_dn+'-desc');if(_fd)try{_fd.focus();}catch(e){}}}
