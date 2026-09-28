@@ -3346,7 +3346,7 @@ var EXCEL_QUIZ=[
    e:"NB.SI(plage ; critère) compte les cellules vérifiant le critère. Le critère numérique s'écrit entre guillemets : \">1000\"."},
   {q:"Pour afficher \"À payer\" si D2 est positif, sinon \"Crédit de TVA\" :",
    opts:['=SI(D2>0;"À payer";"Crédit de TVA")','=SOMME.SI(D2>0;"À payer")','=SI(D2;"À payer")','=SI(D2<0;"À payer";"Crédit de TVA")'],c:0,
-   e:"=SI(test ; valeur_si_vrai ; valeur_si_faux). L'option D inverserait les deux résultats (négatif → « À payer »)."},
+   e:"=SI(test ; valeur_si_vrai ; valeur_si_faux). La formule qui teste D2<0 inverserait les deux résultats (un montant négatif afficherait « À payer »)."},
   {q:"Pour retrouver le libellé du compte 607 dans le plan comptable (numéros col. A, libellés col. B de l'onglet Plan) :",
    opts:['=RECHERCHEX("607";Plan!A:A;Plan!B:B)','=SOMME.SI(Plan!A:A;"607";Plan!B:B)','=NB.SI(Plan!A:A;"607")','=RECHERCHEV(607;Plan!A:B;1)'],c:0,
    e:"RECHERCHEX(valeur ; colonne_recherche ; colonne_retour). SOMME.SI additionne des nombres, pas des textes. RECHERCHEV avec index 1 retournerait le numéro lui-même."},
@@ -10583,6 +10583,11 @@ document.addEventListener('keydown',function(e){
     if(vb){e.preventDefault();vb.click();}
   }
 });
+/* Les bonnes réponses étaient souvent en B : on mélange l'ordre des options à chaque ouverture de l'app. */
+(function(){function mix(q){var k=q&&(Array.isArray(q.o)?'o':(Array.isArray(q.opts)?'opts':null));if(!k||q.keep||typeof q.c!=='number')return;var good=q[k][q.c],o=shuffle(q[k]);q[k]=o;q.c=o.indexOf(good);}
+  MODULES.forEach(function(m){m.quiz.forEach(mix);});EXAM_EXTRA.forEach(mix);MISSIONS.forEach(function(m){m.questions.forEach(mix);});
+  CAB_DOSSIERS.forEach(function(d){d.steps.forEach(function(st){if(st.type==='qcm')mix(st);});});
+  if(typeof COMM_QUIZ!=='undefined')COMM_QUIZ.forEach(mix);if(typeof EXCEL_QUIZ!=='undefined')EXCEL_QUIZ.forEach(mix);})();
 load();mergeMyCards();applyCursusTitle();render();if(!showOnboarding())showNudge();setInterval(focusTick,1000);
 /* Thème « selon l'heure » : vérifié chaque minute. */
 setInterval(function(){if(appGet('mode')!=='heure')return;var th=hourTheme();if(document.documentElement.getAttribute('data-theme')!==th){document.documentElement.setAttribute('data-theme',th);render();}},60000);
