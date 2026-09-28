@@ -4908,6 +4908,38 @@ function viewExamResult(){
 
 /* ---- Glossaire ---- */
 var GLOSSAIRE=[
+  {term:"Acompte",cat:'fac',def:"Somme versée avant la livraison. Reçu d'un client : dette en Clients, avances et acomptes reçus (4191), imputée ensuite sur la facture. Pour une vente de biens, la TVA n'est due qu'à la livraison."},
+  {term:"Balance âgée",cat:'reg',def:"Tableau des créances clients classées selon l'ancienneté du retard (non échu, 1 à 30 jours, 31 à 60, plus de 60). Il sert à prioriser les relances."},
+  {term:"Mise en demeure",cat:'reg',def:"Lettre recommandée avec accusé de réception qui fixe un dernier délai de paiement avant le recouvrement judiciaire (injonction de payer)."},
+  {term:"Pénalités de retard",cat:'reg',def:"Intérêts dus par un client professionnel qui paie après l'échéance, au taux prévu par les conditions générales (au minimum 3 fois le taux d'intérêt légal), plus une indemnité forfaitaire de 40 € pour frais de recouvrement."},
+  {term:"Lettrage",cat:'reg',def:"Rapprochement, dans un compte de tiers, d'une facture et du règlement qui la solde, repérés par une même lettre. Une ligne non lettrée est une facture encore ouverte."},
+  {term:"Charge constatée d'avance",cat:'inv',def:"Partie d'une charge déjà enregistrée qui concerne l'exercice suivant (assurance, loyer payés d'avance). À la clôture : 486 au débit, charge au crédit ; extournée au 1er janvier."},
+  {term:"Produit constaté d'avance",cat:'inv',def:"Partie d'un produit déjà enregistré qui concerne l'exercice suivant. À la clôture : produit au débit, 487 au crédit ; extourné au 1er janvier."},
+  {term:"Facture non parvenue",cat:'inv',def:"Charge de l'exercice dont la facture arrivera après la clôture. On l'enregistre sur estimation : charge et 44586 au débit, 408 au crédit."},
+  {term:"Facture à établir",cat:'inv',def:"Vente livrée avant la clôture mais facturée après. On constate le produit : 418 au débit, vente et 44587 au crédit."},
+  {term:"Extourne",cat:'inv',def:"Écriture inverse passée au premier jour de l'exercice suivant pour annuler une régularisation provisoire (CCA, PCA, FNP, FAE, intérêts courus), afin d'enregistrer ensuite la vraie pièce sans double compte."},
+  {term:"Intérêts courus",cat:'inv',def:"Intérêts d'un emprunt qui concernent l'exercice mais seront payés après la clôture : 661 au débit, 1688 au crédit."},
+  {term:"Créance douteuse",cat:'inv',def:"Créance client dont le paiement devient incertain. Elle est reclassée de 411 en 416 (TTC), puis dépréciée sur la base du HT."},
+  {term:"Dépréciation",cat:'inv',def:"Constatation d'une perte de valeur probable et réversible d'un actif (stock, créance, titres). Elle se reprend (compte 78) quand la perte ne se justifie plus."},
+  {term:"Coût unitaire moyen pondéré (CUMP)",cat:'inv',def:"Méthode de valorisation des stocks : valeur totale (stock initial et entrées) divisée par la quantité totale. Les sorties et le stock final sont évalués à ce coût."},
+  {term:"Inventaire physique",cat:'inv',def:"Comptage réel des stocks à la clôture. C'est lui qui fait foi : l'écart avec le stock théorique (casse, vol, erreur) doit être expliqué."},
+  {term:"Valeurs mobilières de placement (VMP)",cat:'inv',def:"Titres achetés pour placer la trésorerie et être revendus à court terme (actions 503). Une baisse du cours à la clôture se déprécie (6866 / 590) ; une hausse ne se comptabilise pas."},
+  {term:"Réserve légale",cat:'bilan',def:"Réserve obligatoire des SARL et SA : 5 % du bénéfice jusqu'à ce qu'elle atteigne 10 % du capital (compte 1061)."},
+  {term:"Affectation du résultat",cat:'bilan',def:"Décision de l'assemblée sur le bénéfice : réserve légale, autres réserves, dividendes (457) ou report à nouveau. Elle solde le compte 120."},
+  {term:"CA3",cat:'tva',def:"Déclaration mensuelle de TVA du régime réel normal. Elle présente les bases et la TVA collectée par taux, la TVA déductible (immobilisations et autres biens et services) et le solde dû ou le crédit."},
+  {term:"CA12",cat:'tva',def:"Déclaration annuelle de TVA du régime simplifié. L'entreprise verse deux acomptes (juillet 55 %, décembre 40 %) puis régularise le solde avec la CA12."},
+  {term:"Crédit de TVA",cat:'tva',def:"Situation où la TVA déductible dépasse la TVA collectée. Le crédit est reporté sur la déclaration suivante (44567) ou remboursé sous conditions."},
+  {term:"Facturation électronique",cat:'fac',def:"Obligation d'émettre et recevoir les factures entre entreprises dans un format structuré (Factur-X, UBL, CII) via une plateforme agréée : réception au 1er septembre 2026 pour toutes, émission au 1er septembre 2027 pour les PME."},
+  {term:"Plateforme agréée",cat:'si',def:"Prestataire agréé par l'administration fiscale qui transmet les factures électroniques entre entreprises et les données à l'administration (anciennement PDP)."},
+  {term:"E-reporting",cat:'si',def:"Transmission à l'administration des données des opérations qui ne passent pas par une facture électronique entre entreprises françaises : ventes aux particuliers, opérations internationales."},
+  {term:"Note de frais",cat:'soc',def:"Remboursement au salarié de dépenses engagées pour l'entreprise, sur justificatifs. Ce n'est pas du salaire. La TVA est récupérable sur un repas d'affaires, pas sur le transport de personnes."},
+  {term:"DSN",cat:'soc',def:"Déclaration sociale nominative : transmission mensuelle des salaires, cotisations, prélèvement à la source et événements (embauche, arrêt, départ) de chaque salarié."},
+  {term:"DPAE",cat:'soc',def:"Déclaration préalable à l'embauche, faite auprès de l'URSSAF avant la prise de poste (au plus tôt 8 jours avant)."},
+  {term:"Prélèvement à la source (PAS)",cat:'soc',def:"Impôt sur le revenu retenu par l'employeur sur le salaire net imposable, au taux transmis par l'administration (ou le taux neutre), puis reversé via la DSN."},
+  {term:"Solde de tout compte",cat:'soc',def:"Reçu listant les sommes versées au salarié à la fin du contrat. Il peut être dénoncé dans les 6 mois suivant sa signature."},
+  {term:"Taux de marge / taux de marque",cat:'gest',def:"Taux de marge = marge / coût d'achat. Taux de marque = marge / prix de vente. Pour une même marge, le taux de marge est toujours le plus élevé des deux."},
+  {term:"Tableau de bord",cat:'gest',def:"Document court et régulier qui présente quelques indicateurs clés (CA, marge, trésorerie, délais), comparés à une référence, avec un commentaire pour aider à décider."},
+  {term:"Délai de paiement clients",cat:'gest',def:"Durée moyenne entre la vente et l'encaissement : créances clients TTC / chiffre d'affaires TTC × nombre de jours de la période."},
   {term:'Actif',cat:'bilan',def:'Ensemble des emplois de l\'entreprise (ce qu\'elle possède ou ce qui lui est dû) : immobilisations, stocks, créances, disponibilités. Inscrit à gauche du bilan.'},
   {term:'Passif',cat:'bilan',def:'Ensemble des ressources de l\'entreprise (ce qu\'elle doit) : capitaux propres, dettes financières, dettes d\'exploitation. Inscrit à droite du bilan.'},
   {term:'Bilan',cat:'bilan',def:'Document de synthèse annuel présentant, à une date donnée, l\'actif (emplois) et le passif (ressources) de l\'entreprise. Actif = Passif (toujours équilibré).'},
@@ -4941,7 +4973,6 @@ var GLOSSAIRE=[
   {term:'Résultat fiscal',cat:'fisc',def:'Base de calcul de l\'impôt sur les bénéfices. On part du résultat comptable, on rajoute les réintégrations (charges non déductibles) et on retire les déductions (produits non imposables).'},
   {term:'Impôt sur les sociétés (IS)',cat:'fisc',def:'Impôt sur les bénéfices des sociétés, assis sur le résultat fiscal. Taux normal 25 %, taux réduit 15 % pour les PME jusqu\'à 42 500 euros. Écriture : 695 / 444.'},
   {term:'Réintégration',cat:'fisc',def:'Charge comptabilisée mais non déductible fiscalement (amende, pénalité, part non déductible), rajoutée au résultat comptable pour obtenir le résultat fiscal.'},
-  {term:'TVA à décaisser',cat:'tva',def:'Somme due à l\'État : TVA collectée moins TVA déductible (compte 44551). Si la déductible dépasse la collectée, on obtient un crédit de TVA à reporter (44567).'},
   {term:'Salaire brut / net',cat:'soc',def:'Le salaire brut est la rémunération avant retenues. Le salaire net à payer égale le brut moins les cotisations salariales. Le coût employeur ajoute au brut les cotisations patronales.'},
   {term:'Cotisations sociales',cat:'soc',def:'Prélèvements finançant la protection sociale. Salariales : retenues sur le brut. Patronales : à la charge de l\'employeur, en plus du brut. Reversées à l\'Urssaf et aux caisses.'},
   {term:'Valeur ajoutée',cat:'gest',def:'Richesse créée par l\'entreprise : production moins consommations en provenance de tiers. Elle rémunère le personnel, l\'État, les prêteurs et l\'entreprise.'},
@@ -8380,7 +8411,7 @@ function agendaReadPeriodFormDOM(){
 }
 
 function toolGlossaire(){
-  var CAT_LABELS={bilan:'Bilan & résultat',pcg:'Plan comptable & écritures',tva:'TVA',fac:'Factures & escompte',reg:'Règlements',amo:'Amortissements',fisc:'Fiscalité',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information"};
+  var CAT_LABELS={bilan:'Bilan & résultat',pcg:'Plan comptable & écritures',tva:'TVA',fac:'Factures & escompte',reg:'Règlements',amo:'Amortissements',fisc:'Fiscalité',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information",inv:"Travaux d'inventaire"};
   var groups={};
   GLOSSAIRE.forEach(function(g){if(!groups[g.cat])groups[g.cat]=[];groups[g.cat].push(g);});
   var sections=Object.keys(groups).map(function(cat){
