@@ -1464,6 +1464,9 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .mock-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mock-time{font-size:26px;font-weight:700;color:var(--accent)}
 .mock-q{font-size:clamp(20px,2.6vw,26px);line-height:1.35;margin:16px 0 10px}
+.dp-from{margin-top:14px;border-top:1px dashed var(--edge);padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.dp-jr{display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:13px;border:1px solid var(--edge);border-radius:9px;padding:7px 10px;background:var(--paper)}
+.dp-jr .btn-sm{flex-shrink:0}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -5921,9 +5924,12 @@ function tpDp(){
         '<button class="btn-sm" data-action="tp-dp-del" data-k="'+c.code+'-'+x.i+'" aria-label="Supprimer l\'exemple '+(n+1)+' du '+c.code+'" style="margin-left:auto">'+SVG.x+'</button></div>'+fields+'</div>';
     }).join('');
     var add=exs.length<3?'<button class="btn-sm" data-action="tp-dp-add" data-k="'+c.code+'">+ Ajouter un exemple ('+exs.length+'/3)</button>':'';
+    var pre='CA'+c.code.slice(-1)+'.',jr=(state.journal||[]).filter(function(en){return (en.acts||[]).some(function(a){return String(a).indexOf(pre)===0;});}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    var fromJ=jr.length?'<div class="dp-from"><div class="eyebrow">Depuis ton carnet de bord ('+jr.length+')</div>'+jr.slice(0,5).map(function(en){return '<div class="dp-jr"><div><b>'+escHtml(en.date||'')+'</b> '+escHtml(String(en.missions||'').slice(0,140))+(String(en.missions||'').length>140?'…':'')+'</div>'+(exs.length<3?'<button class="btn-sm" data-action="tp-dp-from-journal" data-k="'+c.code+'" data-id="'+escHtml(en.id)+'">'+SVG.arR+' En faire un exemple</button>':'')+'</div>';}).join('')+'</div>':
+      '<p class="tool-sub" style="margin:10px 0">Astuce : dans Agenda › Carnet de bord, relie tes entrées de stage aux activités '+c.code+' : elles apparaîtront ici, prêtes à devenir des exemples.</p>';
     return '<div class="tool-section" style="margin-top:16px"><h2 class="tool-title"><span class="epr-code">'+c.code+'</span> '+escHtml(c.titre)+'</h2>'+
       '<details class="suj-cor"><summary>'+SVG.list+' Idées d\'exemples pour cette activité type</summary><div class="suj-cor-body"><ul class="tp-ul" style="margin:0">'+guide+'</ul></div></details>'+
-      (blocks||'<p class="tool-sub" style="margin:12px 0">Aucun exemple pour l\'instant.</p>')+add+'</div>';
+      (blocks||'<p class="tool-sub" style="margin:12px 0">Aucun exemple pour l\'instant.</p>')+add+fromJ+'</div>';
   }).join('');
   var dip=state.tp.dp.extra&&typeof state.tp.dp.extra==='object'?state.tp.dp.extra:{};
   return '<div class="tool-section"><h2 class="tool-title">Mon dossier professionnel (DP)</h2>'+
@@ -9077,14 +9083,14 @@ function journalReadFormDOM(){
   ui.journalForm.missions=get('jr-missions');
   ui.journalForm.appris=get('jr-appris');
 }
-function activityById(id){for(var i=0;i<ACTIVITES.length;i++){for(var j=0;j<ACTIVITES[i].items.length;j++){if(ACTIVITES[i].items[j].id===id)return ACTIVITES[i].items[j];}}return null;}
+function activityById(id){var lists=[ACTIVITES,ACTIVITES_TP];for(var L=0;L<lists.length;L++){for(var i=0;i<lists[L].length;i++){for(var j=0;j<lists[L][i].items.length;j++){if(lists[L][i].items[j].id===id)return lists[L][i].items[j];}}}return null;}
 function carnetActsField(f){
   var actsArr=f.acts||[];
   var actChips=actsArr.length?actsArr.map(function(id){
     var it=activityById(id);var lab=it?(id+' '+it.label):id;
     return '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--debit-s);color:var(--debit);font-size:12px">'+escHtml(lab)+'<button data-action="journal-act-del" data-id="'+escHtml(id)+'" aria-label="Retirer cette compétence" style="cursor:pointer;color:var(--debit);font-weight:700">×</button></span>';
   }).join(' '):'<span style="color:var(--ink2);font-size:13px">Aucune activité liée pour l\'instant.</span>';
-  var optgroups=ACTIVITES.map(function(proc){
+  var optgroups=activitesCur().map(function(proc){
     return '<optgroup label="'+escHtml(proc.p)+'">'+proc.items.map(function(it){
       return '<option value="'+escHtml(it.id)+'">'+escHtml(it.id+' — '+it.label)+'</option>';
     }).join('')+'</optgroup>';
@@ -9161,7 +9167,7 @@ function viewAgendaCarnet(){
   }else if(!ui.journalForm){
     listHTML='<div style="color:var(--ink2);font-size:14px;padding:10px 0">Aucune entrée pour le moment. Note ta première semaine de révisions !</div>';
   }
-  return '<p style="color:var(--ink2);font-size:14px;margin:0 0 14px;max-width:660px">Journal de bord de ta préparation au BTS : remplis-le au fil des semaines pour suivre tes révisions, tes réussites et les points à retravailler.</p>'+
+  return '<p style="color:var(--ink2);font-size:14px;margin:0 0 14px;max-width:660px">'+(isTP()?'Journal de bord de ta formation et de ton stage : note chaque semaine ce que tu as fait et relie-le aux activités du titre. Ces entrées se transforment en un clic en exemples de ton dossier professionnel.':'Journal de bord de ta préparation au BTS : remplis-le au fil des semaines pour suivre tes révisions, tes réussites et les points à retravailler.')+'</p>'+
     '<div class="ag-section-head"><span class="ag-section-title">Mes entrées</span>'+
       '<span style="display:inline-flex;gap:8px;flex-wrap:wrap">'+
         (entries.length?'<button class="btn-sm" data-action="journal-export" style="padding:5px 12px;font-size:12px">'+SVG.dl+' Exporter le carnet</button>':'')+
@@ -10359,6 +10365,8 @@ document.addEventListener('click',function(e){
   else if(a==='tp-go'){ui.tab='outils';ui.tool='tpca';ui.tpTab=t.dataset.k||'ref';render();focusMain();}
   else if(a==='tp-go-erp'){navTerrain('erp');render();focusMain();}
   else if(a==='tp-crit'){var _tk=t.dataset.k,_tl=parseInt(t.dataset.lvl,10);if(_tk&&_tl>=0&&_tl<=2){var _y=window.scrollY;if(state.tp.crit[_tk]===_tl)delete state.tp.crit[_tk];else state.tp.crit[_tk]=_tl;save();render();window.scrollTo(0,_y);var _tb=document.querySelector('[data-action="tp-crit"][data-k="'+_tk+'"][data-lvl="'+_tl+'"]');if(_tb)try{_tb.focus({preventScroll:true});}catch(e){}}}
+  else if(a==='tp-dp-from-journal'){var _jc=t.dataset.k,_je=null;(state.journal||[]).forEach(function(en){if(en.id===t.dataset.id)_je=en;});var _jn=-1;for(var _ji=0;_ji<3;_ji++){if(!state.tp.dp[_jc+'-'+_ji]){_jn=_ji;break;}}
+    if(_je&&_jn>=0){var _acts=(_je.acts||[]).map(function(id){var it=activityById(id);return it?it.label:id;}).join(', ');state.tp.dp[_jc+'-'+_jn]={desc:String(_je.missions||''),moyens:'',avec:'',contexte:'Stage en entreprise, semaine du '+(_je.date?tpFrDate(_je.date):'')+(_acts?' ('+_acts+')':''),info:String(_je.appris||'')};save();var _yj=window.scrollY;render();window.scrollTo(0,_yj);announce('Exemple créé à partir du carnet de bord : complète les moyens utilisés et avec qui tu as travaillé.');}}
   else if(a==='tp-dp-add'){var _dc=t.dataset.k,_dn=-1;for(var _di=0;_di<3;_di++){if(!state.tp.dp[_dc+'-'+_di]){_dn=_di;break;}}if(_dn>=0){state.tp.dp[_dc+'-'+_dn]={desc:'',moyens:'',avec:'',contexte:'',info:''};save();var _y2=window.scrollY;render();window.scrollTo(0,_y2);var _fd=document.getElementById('tpdp-'+_dc+'-'+_dn+'-desc');if(_fd)try{_fd.focus();}catch(e){}}}
   else if(a==='tp-dp-del'){var _dk=t.dataset.k;if(_dk&&state.tp.dp[_dk]){var _de=state.tp.dp[_dk],_has=Object.keys(_de).some(function(f){return String(_de[f]||'').trim();});if(_has&&!confirm('Supprimer cet exemple du dossier professionnel ? Son texte sera perdu.'))return;delete state.tp.dp[_dk];save();var _y3=window.scrollY;render();window.scrollTo(0,_y3);}}
   else if(a==='dl-tp-dp'){downloadTpDp();}
