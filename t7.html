@@ -1475,9 +1475,11 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .fch-t td{padding:4px;border-bottom:1px solid var(--edge);vertical-align:top}
 .fch-t td:first-child{font-weight:600}
 .fch-m{background:var(--paper)}
-.fch-go{margin-top:8px}
+.fch-go{margin:0}
 .fch-r{border-style:dashed}
-@media print{body:has(.fch) .page-head,body:has(.fch) .tool-section.fch~*{display:none!important}body:has(.fch) .panel:has(.fch),body:has(.fch) .tools-layout{border:0!important;padding:0!important;background:#fff!important}.fch-grid{display:block;columns:2;column-gap:6px}.fch-b{margin:0 0 6px;padding:6px 8px;background:#fff!important;border-color:#bbb!important;border-radius:6px}.fch-b h3{font-size:11pt;margin-bottom:3px;color:#000!important}.fch-b ul{font-size:8pt;line-height:1.25;padding-left:14px}.fch-b li+li{margin-top:1px}.fch-t{font-size:7.5pt}.fch-t td{padding:2px 3px}.fch-t th{font-size:7pt}.fch .tool-sub{font-size:8.5pt;color:#333!important}.fch-head{margin-bottom:6px}.fch .tool-title{font-size:15pt}.fch .epr-code{background:#fff!important;color:#000!important;border:1px solid #000}}
+.fch-p{border-color:color-mix(in srgb,var(--credit) 45%,var(--edge))}.fch-p h3{color:var(--credit)}
+@page{margin:10mm}
+@media print{body:has(.fch) .page-head,body:has(.fch) .tool-section.fch~*{display:none!important}body:has(.fch) .panel:has(.fch),body:has(.fch) .tools-layout{border:0!important;padding:0!important;background:#fff!important}.fch-grid{display:block;columns:2;column-gap:6px}.fch-b{margin:0 0 6px;padding:6px 8px;background:#fff!important;border-color:#bbb!important;border-radius:6px}.fch-b h3{font-size:11pt;margin-bottom:3px;color:#000!important}.fch-b ul{font-size:7.8pt;line-height:1.22;padding-left:13px}.fch-b li+li{margin-top:1px}.fch-t{font-size:7.5pt}.fch-t td{padding:2px 3px}.fch-t th{font-size:7pt}.fch .tool-sub{font-size:8.5pt;color:#333!important}.fch-head{margin-bottom:6px}.fch .tool-title{font-size:15pt}.fch .epr-code{background:#fff!important;color:#000!important;border:1px solid #000}}
 .mock-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mock-time{font-size:26px;font-weight:700;color:var(--accent)}
 .mock-q{font-size:clamp(20px,2.6vw,26px);line-height:1.35;margin:16px 0 10px}
@@ -2341,6 +2343,18 @@ var CARDS=[
   {id:'soc121',t:'soc',q:"Variables individuelles ou collectives : donne un exemple de chaque.",a:"Individuelles : heures supplémentaires, absence, prime d'un salarié. Collectives : nouveau taux de cotisation, revalorisation du SMIC, jour férié."},
   {id:'soc122',t:'soc',q:"Pourquoi contrôler la cohérence d'un bulletin d'un mois sur l'autre ?",a:"Pour repérer une erreur de saisie : un écart de brut ou de net doit s'expliquer par une variable (heures, absence, prime, taux)."},
   {id:'soc123',t:'soc',q:"Qui supporte les cotisations salariales et qui les verse ?",a:"Le salarié les supporte (retenues sur le brut) mais c'est l'employeur qui les déclare et les verse aux organismes avec ses cotisations patronales."},
+  {id:'at21',t:'tva',q:"Prestation de services facturée en mars, payée en mai (pas d'option débits) : quand la TVA est-elle due ?",a:"En mai, à l'encaissement. En attendant, elle reste en TVA collectée non exigible."},
+  {id:'at22',t:'tva',q:"Acompte reçu sur une commande de marchandises : la TVA est-elle due tout de suite ?",a:"Non : pour une livraison de biens, la TVA est exigible à la livraison, pas à l'acompte."},
+  {id:'at23',t:'tva',q:"Acompte reçu sur une prestation de services : la TVA est-elle due tout de suite ?",a:"Oui : pour les services, la TVA est exigible à l'encaissement, acomptes compris."},
+  {id:'at24',t:'tva',q:"Comment extraire la TVA d'un encaissement TTC à 20 % ?",a:"TTC ÷ 6, soit 20/120. Exemple : 1 200 € TTC contient 200 € de TVA."},
+  {id:'at25',t:'dep',q:"Dépréciation existante 1 000 €, il en faut 1 400 € : quelle écriture ?",a:"Une dotation complémentaire de 400 €, sans toucher aux 1 000 € déjà constatés."},
+  {id:'at26',t:'dep',q:"Dépréciation existante 1 000 €, il n'en faut plus que 300 € : quelle écriture ?",a:"Une reprise de 700 € : un produit qui augmente le résultat."},
+  {id:'at27',t:'dep',q:"Créance douteuse devenue irrécouvrable, déjà dépréciée : deux écritures ?",a:"La perte sur le HT, avec la TVA récupérée, contre le compte de clients douteux pour le TTC ; puis la reprise de toute la dépréciation, devenue sans objet."},
+  {id:'at28',t:'reg',q:"Première relance d'un bon client : quel ton et quelle formule clé ?",a:"Courtois et factuel, avec « sauf erreur de notre part » : un oubli est possible. On joint la facture et on fixe un délai."},
+  {id:'at29',t:'reg',q:"Que rappelle une seconde relance ?",a:"La relance précédente, les pénalités de retard et l'indemnité forfaitaire de 40 €, un délai et la suite prévue (mise en demeure), en proposant un échéancier."},
+  {id:'at30',t:'fac',q:"Le prix facturé ne correspond pas au bon de commande : que demander au fournisseur ?",a:"Un avoir du montant de l'écart, en joignant le bon de commande et la facture. On règle seulement la partie conforme."},
+  {id:'at31',t:'rappro',q:"Un écart de rapprochement reste inexpliqué : que faire ?",a:"Ne jamais le « forcer » par une écriture inventée. Le signaler au responsable avec les contrôles faits et les pistes restantes."},
+  {id:'at32',t:'rappro',q:"Pourquoi regarder si un écart est divisible par 9 ?",a:"Un écart divisible par 9 trahit souvent une inversion de chiffres (54 saisi 45)."},
   {id:'at1',t:'reg',q:"Dans un budget de trésorerie, une vente de mars payée à 30 jours apparaît quand ?",a:"En avril, pour son montant TTC : le budget suit l'argent, pas la facture."},
   {id:'at2',t:'reg',q:"Pourquoi la TVA d'avril apparaît-elle en mai dans le budget de trésorerie ?",a:"Parce qu'elle est déclarée et payée le mois suivant. C'est la TVA à décaisser (collectée moins déductible) qui sort."},
   {id:'at3',t:'reg',q:"Budget de trésorerie : les dotations aux amortissements y figurent-elles ?",a:"Non : ce sont des charges calculées, sans sortie d'argent. Seul l'achat du bien, payé, apparaît dans le budget."},
@@ -4248,7 +4262,7 @@ function viewAccueil(){
     act('','data-action="dash-review"',SVG.refresh,'Réviser les cartes dues',due>0?due+' carte'+(due>1?'s':'')+' en attente':'Rien à réviser pour l\'instant',due===0)+
     (_nx!==null?act('','data-action="open" data-mi="'+_nx+'"',SVG.book,'Continuer : '+escHtml(MODULES[_nx].title),'Module '+MODULES[_nx].num+' &middot; cours, mémo, quiz'):'')+
     (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
-      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','19 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
+      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','21 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
     act('','data-action="quick-start"',SVG.exam,'Quiz éclair · 3 min','5 questions sur ton étape en cours du plan')+
   '</div></section>';
@@ -4273,7 +4287,7 @@ function viewAccueil(){
     '<p class="dash-foot">'+(ui.dashEdit?'':'<button class="btn-sm" data-action="dash-edit" style="margin-right:8px">'+SVG.list+' Personnaliser l\'accueil</button>')+'Astuce : <kbd class="sc-kbd">Ctrl</kbd>+<kbd class="sc-kbd">K</kbd> pour chercher et sauter partout, <kbd class="sc-kbd">?</kbd> pour les raccourcis. Réglages : Outils &rsaquo; Apparence.</p>';
 }
 
-var MOD_AT={facture:['fac'],efacture:['fac'],reglements:['let','ba','mail'],rapprochement:['rap'],budget:['tre'],tva:['exi','ue','ndf'],'decla-tva':['exi','ca3','ue'],paie:['paie','cp'],couts:['sr'],analyse:['tdb','sr'],amortissements:['amo'],depreciations:['depaj','inv'],regularisations:['inv','emp'],stocks:['inv'],financement:['emp'],resultat:['aff'],is:['aff']};
+var MOD_AT={facture:['fac'],efacture:['fac'],reglements:['let','ba','mail'],rapprochement:['rap'],budget:['tre'],tva:['exi','ue','ndf'],'decla-tva':['exi','ca3','ue'],paie:['paie','cp'],couts:['sr'],analyse:['tdb','sr'],amortissements:['amo'],depreciations:['depaj','inv','vmp'],provisions:['prov'],regularisations:['inv','emp'],stocks:['inv'],financement:['emp'],resultat:['aff'],is:['aff']};
 function viewModule(){
   var m=MODULES[route.mi],lastKey=m.hasExo?'exo':'quiz';
   var steps=[['cours','Cours'],['memo','Mémo visuel'],[lastKey,m.hasExo?'Exercice':'Quiz']];
@@ -4466,6 +4480,12 @@ function viewSession(){
 
 /* Banque de questions supplémentaires pour l'examen blanc (élargit le tirage). */
 var EXAM_EXTRA=[
+{q:"Prestation de services facturée en janvier, encaissée en mars, sans option pour les débits. La TVA est déclarée…",o:["sur la CA3 de janvier","sur la CA3 de mars","sur la CA3 de décembre","jamais, c'est une prestation"],c:1,e:"Pour les services, la TVA est exigible à l'encaissement : elle figure sur la déclaration du mois du paiement.",cat:"fisc",mod:"Exigibilité de la TVA"},
+{q:"Acompte de 1 200 € TTC reçu sur une commande de marchandises livrées le mois suivant. TVA exigible ce mois-ci ?",o:["200 €","240 €","0 €","100 €"],c:2,e:"Pour les biens, la TVA est exigible à la livraison : l'acompte ne la déclenche pas.",cat:"fisc",mod:"Exigibilité de la TVA"},
+{q:"Dépréciation de 900 € constatée l'an dernier ; il faut désormais 600 €. L'écriture de clôture est…",o:["une dotation de 600 €","une reprise de 300 €","une reprise de 900 € et une dotation de 600 €","aucune écriture"],c:1,e:"On ajuste l'existant : 900 − 600 = 300 € de reprise, un produit.",cat:"inv",mod:"Dépréciations"},
+{q:"Une créance de 3 600 € TTC (TVA 20 %) devient irrécouvrable. Montant de la perte constatée ?",o:["3 600 €","3 000 €","600 €","0 €, la dépréciation suffit"],c:1,e:"La perte se constate sur le HT (3 000 €) ; la TVA de 600 € est récupérée.",cat:"inv",mod:"Dépréciations"},
+{q:"Dans un courriel de première relance, quelle formule montre qu'une erreur reste possible ?",o:["« Dernier avertissement »","« Sauf erreur de notre part »","« Nous vous rappelons vos obligations »","« Faute de quoi »"],c:1,e:"« Sauf erreur de notre part » laisse une porte ouverte : le client a peut-être déjà payé.",cat:"op",mod:"Écrits professionnels"},
+{q:"Un écart de rapprochement bancaire reste inexpliqué en fin de mois. Tu…",o:["passes une écriture en charges diverses pour équilibrer","le signales à ton responsable avec les contrôles faits et tes pistes","attends le mois suivant sans rien dire","modifies le solde du relevé"],c:1,e:"Un écart ne se « force » jamais : on le documente et on le signale.",cat:"op",mod:"Rapprochement bancaire"},
 {q:"Dans un budget de trésorerie, une vente de 1 000 € HT (TVA 20 %) payable à 30 jours, facturée en mars, figure…",o:["en mars pour 1 000 €","en avril pour 1 200 €","en mars pour 1 200 €","en avril pour 1 000 €"],c:1,e:"Le budget suit l'argent : le client paie 1 200 € TTC en avril.",cat:"op",mod:"Trésorerie"},
 {q:"Quel élément n'apparaît jamais dans un budget de trésorerie ?",o:["La TVA à décaisser","Le remboursement d'un emprunt","La dotation aux amortissements","Le paiement des salaires"],c:2,e:"La dotation est une charge calculée, sans mouvement d'argent.",cat:"op",mod:"Trésorerie"},
 {q:"Note de frais : sur quelle dépense la TVA est-elle récupérable ?",o:["Billet de train du salarié","Nuit d'hôtel du salarié","Fournitures achetées pour l'entreprise, avec facture","Aucune, une note de frais n'ouvre jamais droit à déduction"],c:2,e:"La TVA sur le transport de personnes et l'hébergement du personnel n'est pas déductible ; celle des fournitures l'est avec une facture.",cat:"op",mod:"Note de frais"},
@@ -4617,7 +4637,9 @@ var EXAM_EXTRA=[
 ];
 /* Examen par CCP (Titre Pro) : modules du CCP et catégories de questions associées. */
 var CCP_EXAM={ccp1:{i:0,cats:['op','tva']},ccp2:{i:1,cats:['fisc','soc','gest']},ccp3:{i:2,cats:['inv','synth']}};
-function examPool(cat){if(CCP_EXAM[cat]){var ce=CCP_EXAM[cat],mods=TP_CCP[ce.i].mods,pp=[];MODULES.forEach(function(m){if(mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});EXAM_EXTRA.forEach(function(q){if(ce.cats.indexOf(q.cat)>=0)pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return pp;}var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
+/* Une même question peut figurer dans un quiz de module et dans la banque d'examen : on ne la garde qu'une fois. */
+function examPool(cat){var seen={};return examPool0(cat).filter(function(q){var k=String(q.q).trim().toLowerCase();if(seen[k])return false;seen[k]=1;return true;});}
+function examPool0(cat){if(CCP_EXAM[cat]){var ce=CCP_EXAM[cat],mods=TP_CCP[ce.i].mods,pp=[];MODULES.forEach(function(m){if(mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});EXAM_EXTRA.forEach(function(q){if(ce.cats.indexOf(q.cat)>=0)pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return pp;}var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
 
 /* ---- Générateur procédural de questions d'examen (réponses calculées => toujours justes) ---- */
 function grnd(min,max,step){step=step||1;var k=Math.floor((max-min)/step);if(k<0)k=0;return min+step*Math.floor(Math.random()*(k+1));}
@@ -4919,6 +4941,9 @@ function viewExamResult(){
 
 /* ---- Glossaire ---- */
 var GLOSSAIRE=[
+  {term:"Exigibilité de la TVA",cat:'tva',def:"Moment où la TVA devient due au Trésor : à la livraison pour les biens, à l'encaissement pour les services (sauf option pour les débits). Elle se distingue du fait générateur."},
+  {term:"TVA collectée non exigible",cat:'tva',def:"TVA facturée sur des prestations pas encore encaissées : elle attend dans un compte d'attente (44574) et devient exigible au paiement du client."},
+  {term:"Relance client",cat:'reg',def:"Courriel ou lettre qui rappelle une facture échue : d'abord amiable (« sauf erreur de notre part »), puis plus ferme avec les pénalités, avant la mise en demeure."},
   {term:"Budget de trésorerie",cat:'reg',def:"Prévision mois par mois des encaissements et décaissements, en TTC et à la date où l'argent bouge. Il montre à l'avance les mois où la banque risque de passer dans le rouge."},
   {term:"Découvert bancaire",cat:'reg',def:"Solde négatif du compte bancaire, autorisé ou non par la banque. Il coûte des agios et se négocie à l'avance quand le budget de trésorerie prévoit un creux."},
   {term:"Point mort",cat:'gest',def:"Date à laquelle le seuil de rentabilité est atteint dans l'année : seuil divisé par le chiffre d'affaires, multiplié par 360 jours (activité régulière)."},
@@ -5012,7 +5037,7 @@ var GLOSSAIRE=[
 ];
 
 /* ---- Outils ---- */
-var APP_VERSION='2.2.0';
+var APP_VERSION='2.3.0';
 var ACCENTS=[['','Selon l\'ambiance'],['ocean','Océan'],['emeraude','Émeraude'],['sapin','Sapin'],['indigo','Indigo'],['violet','Violet'],['rose','Rose'],['bordeaux','Bordeaux'],['ambre','Ambre']];
 /* Apparence : chaque option est stockée dans localStorage (legl.<clé>) et posée en attribut data-<clé> sur <html>. */
 var AMBIANCES=[
@@ -5099,7 +5124,7 @@ var NAV_ITEMS=[
   {label:'Grille d\'auto-évaluation (Titre Pro)',sub:'Critères officiels des 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='grille';}},
   {label:'Dossier professionnel (DP)',sub:'Brouillon du DP par activité type, export texte',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='dp';}},
   {label:'Entraînement aux entretiens',sub:'Entretien technique et entretien final du Titre Pro',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='oral';}},
-  {label:'Ateliers pratiques Titre Pro',sub:'19 ateliers : facture, lettrage, note de frais, relances et courriels, rapprochement, trésorerie, exigibilité et CA3, TVA intracommunautaire, paie, congés payés, tableau de bord, seuil de rentabilité, amortissement, inventaire, dépréciations, emprunt, affectation (cas illimités)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';}},
+  {label:'Ateliers pratiques Titre Pro',sub:'21 ateliers : facture, lettrage, note de frais, relances et courriels, rapprochement, trésorerie, exigibilité et CA3, TVA intracommunautaire, paie, congés payés, tableau de bord, seuil de rentabilité, amortissement, placements, inventaire, dépréciations, provisions, emprunt, affectation (cas illimités)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';}},
   {label:'Mises en situation professionnelles',sub:'CCP1 (2 h), CCP2 (1 h 30), CCP3 (1 h 30), session complète (4 h)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='msp';}}
 ];
 
@@ -5814,6 +5839,8 @@ var ENTRETIEN_TP=[
   {id:'o44',k:'CCP2',q:"Comment expliques-tu le seuil de rentabilité à un gérant qui n'est pas comptable ?",p:"C'est le chiffre d'affaires à partir duquel l'entreprise ne perd plus d'argent : chaque vente rapporte une marge après les coûts variables, et il faut cumuler assez de marge pour payer les charges fixes (loyer, salaires fixes, assurances). Je lui donne la date approximative où ce niveau est atteint dans l'année et la marge de sécurité : de combien les ventes peuvent baisser avant la perte."},
   {id:'o45',k:'CCP3',q:"L'entreprise a emprunté en cours d'année. Que fais-tu à la clôture ?",p:"Je vérifie que le capital restant dû au bilan correspond au tableau d'amortissement de la banque. Je comptabilise les intérêts courus entre la dernière échéance et la clôture : une charge d'intérêts de l'exercice, contre une dette d'intérêts courus, extournée au début de l'exercice suivant. Je rappelle que seuls les intérêts sont des charges, pas le capital remboursé."},
   {id:'o46',k:'CCP3',q:"Pourquoi faut-il une variation de stock à la clôture ?",p:"Les achats sont comptabilisés en charges quand ils sont faits, mais une partie n'est pas encore vendue ou consommée à la clôture. On annule le stock initial et on constate le stock final issu de l'inventaire physique : ainsi la charge de l'exercice correspond à ce qui a réellement été consommé, et le stock apparaît à l'actif du bilan."},
+  {id:'o47',k:'CCP1',q:"Un client t'appelle, mécontent : il estime avoir déjà payé la facture que tu viens de relancer. Comment réagis-tu ?",p:"Je reste calme et courtois, je le remercie de son appel et je note les références de son paiement (date, montant, moyen). Je vérifie le compte client et le relevé bancaire : un règlement mal imputé ou pas encore lettré est possible. Je le rappelle ou lui écris avec la réponse, et je m'excuse si l'erreur vient de nous. S'il n'a pas payé, je lui transmets les éléments factuels sans polémiquer."},
+  {id:'o48',k:'CCP3',q:"Une créance dépréciée l'an dernier est finalement réglée par le client. Que fais-tu ?",p:"J'enregistre l'encaissement : banque au débit, clients douteux au crédit pour le montant TTC reçu. La dépréciation n'a plus d'objet : je la reprends en totalité, ce qui crée un produit. Si le client ne paie qu'une partie et que le reste est définitivement perdu, je constate la perte sur le HT restant avec la TVA récupérée, et je reprends aussi la dépréciation."},
   {id:'o40',k:'final',q:"Quel est ton projet professionnel après le titre ?",p:"Je présente un projet réaliste et argumenté : type de structure visée (cabinet, PME, collectivité), missions qui me motivent, ce que la formation et le stage m'ont confirmé, ce que je veux encore développer (paie, logiciels, facturation électronique), et le cas échéant une évolution possible (poursuite d'études, spécialisation)."},
   {id:'oef1',k:'CCP1',q:"La facturation électronique arrive dans les entreprises. Qu'est-ce que cela change dans ton travail ?",p:"Calendrier : réception obligatoire pour toutes au 1er septembre 2026, émission pour les PME au 1er septembre 2027. Factures structurées (Factur-X, UBL, CII) transmises par une plateforme agréée, nouvelles mentions (SIREN du client, nature de l'opération). Moins de saisie, plus de contrôle : rapprochement avec commandes et livraisons, gestion des rejets et des statuts, e-reporting pour les ventes aux particuliers."},
   {id:'oef2',k:'CCP1',q:"Un fournisseur t'envoie encore une facture en PDF par courriel après la date d'obligation. Que fais-tu ?",p:"Je vérifie si l'obligation d'émission s'applique déjà à lui (taille de l'entreprise, calendrier). Si oui, je lui demande poliment de passer par sa plateforme agréée, en lui rappelant l'annuaire. En attendant, je ne bloque pas le paiement d'une dette réelle sans en parler à mon responsable, et je trace l'échange."},
@@ -5877,13 +5904,13 @@ var TP_FICHES={
   CCP1:{sous:'Clients, fournisseurs, trésorerie',duree:'Mise en situation de 2 h, puis entretien technique',blocs:[
     {at:'fac',h:'Facture en cascade',l:['Prix brut − remise − rabais − ristourne = <b>net commercial</b> (chaque réduction se calcule sur le montant précédent)','Net commercial − escompte = <b>net financier</b>','+ frais de port (soumis à TVA) = base HT, puis TVA et TTC','Avoir : mêmes mentions qu\'une facture, il annule tout ou partie d\'une vente']},
     {h:'Écritures du quotidien',t:[['Vente','Client (TTC)','Ventes (HT) et TVA collectée'],['Achat','Achats (HT) et TVA déductible','Fournisseur (TTC)'],['Règlement client','Banque','Client'],['Règlement fournisseur','Fournisseur','Banque'],['Escompte accordé','Escompte accordé (charge financière) et TVA collectée','Client']]},
-    {at:'let',h:'Suivi des tiers',l:['<b>Lettrage</b> : rapprocher une facture et son règlement quand ils se soldent exactement ; le lettrage partiel attend le solde','<b>Balance âgée</b> : classer les créances par ancienneté, relancer d\'abord les plus anciennes','Délais légaux : 60 jours date de facture ou 45 jours fin de mois ; pénalités de retard et indemnité forfaitaire de 40 €']},
+    {at:['let','mail'],h:'Suivi des tiers',l:['<b>Lettrage</b> : rapprocher une facture et son règlement quand ils se soldent exactement ; le lettrage partiel attend le solde','<b>Balance âgée</b> : classer les créances par ancienneté, relancer d\'abord les plus anciennes','Délais légaux : 60 jours date de facture ou 45 jours fin de mois ; pénalités de retard et indemnité forfaitaire de 40 €']},
     {at:'rap',h:'Rapprochement bancaire',l:['Partir des deux soldes, compte 512 et relevé, en sens inverse (débiteur chez l\'un, créditeur chez l\'autre)','Pointer ce qui figure des deux côtés','Ce qui est sur le relevé et pas en compta (frais, agios, prélèvements, virements reçus) : <b>on l\'enregistre</b>','Ce qui est en compta et pas sur le relevé (chèques non encaissés) : décalage normal, on attend']},
     {at:'tre',h:'Trésorerie et notes de frais',l:['Budget de trésorerie : encaissements et décaissements <b>TTC</b>, à la date où l\'argent bouge ; la TVA à payer est décalée d\'un mois','Note de frais : TVA récupérable sur les repas et les fournitures avec facture au nom de l\'entreprise ; pas sur le train ni l\'hébergement du salarié']},
     {h:'Facturation électronique',l:['Réception obligatoire pour toutes les entreprises depuis le 1<sup>er</sup> septembre 2026','Émission : grandes entreprises et ETI en septembre 2026, PME et micro-entreprises en septembre 2027','Passage par une plateforme agréée ; formats Factur-X, UBL ou CII ; le PDF simple ne suffit plus']}
   ]},
   CCP2:{sous:'TVA, paie, tableaux de bord',duree:'Mise en situation de 1 h 30, puis entretien technique',blocs:[
-    {h:'TVA : ce qui compte',l:['Taux : 20 % normal, 10 % intermédiaire, 5,5 % réduit, 2,1 % particulier','Exigibilité : biens à la livraison ; services à l\'encaissement, sauf option pour les débits','TVA à décaisser = collectée − déductible (biens et services, immobilisations) − crédit antérieur','Régime réel normal : CA3 mensuelle ; réel simplifié : CA12 annuelle et deux acomptes (55 % en juillet, 40 % en décembre)']},
+    {at:'exi',h:'TVA : ce qui compte',l:['Taux : 20 % normal, 10 % intermédiaire, 5,5 % réduit, 2,1 % particulier','Exigibilité : biens à la livraison ; services à l\'encaissement, sauf option pour les débits','TVA à décaisser = collectée − déductible (biens et services, immobilisations) − crédit antérieur','Régime réel normal : CA3 mensuelle ; réel simplifié : CA12 annuelle et deux acomptes (55 % en juillet, 40 % en décembre)']},
     {at:'ca3',h:'Liquider la TVA',t:[['Solder la TVA collectée du mois','TVA collectée',''],['Solder la TVA déductible du mois','','TVA déductible (biens et services, immobilisations)'],['Différence si la collectée est plus forte','','TVA à décaisser'],['Différence si la déductible est plus forte','Crédit de TVA à reporter',''],['Paiement le mois suivant','TVA à décaisser','Banque']]},
     {at:'ue',h:'TVA dans l\'Union européenne',l:['Achat intracommunautaire : <b>autoliquidation</b>, la même TVA est due et déductible, rien à décaisser si la déduction est totale','Vente à un assujetti d\'un autre pays : exonérée, numéros de TVA des deux parties et mention obligatoire sur la facture']},
     {at:'paie',h:'Paie : du brut au net',l:['Salaire de base + heures supplémentaires (+25 % de la 36<sup>e</sup> à la 43<sup>e</sup>, +50 % au-delà) + primes = <b>brut</b>','Brut − cotisations salariales = net ; − prélèvement à la source = <b>net payé</b>','Congés payés : comparer la règle du dixième et le maintien de salaire, retenir le plus favorable au salarié']},
@@ -5892,12 +5919,17 @@ var TP_FICHES={
   ]},
   CCP3:{sous:'Travaux de fin d\'exercice',duree:'Mise en situation de 1 h 30, puis entretien technique',blocs:[
     {h:'Amortissements',l:['Base = coût d\'acquisition HT (prix + frais accessoires)','Linéaire : base × taux × durée d\'usage de l\'année (prorata en jours sur 360 la première année)','Dégressif : taux linéaire × 1,25 (3 et 4 ans), × 1,75 (5 et 6 ans), × 2,25 (plus de 6 ans) ; passage au linéaire dès qu\'il donne plus','VNC = base − cumul des amortissements']},
-    {at:'amo',h:'Cession d\'immobilisation',t:[['Dotation complémentaire jusqu\'à la cession','Dotations aux amortissements','Amortissements'],['Sortie du bien','Amortissements (cumul) ; valeur comptable des éléments cédés (VNC)','Immobilisation (valeur d\'origine)'],['Prix de cession','Créance sur cession ou banque','Produits des cessions d\'éléments d\'actif']]},
-    {at:'inv',h:'Stocks, créances, dépréciations',l:['Variation de stock = stock initial − stock final : on annule le stock initial, on constate le stock final','Créance douteuse : virer au compte clients douteux (TTC) ; dépréciation sur le <b>HT</b> du montant jugé irrécouvrable','Créance irrécouvrable : perte sur le HT, TVA récupérée, reprise de la dépréciation','Provision pour risque : litige, garantie ; elle se reprend quand le risque disparaît']},
+    {at:['amo','vmp'],h:'Cession d\'immobilisation',t:[['Dotation complémentaire jusqu\'à la cession','Dotations aux amortissements','Amortissements'],['Sortie du bien','Amortissements (cumul) ; valeur comptable des éléments cédés (VNC)','Immobilisation (valeur d\'origine)'],['Prix de cession','Créance sur cession ou banque','Produits des cessions d\'éléments d\'actif']]},
+    {at:['inv','depaj','prov'],h:'Stocks, créances, dépréciations',l:['Variation de stock = stock initial − stock final : on annule le stock initial, on constate le stock final','Créance douteuse : virer au compte clients douteux (TTC) ; dépréciation sur le <b>HT</b> du montant jugé irrécouvrable','Créance irrécouvrable : perte sur le HT, TVA récupérée, reprise de la dépréciation','Provision pour risque : litige, garantie ; elle se reprend quand le risque disparaît']},
     {h:'Régularisations (rattacher à l\'exercice)',t:[['Charge payée d\'avance','Charges constatées d\'avance','Compte de charge'],['Produit encaissé d\'avance','Compte de produit','Produits constatés d\'avance'],['Facture non parvenue','Charge et TVA déductible à régulariser','Fournisseurs, factures non parvenues'],['Facture à établir','Clients, factures à établir','Produit et TVA collectée à régulariser'],['Intérêts courus','Charges d\'intérêts','Intérêts courus sur emprunts']]},
     {at:'emp',h:'Emprunts',l:['Annuité constante = capital × i ÷ (1 − (1 + i)<sup>−n</sup>)','Intérêts = capital restant dû × taux ; amortissement = annuité − intérêts','Échéance : emprunts (part de capital) et charges d\'intérêts au débit, banque au crédit']},
     {at:'aff',h:'Affectation du résultat',l:['Imputer d\'abord un report à nouveau déficitaire','Réserve légale : 5 % du bénéfice, jusqu\'à ce qu\'elle atteigne 10 % du capital','Puis réserves statutaires, dividendes, autres réserves ; le reste en report à nouveau','Impôt sur les sociétés : 15 % jusqu\'à 42 500 € de bénéfice pour les PME éligibles, 25 % au delà']}
   ]}
+};
+var TP_FICHE_PIEGES={
+  CCP1:['Calculer l\'escompte sur le brut au lieu du net commercial','Oublier que les frais de port facturés sont soumis à la TVA','Enregistrer au rapprochement les chèques pas encore encaissés : ils ne demandent aucune écriture','Lettrer une facture avec un règlement partiel comme si elle était soldée'],
+  CCP2:['Déclarer la TVA de prestations facturées mais pas encore encaissées','Oublier le crédit de TVA de la déclaration précédente','Confondre taux de marge (sur le coût d\'achat) et taux de marque (sur le prix de vente)','Oublier les charges patronales dans le coût employeur'],
+  CCP3:['Amortir ou déprécier sur le TTC au lieu du HT','Oublier le prorata de la première année et de l\'année de cession','Recréer une dépréciation au lieu d\'ajuster celle qui existe','Passer le capital remboursé d\'un emprunt en charge']
 };
 var TP_FICHE_METHODE=['Lire tout le dossier avant d\'écrire : repérer les annexes et les questions','Commencer par ce que tu maîtrises, garder 10 minutes pour relire','Poser chaque calcul (formule, puis chiffres) : un résultat faux avec une méthode juste rapporte des points','Vérifier l\'équilibre débit crédit de chaque écriture et les libellés','À l\'entretien technique : expliquer ce que tu as fait et pourquoi, avec les mots du métier'];
 function tpFicheToRevise(code){
@@ -5913,12 +5945,13 @@ function tpFiches(){
   var chips=TP_CCP.map(function(x){var on=x.code===code;return '<button class="chip'+(on?' on':'')+'" aria-pressed="'+(on?'true':'false')+'" data-action="tp-fiche" data-k="'+x.code+'">'+x.code+'</button>';}).join('');
   var blocs=f.blocs.map(function(b){
     var inner=b.t?'<table class="fch-t"><thead><tr><th>Opération</th><th>Débit</th><th>Crédit</th></tr></thead><tbody>'+b.t.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>';}).join('')+'</tbody></table>':'<ul>'+b.l.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
-    var atn=b.at&&TP_AT.filter(function(a){return a[0]===b.at;})[0];return '<section class="fch-b"><h3>'+b.h+'</h3>'+inner+(atn?'<button class="btn-sm no-print fch-go" data-action="plan-at" data-k="'+b.at+'">'+SVG.check+' Atelier : '+escHtml(atn[1])+'</button>':'')+'</section>';}).join('');
+    var ats=[].concat(b.at||[]).map(function(k){var a=TP_AT.filter(function(x){return x[0]===k;})[0];return a?'<button class="btn-sm fch-go" data-action="plan-at" data-k="'+k+'">'+SVG.check+' Atelier : '+escHtml(a[1])+'</button>':'';}).join('');return '<section class="fch-b"><h3>'+b.h+'</h3>'+inner+(ats?'<div class="row no-print" style="margin:8px 0 0;gap:6px">'+ats+'</div>':'')+'</section>';}).join('');
   var rev=tpFicheToRevise(code),revH=rev.length?'<ul>'+rev.slice(0,6).map(function(x){return '<li>'+escHtml(x)+'</li>';}).join('')+(rev.length>6?'<li>et '+(rev.length-6)+' autre'+(rev.length-6>1?'s':'')+'</li>':'')+'</ul>':'<p>Tout est validé pour ce CCP : entretiens et mises en situation chronométrées pour finir.</p>';
   return '<div class="tool-section fch">'+
     '<div class="row no-print" style="margin:0 0 12px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px"><div class="chips" style="margin:0">'+chips+'</div><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer la fiche</button></div>'+
     '<div class="fch-head"><span class="epr-code">'+code+'</span><div><h2 class="tool-title" style="margin:0">'+escHtml(c.titre)+'</h2><p class="tool-sub" style="margin:2px 0 0">'+f.sous+' · '+f.duree+'. Les numéros de compte sont fournis à l\'examen : retiens à quoi sert chaque compte.</p></div></div>'+
     '<div class="fch-grid">'+blocs+
+    '<section class="fch-b fch-p"><h3>Pièges fréquents</h3><ul>'+TP_FICHE_PIEGES[code].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></section>'+
     '<section class="fch-b fch-m"><h3>Le jour de l\'épreuve</h3><ul>'+TP_FICHE_METHODE.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></section>'+
     '<section class="fch-b fch-r"><h3>À revoir pour moi</h3>'+revH+'</section></div></div>';
 }
@@ -6129,7 +6162,7 @@ function tpMsp(){
     '<div style="margin-top:16px">'+cards+'</div>';
 }
 /* ==== Ateliers pratiques Titre Pro : générateurs purs (testés par verif.mjs) ==== */
-var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['tre','Budget de trésorerie','CCP1'],['mail','Écrits professionnels','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['exi','Exigibilité de la TVA','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['cp','Congés payés','CCP2'],['tdb','Tableau de bord','CCP2'],['sr','Seuil de rentabilité','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['depaj','Ajustement des dépréciations','CCP3'],['emp','Emprunt et intérêts courus','CCP3'],['aff','Affectation du résultat','CCP3']];
+var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['tre','Budget de trésorerie','CCP1'],['mail','Écrits professionnels','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['exi','Exigibilité de la TVA','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['cp','Congés payés','CCP2'],['tdb','Tableau de bord','CCP2'],['sr','Seuil de rentabilité','CCP2'],['amo','Amortissement & cession','CCP3'],['vmp','Valeurs mobilières de placement','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['depaj','Ajustement des dépréciations','CCP3'],['prov','Provisions pour risques','CCP3'],['emp','Emprunt et intérêts courus','CCP3'],['aff','Affectation du résultat','CCP3']];
 var TP_MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 var TP_BA_TR=['Non échu','Retard de 1 à 30 jours','Retard de 31 à 60 jours','Retard de plus de 60 jours'];
 var TP_BA_AC=['Aucune action (suivi)','Relance amiable (appel ou courriel)','Lettre de relance avec rappel des pénalités','Mise en demeure (recommandé AR)'];
@@ -6297,12 +6330,23 @@ function tpGenDepaj(){
   var dot=r2(a*(pA2-pA1)/100),rep=r2(b*(pB1-pB2)/100+c*pC1/100);
   return {n:noms,d:{a:a,b:b,c:c,pA1:pA1,pA2:pA2,pB1:pB1,pB2:pB2,pC1:pC1},x:{dot:dot,rep:rep,perte:c,tva:r2(c*0.2)}};
 }
-var TP_AT_GEN={mail:tpGenMail,exi:tpGenExi,depaj:tpGenDepaj,tre:tpGenTre,cp:tpGenCp,emp:tpGenEmp,sr:tpGenSr,let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
+function tpGenProv(){
+  var P1=tpRnd(4,20)*500,X=tpRnd(3,24)*500,R=tpRnd(2,16)*500,G1=tpRnd(4,20)*250,G2;do{G2=tpRnd(4,20)*250;}while(G2===G1);
+  return {sal:['un ancien salarié','une ancienne comptable','un ex-commercial'][tpRnd(0,2)],cl:['Hôtel des Tilleuls','SAS Vitalis','Garage Lemaire'][tpRnd(0,2)],d:{P1:P1,X:X,R:R,G1:G1,G2:G2},x:{dot:r2(R+Math.max(0,G2-G1)),rep:r2(P1+Math.max(0,G1-G2)),bil:r2(R+G2)}};
+}
+function tpGenVmp(){
+  var n=tpRnd(10,60)*10,c1=tpRnd(20,90)+[0,0.5][tpRnd(0,1)],m=tpRnd(2,Math.floor(n/20))*10,c2=r2(c1*(0.8+Math.random()*0.4)),c3=r2(c1*(0.75+Math.random()*0.4));
+  if(Math.abs(c2-c1)<0.1)c2=r2(c1+1.2);
+  var reste=n-m;
+  return {soc:['Crédit Maritime SA','Armor Industries','Breizh Énergies'][tpRnd(0,2)],d:{n:n,c1:c1,m:m,c2:c2,c3:c3,reste:reste},x:{vo:r2(n*c1),rc:r2(m*(c2-c1)),dep:c3<c1?r2(reste*(c1-c3)):0,brut:r2(reste*c1)}};
+}
+var TP_AT_GEN={prov:tpGenProv,vmp:tpGenVmp,mail:tpGenMail,exi:tpGenExi,depaj:tpGenDepaj,tre:tpGenTre,cp:tpGenCp,emp:tpGenEmp,sr:tpGenSr,let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
 /* ==== fin des générateurs d'ateliers ==== */
 function fmt2(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n).replace(/\u202F/g,'\u00A0')+' €';}
 function tpNum(v){if(v===null||v===undefined)return NaN;var s=String(v).replace(/[\s  €%]/g,'').replace(/[\u2212\u2013]/g,'-').replace(',','.');if(s==='')return NaN;return parseFloat(s);}
+function tpDur(sec){var m=Math.floor(sec/60),s=sec%60;return m?m+' min'+(s?' '+(s<10?'0':'')+s+' s':''):s+' s';}
 function tpFrDate(iso){var p=String(iso).split('-');return p[2]+'/'+p[1]+'/'+p[0];}
-function tpAtState(k){if(!ui.tpAtData)ui.tpAtData={};if(!ui.tpAtData[k])ui.tpAtData[k]={s:TP_AT_GEN[k](),ans:{},res:null,revealed:false};return ui.tpAtData[k];}
+function tpAtState(k){if(!ui.tpAtData)ui.tpAtData={};if(!ui.tpAtData[k])ui.tpAtData[k]={s:TP_AT_GEN[k](),ans:{},res:null,revealed:false,t0:Date.now()};return ui.tpAtData[k];}
 function tpAtFmt(k,f,v){if(k==='sr'&&f==='tmcv')return String(v).replace('.',',')+' %';if(k==='sr'&&f==='pm')return v+' jours';if(k==='tdb'&&f==='vp')return String(v).replace('.',',')+' %';if(k==='tdb')return new Intl.NumberFormat('fr-FR').format(v).replace(/\u202F/g,'\u00A0')+' €';return fmt2(v);}
 function tpAtField(k,f,label,st){
   var id='tpat-'+k+'-'+f,ans=st.ans[f],res=st.res?st.res[f]:null,show=st.res||st.revealed;
@@ -6493,6 +6537,33 @@ function tpAtBody(k){
       '<p class="tool-sub">Créance irrécouvrable : on constate la perte sur le HT et on récupère la TVA collectée à l\'origine.</p>'+
       tpAtEcr([['Pertes sur créances irrécouvrables (654)',d.c,0],['TVA collectée (44571)',x.tva,0],['Clients douteux (416)',0,r2(d.c*1.2)]])+
       '<p class="tool-sub">On ajuste toujours la dépréciation existante : on ne l\'annule pas pour en créer une nouvelle. Une dépréciation se calcule sur le HT, car la TVA sera récupérée si la créance est perdue.</p>';
+  }else if(k==='prov'){
+    en='<p>Clôture au 31/12/N. Provisions pour risques au bilan du 31/12/N-1 :</p><ul class="tp-ul">'+
+      '<li>Provision pour litige avec '+s.sal+' devant les prud\'hommes : <b>'+fmt2(d.P1)+'</b>. Le jugement est tombé en N : l\'entreprise a versé <b>'+fmt2(d.X)+'</b> d\'indemnités, enregistrées en charges au paiement. Le litige est clos.</li>'+
+      '<li>Provision pour garanties données aux clients : <b>'+fmt2(d.G1)+'</b>. D\'après les retours de l\'année, le risque est estimé à <b>'+fmt2(d.G2)+'</b> au 31/12/N.</li></ul>'+
+      '<p>Nouveau en N : le client <b>'+s.cl+'</b> réclame des dommages pour un retard de livraison. L\'avocat estime la somme probable à <b>'+fmt2(d.R)+'</b>.</p>';
+    form=tpAtField(k,'dot','Total des dotations aux provisions de N',st)+tpAtField(k,'rep','Total des reprises sur provisions de N',st)+tpAtField(k,'bil','Provisions pour risques au bilan du 31/12/N',st);
+    var gd=r2(d.G2-d.G1);
+    cor='<h3 class="tpat-h">Provision par provision</h3><ul class="tp-ul">'+
+      '<li><b>Litige prud\'homal</b> : clos, la provision de '+fmt2(d.P1)+' n\'a plus d\'objet. On la reprend en totalité, quel que soit le montant finalement payé ('+fmt2(d.X)+', déjà en charges).</li>'+
+      '<li><b>Garanties</b> : il faut '+fmt2(d.G2)+', on a '+fmt2(d.G1)+' : '+(gd>0?'dotation complémentaire de '+fmt2(gd):'reprise de '+fmt2(-gd))+'.</li>'+
+      '<li><b>Nouveau litige</b> : risque probable, montant estimable : dotation de '+fmt2(d.R)+'.</li></ul>'+
+      tpAtEcr([['Dotations aux provisions d\'exploitation (6815)',x.dot,0],['Provisions pour litiges (1511)',0,d.R],['Provisions pour garanties données aux clients (1512)',0,Math.max(0,gd)]])+
+      tpAtEcr([['Provisions pour litiges (1511)',d.P1,0],['Provisions pour garanties données aux clients (1512)',Math.max(0,-gd),0],['Reprises sur provisions d\'exploitation (7815)',0,x.rep]])+
+      '<p class="tool-sub" style="margin-top:8px">Au bilan : '+fmt2(d.R)+' + '+fmt2(d.G2)+' = '+fmt2(x.bil)+'. Une provision se crée pour un risque probable et chiffrable ; elle s\'ajuste chaque année et se reprend quand le risque disparaît, qu\'il se soit réalisé ou non.</p>';
+  }else if(k==='vmp'){
+    en='<p>Placement de trésorerie en actions <b>'+s.soc+'</b> (titres destinés à être revendus à court terme) :</p><ul class="tp-ul">'+
+      '<li>Mars N : achat de <b>'+d.n+'</b> actions à <b>'+fmt2(d.c1)+'</b> l\'une (frais d\'achat passés en charges)</li>'+
+      '<li>Septembre N : cession de <b>'+d.m+'</b> actions à <b>'+fmt2(d.c2)+'</b> l\'une</li>'+
+      '<li>31 décembre N : cours de bourse <b>'+fmt2(d.c3)+'</b></li></ul>'+
+      '<p class="tool-sub">Résultat de cession : signe moins si c\'est une perte. Dépréciation : 0 si le cours est au-dessus du prix d\'achat.</p>';
+    form=tpAtField(k,'vo','Valeur d\'entrée des titres achetés en mars',st)+tpAtField(k,'rc','Résultat de la cession de septembre',st)+tpAtField(k,'brut','Valeur brute des titres restants au 31/12',st)+tpAtField(k,'dep','Dépréciation à constater au 31/12',st);
+    var pc=r2(d.m*d.c2),vc=r2(d.m*d.c1);
+    cor='<h3 class="tpat-h">Achat</h3>'+tpAtEcr([['Valeurs mobilières de placement (503)',x.vo,0],['Banque (512)',0,x.vo]])+
+      '<h3 class="tpat-h">Cession</h3>'+tpAtEcr([['Banque (512)',pc,0],[(x.rc<0?'Charges nettes sur cessions de VMP (667)':''),x.rc<0?-x.rc:0,0],['Valeurs mobilières de placement (503)',0,vc],[(x.rc>0?'Produits nets sur cessions de VMP (767)':''),0,x.rc>0?x.rc:0]])+
+      '<p class="tool-sub">'+d.m+' × ('+fmt2(d.c2)+' − '+fmt2(d.c1)+') = '+fmt2(x.rc)+' : '+(x.rc>=0?'plus-value, un produit financier.':'moins-value, une charge financière.')+' Les titres sortent à leur prix d\'achat.</p>'+
+      '<h3 class="tpat-h">Inventaire</h3><p class="tool-sub">Il reste '+d.reste+' titres, soit '+fmt2(x.brut)+' au prix d\'achat. '+(x.dep>0?'Le cours ('+fmt2(d.c3)+') est inférieur : dépréciation de '+d.reste+' × ('+fmt2(d.c1)+' − '+fmt2(d.c3)+') = '+fmt2(x.dep)+'.':'Le cours ('+fmt2(d.c3)+') dépasse le prix d\'achat : la plus-value latente ne se comptabilise pas (prudence).')+'</p>'+
+      (x.dep>0?tpAtEcr([['Dotations aux dépréciations des éléments financiers (6866)',x.dep,0],['Dépréciations des VMP (590)',0,x.dep]]):'');
   }else if(k==='fac'){
     en='<p>Tu établis la facture de vente au client <b>'+s.cl+'</b> :</p><ul class="tp-ul"><li>'+d.q+' × <b>'+s.art+'</b> à '+fmt2(d.pu)+' HT l\'unité</li>'+
       '<li>Remise de <b>'+d.r1+' %</b>'+(d.r2?' puis remise supplémentaire de <b>'+d.r2+' %</b> (en cascade)':'')+'</li>'+
@@ -6552,9 +6623,9 @@ function tpAtBody(k){
     cor='<h3 class="tpat-h">Calcul</h3><p class="tool-sub">Facture '+w.num+' : '+w.late+' jours de retard. Pénalités = '+fmt2(w.m)+' x '+s.taux+' % x '+w.late+' / 365 = '+fmt2(x.pen)+' ; avec l\'indemnité de 40 euros : '+fmt2(x.tot)+'. Au-delà de la mise en demeure, l\'injonction de payer est décidée par le responsable ; à la clôture, une créance compromise est reclassée en 416 et dépréciée.</p>';
   }
   var total=Object.keys(x).length,good=st.res?Object.keys(st.res).filter(function(f){return st.res[f];}).length:0;
-  var score=st.res?'<div class="quiz-fb '+(good===total?'ok':'ko')+'" style="margin:14px 0 0" role="status">'+(good===total?'Sans faute : ':'Résultat : ')+good+' / '+total+' réponses justes.'+(good===total?'':' Les valeurs attendues sont indiquées en face des erreurs.')+'</div>':'';
+  var score=st.res?'<div class="quiz-fb '+(good===total?'ok':'ko')+'" style="margin:14px 0 0" role="status">'+(good===total?'Sans faute : ':'Résultat : ')+good+' / '+total+' réponses justes'+(good===total&&st.dur?', en '+tpDur(st.dur):'')+'.'+(good===total?'':' Les valeurs attendues sont indiquées en face des erreurs.')+'</div>':'';
   var stat=state.tp.at&&state.tp.at[k];
-  var statH=stat?'<span class="tool-sub" style="margin:0">'+stat.n+' cas traité'+(stat.n>1?'s':'')+' · meilleur score '+stat.best+' % · '+(stat.ok||0)+' sans faute</span>':'';
+  var statH=stat?'<span class="tool-sub" style="margin:0">'+stat.n+' cas traité'+(stat.n>1?'s':'')+' · meilleur score '+stat.best+' % · '+(stat.ok||0)+' sans faute'+(stat.bt?' · meilleur temps '+tpDur(stat.bt):'')+'</span>':'';
   return '<div class="tool-section" style="margin-top:14px"><div class="tp-comp-h"><h2 class="tool-title" style="margin:0;flex:1">'+escHtml(TP_AT.filter(function(a){return a[0]===k;})[0][1])+'</h2>'+statH+'</div>'+
     '<div class="tpat-en">'+en+'</div><div class="tpat-form'+(k==='mail'?' tpat-long':'')+'" id="tpat-form">'+form+'</div>'+score+
     '<div class="row" style="margin-top:14px"><button class="btn btn-pri" data-action="tp-at-verify">'+SVG.check+' Vérifier (Entrée)</button><button class="btn btn-gh" data-action="tp-at-new">'+SVG.refresh+' Nouveau cas</button>'+(st.res||st.revealed?'':'<button class="btn-sm" data-action="tp-at-reveal">Voir le corrigé</button>')+'</div>'+
@@ -6579,8 +6650,9 @@ function tpAteliers(){
   var cur=ui.tpAt||'ca3';
   var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
-    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, écrits professionnels, rapprochement bancaire, budget de trésorerie (CCP1) ; exigibilité et déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, travaux d\'inventaire, ajustement des dépréciations, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
-    '<div style="margin-top:14px">'+chipsH+'</div>'+tpAtBody(cur);
+    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, écrits professionnels, rapprochement bancaire, budget de trésorerie (CCP1) ; exigibilité et déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, valeurs mobilières de placement, travaux d\'inventaire, ajustement des dépréciations, provisions pour risques, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
+    '<div class="row" style="margin:14px 0 0;align-items:center"><button class="btn-sm" data-action="tp-at-rand">'+SVG.refresh+' Un atelier au hasard</button><span class="tool-sub" style="margin:0">de préférence dans le CCP en cours, parmi ceux pas encore réussis sans faute</span></div>'+
+    '<div style="margin-top:10px">'+chipsH+'</div>'+tpAtBody(cur);
 }
 function tpAtVerify(){
   var k=ui.tpAt||'ca3',st=tpAtState(k),x=st.s.x,res={};
@@ -6597,7 +6669,7 @@ function tpAtVerify(){
   st.res=res;
   var good=Object.keys(res).filter(function(f){return res[f];}).length,total=Object.keys(res).length,pct=Math.round(good/total*100);
   if(!state.tp.at||typeof state.tp.at!=='object')state.tp.at={};
-  var s=state.tp.at[k]||{n:0,best:0,ok:0};s.n++;if(pct>s.best)s.best=pct;if(good===total)s.ok=(s.ok||0)+1;state.tp.at[k]=s;
+  var s=state.tp.at[k]||{n:0,best:0,ok:0};s.n++;if(pct>s.best)s.best=pct;if(good===total)s.ok=(s.ok||0)+1;if(good===total&&!st.revealed&&st.t0&&!st.dur){st.dur=Math.max(1,Math.round((Date.now()-st.t0)/1000));if(!s.bt||st.dur<s.bt)s.bt=st.dur;}state.tp.at[k]=s;
   logSession('atelier','Atelier '+TP_AT.filter(function(a){return a[0]===k;})[0][1],{n:good,d:total});
   announce(good===total?'Sans faute : '+good+' sur '+total+'.':'Résultat : '+good+' réponses justes sur '+total+'. Les valeurs attendues sont affichées.');
 }
@@ -6610,7 +6682,7 @@ var FORM_PHASES=[
   {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
     mods:['decla-tva','paie','couts','analyse','sic'],at:['exi','ca3','ue','paie','cp','tdb','sr'],msp:'CCP2',ccp:'CCP2'},
   {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
-    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','inv','depaj','emp','aff'],msp:'CCP3',ccp:'CCP3'},
+    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','vmp','inv','depaj','prov','emp','aff'],msp:'CCP3',ccp:'CCP3'},
   {k:'final',n:'Dossier pro & session',s:'Session',w:14,d:'Finaliser le dossier professionnel, préparer les entretiens, enchaîner les mises en situation complètes.',
     mods:[],at:[],msp:'TPCA',ccp:''}
 ];
@@ -6942,7 +7014,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p>Ateliers <b>budget de trésorerie</b>, <b>congés payés</b>, <b>seuil de rentabilité</b> et <b>emprunt</b>, reliés aux cours et aux fiches. <b>Session du jour</b> centrée sur le CCP en cours. Recherche classée par pertinence. Cartes dédoublonnées, sans récitation de numéros de compte. <b>Fiches récapitulatives</b> d\'une page par CCP, à imprimer pour les dernières semaines. Ateliers <b>lettrage</b>, <b>note de frais</b> et <b>TVA intracommunautaire</b>, cartes filtrables par CCP. <b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>12 dossiers cabinet</b>, <b>16 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p>Atelier <b>écrits professionnels</b> (relances, erreur de facture, note au responsable) avec modèle et grille de relecture. Ateliers <b>exigibilité de la TVA</b> et <b>ajustement des dépréciations</b>. Deux dossiers cabinet : <b>Kerlo Services</b> (CCP2) et <b>Marée Haute</b> (CCP3). <b>Pièges fréquents</b> dans chaque fiche CCP, bouton <b>atelier au hasard</b>. Ateliers <b>budget de trésorerie</b>, <b>congés payés</b>, <b>seuil de rentabilité</b> et <b>emprunt</b>, reliés aux cours et aux fiches. <b>Session du jour</b> centrée sur le CCP en cours. Recherche classée par pertinence. Cartes dédoublonnées, sans récitation de numéros de compte. <b>Fiches récapitulatives</b> d\'une page par CCP, à imprimer pour les dernières semaines. Ateliers <b>lettrage</b>, <b>note de frais</b> et <b>TVA intracommunautaire</b>, cartes filtrables par CCP. <b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>14 dossiers cabinet</b>, <b>19 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -7251,6 +7323,8 @@ function toolRapprochement(){
 var CAB_CABINET="Cabinet Duval & Associés";
 var CAB_ACCTS_EXTRA=[
   {num:'1061',lib:'Réserve légale',cl:1,cat:'Bilan',sens:'C'},
+  {num:'442',lib:'État, impôts et taxes recouvrables sur des tiers',cl:4,cat:'Bilan',sens:'C'},
+  {num:'78174',lib:'Reprises sur dépréciations des créances',cl:7,cat:'Gestion',sens:'C'},
   {num:'1068',lib:'Autres réserves',cl:1,cat:'Bilan',sens:'C'},
   {num:'119',lib:'Report à nouveau (solde débiteur)',cl:1,cat:'Bilan',sens:'D'},
   {num:'1688',lib:'Intérêts courus sur emprunts',cl:1,cat:'Bilan',sens:'C'},
@@ -7752,7 +7826,85 @@ var CAB_DOSSIERS=[
    o:['Rien, elles restent définitivement','Je les extourne (écritures inverses) pour pouvoir enregistrer normalement les vraies factures','Je les supprime du journal de 2026','Je les transforme en écritures de banque'],c:1,
    e:'Ces régularisations sont provisoires : on les extourne au 1er jour de l\'exercice suivant. Quand la vraie facture arrive, on la saisit normalement, sans double compte.'}
  ]}
-
+,
+{id:'c13',ccp:'CCP2',client:'SARL Kerlo Services',secteur:'Maintenance informatique, Lorient',periode:'Mars 2027',duree:40,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Kerlo Services : TVA de mars, paie et point trimestriel',corps:["Bonjour,","Kerlo Services vend surtout des contrats de maintenance, et parfois du matériel. Attention, ils n'ont pas opté pour les débits : la TVA sur leurs prestations suit les encaissements.","Il faut préparer la CA3 de mars, calculer les congés payés de Maëlle, passer l'écriture de paie du mois et faire un point rapide du trimestre pour M. Kerlo.","Merci !"]},
+ steps:[
+  {type:'calc',comp:0,titre:'TVA exigible en mars',
+   doc:{type:'table',titre:'Opérations de mars (TVA 20 %)',head:['Opération','Montant'],rows:[['Encaissements sur contrats de maintenance facturés en février','14 400,00 € TTC'],['Contrats facturés en mars, pas encore encaissés','6 000,00 € HT'],['Serveur vendu et livré le 18 mars, payable en avril','2 500,00 € HT'],['Acompte reçu sur une installation prévue en avril','1 800,00 € TTC']]},
+   consigne:'Calcule la TVA exigible en mars sur les prestations, sur les ventes de biens, puis le total de TVA collectée à déclarer.',
+   f:[{k:'ts',l:'TVA exigible sur les prestations (€)',v:2700},{k:'tb',l:'TVA exigible sur les biens (€)',v:500},{k:'tc',l:'TVA collectée à déclarer (€)',v:3200}],
+   e:'Prestations : TVA à l\'encaissement. 14 400 ÷ 6 = 2 400 € et l\'acompte 1 800 ÷ 6 = 300 €, soit 2 700 €. Les contrats non encaissés attendront. Biens : TVA à la livraison, même si le client paie en avril : 2 500 × 20 % = 500 €. Total : 3 200 €.'},
+  {type:'calc',comp:0,titre:'TVA à payer',
+   doc:{type:'table',titre:'TVA déductible de mars',head:['Nature','TVA'],rows:[['Achats de pièces, sous-traitance, frais généraux','1 150,00 €'],['Ordinateur de diagnostic acheté pour l\'atelier (immobilisation)','400,00 €'],['Crédit reporté de février','néant']]},
+   consigne:'Calcule le total de TVA déductible puis la TVA à décaisser de mars.',
+   f:[{k:'ded',l:'TVA déductible totale (€)',v:1550},{k:'due',l:'TVA à décaisser (€)',v:1650}],
+   e:'1 150 + 400 = 1 550 € de TVA déductible. TVA à décaisser : 3 200 − 1 550 = 1 650 €, à payer avec la CA3 en avril.'},
+  {type:'ecr',comp:0,titre:'Liquidation de la TVA',journal:'OD',date:'31/03/27',piece:'TVA-03',
+   consigne:'Passe l\'écriture de liquidation de la TVA de mars.',
+   sol:[{acc:'44571',side:'D',amt:3200},{acc:'44566',side:'C',amt:1150},{acc:'44562',side:'C',amt:400},{acc:'44551',side:'C',amt:1650}],
+   e:'On solde la TVA collectée et les deux TVA déductibles ; la différence est la dette envers l\'État, TVA à décaisser.'},
+  {type:'qcm',comp:0,titre:'L\'option pour les débits',
+   q:'M. Kerlo demande ce que changerait l\'option pour la TVA d\'après les débits. Que lui réponds-tu ?',
+   o:['La TVA sur les prestations serait due dès la facture, même si le client n\'a pas encore payé','Il ne paierait plus de TVA sur ses contrats','La TVA serait payée une fois par an','Rien ne changerait pour les prestations'],c:0,
+   e:'Avec l\'option, la TVA suit la facturation : plus simple à suivre, mais l\'entreprise avance la TVA des clients qui paient tard. Sans l\'option, elle suit les encaissements.'},
+  {type:'calc',comp:1,titre:'Congés payés de Maëlle',
+   consigne:'Maëlle Tanguy, technicienne, prend 12 jours ouvrables de congés en mars. Salaire mensuel brut : 2 340 €. Rémunération brute de la période de référence : 29 500 € (primes d\'intervention comprises). Pour le maintien, compte salaire ÷ 26 × jours pris.',
+   f:[{k:'dix',l:'Règle du dixième (€)',v:1180},{k:'maint',l:'Maintien de salaire (€)',v:1080},{k:'ind',l:'Indemnité à verser (€)',v:1180}],
+   e:'Dixième : 29 500 × 10 % × 12 / 30 = 1 180 €. Maintien : 2 340 ÷ 26 × 12 = 1 080 €. On verse la plus favorable : 1 180 €, grâce aux primes intégrées dans la base du dixième.'},
+  {type:'ecr',comp:1,titre:'Paie de mars',journal:'OD',date:'31/03/27',piece:'PAIE-03',
+   doc:{type:'table',titre:'Journal de paie de mars (3 salariés)',head:['Élément','Montant'],rows:[['Salaires bruts','12 600,00 €'],['Cotisations salariales','2 772,00 €'],['Prélèvement à la source','610,00 €'],['Net à payer','9 218,00 €'],['Cotisations patronales','4 410,00 €']]},
+   consigne:'Passe l\'écriture globale de paie de mars, charges patronales comprises. Toutes les cotisations sont dues à l\'URSSAF (431).',
+   sol:[{acc:'641',side:'D',amt:12600},{acc:'645',side:'D',amt:4410},{acc:'431',side:'C',amt:7182},{acc:'442',side:'C',amt:610},{acc:'421',side:'C',amt:9218}],
+   e:'Charges : brut (641) et cotisations patronales (645). Dettes : URSSAF pour les deux parts (2 772 + 4 410 = 7 182 €), État pour le prélèvement à la source (442), salariés pour le net (421).'},
+  {type:'calc',comp:2,titre:'Point du trimestre',
+   doc:{type:'table',titre:'Chiffre d\'affaires HT',head:['Mois','2026','2027'],rows:[['Janvier','25 000 €','27 400 €'],['Février','24 500 €','28 100 €'],['Mars','28 500 €','30 900 €']]},
+   consigne:'Calcule le chiffre d\'affaires du premier trimestre 2027, sa variation en euros et en pourcentage par rapport à 2026 (2 décimales).',
+   f:[{k:'ca',l:'CA du trimestre 2027 (€)',v:86400},{k:'var',l:'Variation en euros',v:8400},{k:'pct',l:'Variation en %',v:10.77,to:0.01}],
+   e:'2027 : 27 400 + 28 100 + 30 900 = 86 400 €. 2026 : 78 000 €. Variation : + 8 400 €, soit 8 400 ÷ 78 000 = + 10,77 %.'},
+  {type:'redac',comp:2,titre:'Message à M. Kerlo',
+   consigne:'Rédige un court courriel à M. Kerlo : l\'évolution du trimestre et la TVA à payer en avril. Écris-le au brouillon, puis compare avec le modèle.',
+   crit:['Un objet clair','Les chiffres clés, arrondis et comparés à l\'an dernier','La TVA à payer et sa date','Une phrase d\'analyse ou de conseil, sans jargon','Une formule de politesse et une signature'],
+   modele:['Objet : Kerlo Services : premier trimestre 2027 et TVA de mars','Bonjour Monsieur Kerlo,','Votre chiffre d\'affaires du premier trimestre atteint 86 400 € HT, en hausse de 10,8 % par rapport à 2026 (78 000 €). Chaque mois progresse, mars en tête avec 30 900 €.','La déclaration de TVA de mars fait apparaître 1 650 € à payer lors du dépôt en avril. Pensez à garder cette somme disponible.','Attention : 6 000 € de contrats facturés en mars ne sont pas encore encaissés ; leur TVA sera due au moment du paiement.','Je reste à votre disposition pour en parler.','Bien cordialement,','[Prénom Nom], Cabinet Duval & Associés']}
+ ]},
+{id:'c14',ccp:'CCP3',client:'SARL Marée Haute',secteur:'Articles de pêche et accastillage, Lorient Keroman',periode:'Clôture au 31/12/2026',duree:40,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Marée Haute : emprunt et clients douteux',corps:["Bonjour,","Marée Haute a emprunté cet été pour agrandir son entrepôt, et deux ou trois clients posent problème depuis l'an dernier.","Pour la clôture, il faut établir le début du tableau d'emprunt et les intérêts courus, puis ajuster les dépréciations de créances. Un client est définitivement perdu.","Je compte sur toi !"]},
+ steps:[
+  {type:'calc',comp:2,titre:'Tableau d\'emprunt',
+   doc:{type:'table',titre:'Contrat de prêt',head:['Élément','Valeur'],rows:[['Capital emprunté le 1er juillet 2026','60 000,00 €'],['Taux annuel','4 %'],['Remboursement','5 annuités constantes'],['Première échéance','1er juillet 2027']]},
+   consigne:'Calcule l\'annuité constante, puis les intérêts et le capital remboursé dans la première annuité.',
+   f:[{k:'a',l:'Annuité (€)',v:13477.63,to:0.02},{k:'i1',l:'Intérêts de la 1re annuité (€)',v:2400},{k:'k1',l:'Capital remboursé (€)',v:11077.63,to:0.02}],
+   e:'Annuité = 60 000 × 0,04 ÷ (1 − 1,04^−5) = 13 477,63 €. Intérêts de la première année : 60 000 × 4 % = 2 400 €. Capital remboursé : 13 477,63 − 2 400 = 11 077,63 €.'},
+  {type:'ecr',comp:2,titre:'Intérêts courus au 31 décembre',journal:'OD',date:'31/12/26',piece:'INV-10',
+   consigne:'Aucune échéance n\'a été payée en 2026. Enregistre les intérêts qui concernent 2026.',
+   sol:[{acc:'661',side:'D',amt:1200},{acc:'1688',side:'C',amt:1200}],
+   e:'Du 1er juillet au 31 décembre : 6 mois. 60 000 × 4 % × 6/12 = 1 200 €, charge de 2026, contre une dette d\'intérêts courus, extournée le 1er janvier.'},
+  {type:'qcm',comp:2,titre:'L\'emprunt au bilan',
+   q:'Au bilan du 31 décembre 2026, comment apparaît l\'emprunt ?',
+   o:['60 000 € de capital restant dû et 1 200 € d\'intérêts courus, au passif','13 477,63 € au passif, c\'est l\'annuité','60 000 € en charges financières','Rien, puisqu\'aucune échéance n\'a été payée'],c:0,
+   e:'Le capital n\'a pas encore été remboursé : il reste dû en entier. Les intérêts courus s\'y ajoutent. Seuls les intérêts passent en charges.'},
+  {type:'calc',comp:1,titre:'Ajuster les dépréciations',
+   doc:{type:'table',titre:'Clients douteux au 31/12/2026 (TVA 20 %)',head:['Client','Créance HT','Dépréciation 2025','Situation fin 2026'],rows:[['Pêcheries de l\'Ellé','5 000 €','30 %','Perte estimée à 50 %'],['Club nautique de Gâvres','4 000 €','60 %','Plan de paiement : perte ramenée à 20 %'],['Surf Shop Guidel','2 000 €','40 %','Liquidation clôturée : irrécouvrable']]},
+   consigne:'Calcule la dotation complémentaire (Pêcheries de l\'Ellé) et la reprise (Club nautique de Gâvres).',
+   f:[{k:'dot',l:'Dotation complémentaire (€)',v:1000},{k:'rep',l:'Reprise (€)',v:1600}],
+   e:'Pêcheries : il faut 2 500 €, on a 1 500 € : dotation de 1 000 €. Club nautique : il faut 800 €, on a 2 400 € : reprise de 1 600 €. On ajuste l\'existant, on ne recommence pas à zéro.'},
+  {type:'ecr',comp:1,titre:'Dotation complémentaire',journal:'OD',date:'31/12/26',piece:'INV-11',
+   consigne:'Enregistre la dotation complémentaire.',
+   sol:[{acc:'68174',side:'D',amt:1000,alt:['6817']},{acc:'491',side:'C',amt:1000}],
+   e:'Une charge (dotation aux dépréciations des créances) contre la dépréciation des comptes clients, qui vient diminuer la créance à l\'actif.'},
+  {type:'ecr',comp:1,titre:'Reprise',journal:'OD',date:'31/12/26',piece:'INV-12',
+   consigne:'Enregistre la reprise sur le Club nautique de Gâvres.',
+   sol:[{acc:'491',side:'D',amt:1600},{acc:'7817',side:'C',amt:1600,alt:['78174']}],
+   e:'La dépréciation diminue : on reprend l\'excédent par un produit.'},
+  {type:'ecr',comp:1,titre:'Créance irrécouvrable',journal:'OD',date:'31/12/26',piece:'INV-13',
+   consigne:'Surf Shop Guidel ne paiera jamais sa créance de 2 400 € TTC. Constate la perte.',
+   sol:[{acc:'654',side:'D',amt:2000},{acc:'44571',side:'D',amt:400},{acc:'416',side:'C',amt:2400}],
+   e:'Perte sur le HT (654), TVA collectée à l\'origine récupérée, et le compte clients douteux soldé pour le TTC.'},
+  {type:'qcm',comp:1,titre:'La dépréciation de Surf Shop',
+   q:'Que devient la dépréciation de 800 € constatée l\'an dernier sur Surf Shop Guidel ?',
+   o:['Elle est reprise en totalité : elle n\'a plus d\'objet','Elle reste au bilan jusqu\'à la fin du plan','Elle est portée à 100 %','Elle est transformée en provision pour risques'],c:0,
+   e:'La perte est désormais réelle et enregistrée : la dépréciation qui l\'anticipait est reprise en entier (800 €). Au total, le résultat 2026 ne supporte que 2 000 − 800 = 1 200 € de perte nouvelle.'}
+ ]}
 ];
 (function(){var have={};PLAN_COMPTABLE.forEach(function(p){have[p.num]=1;});CAB_ACCTS_EXTRA.forEach(function(p){if(!have[p.num])PLAN_COMPTABLE.push(p);});PLAN_COMPTABLE.sort(function(a,b){return String(a.num).localeCompare(String(b.num),undefined,{numeric:true});});})();
 function cabById(id){for(var i=0;i<CAB_DOSSIERS.length;i++){if(CAB_DOSSIERS[i].id===id)return CAB_DOSSIERS[i];}return null;}
@@ -10745,13 +10897,16 @@ document.addEventListener('click',function(e){
   else if(a==='dl-tp-grille'){downloadTpGrille();}
   else if(a==='dl-methodo-tp'){downloadMethodoTp();}
   else if(a==='tp-at'){ui.tpAt=t.dataset.k||'ca3';render();}
+  else if(a==='tp-at-rand'){var _cc2=null;try{var _t2=formTimeline(),_p2=_t2.cur>=0?_t2.phases[_t2.cur].p:null;if(_p2&&_p2.ccp)_cc2=_p2.ccp;}catch(e){}
+    var _pool=TP_AT.filter(function(x){return x[0]!==ui.tpAt&&(!_cc2||x[2]===_cc2);});var _todo=_pool.filter(function(x){var s=state.tp.at&&state.tp.at[x[0]];return !(s&&s.ok>0);});if(_todo.length)_pool=_todo;if(!_pool.length)_pool=TP_AT.filter(function(x){return x[0]!==ui.tpAt;});
+    var _pk=_pool[Math.floor(Math.random()*_pool.length)];ui.tpAt=_pk[0];render();focusMain();announce('Atelier tiré au sort : '+_pk[1]+'.');}
   else if(a==='form-confirm'){try{localStorage.setItem('legl.formConfirmed','1');}catch(e){}render();announce('Planning confirmé.');}
   else if(a==='form-unconfirm'){try{localStorage.removeItem('legl.formConfirmed');}catch(e){}render();}
   else if(a==='form-carnet'){ui.tab='agenda';ui.agendaSub='carnet';render();focusMain();}
   else if(a==='plan-at'){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';ui.tpAt=t.dataset.k||'ca3';render();focusMain();}
   else if(a==='form-dates-save'){var _fs=document.getElementById('form-start'),_fe=document.getElementById('form-end'),_ff=document.getElementById('form-fend');if(_fs&&_fs.value)setFormStart(_fs.value);if(_ff&&_ff.value)setFormEnd(_ff.value);var _fo=document.getElementById('form-order');try{if(_fo&&/^[123]{3}$/.test(_fo.value))localStorage.setItem('legl.ccpOrder',_fo.value);var _st=[];[0,1].forEach(function(i){var a1=document.getElementById('stage'+i+'-s'),b1=document.getElementById('stage'+i+'-e');if(a1&&b1&&a1.value&&b1.value){_st.push(a1.value<=b1.value?[a1.value,b1.value]:[b1.value,a1.value]);}});localStorage.setItem('legl.stages',JSON.stringify(_st));}catch(e){}if(_fe&&_fe.value)setExamDate(_fe.value);render();announce('Dates de formation enregistrées.');}
   else if(a==='form-agenda-sync'){var _s0=formStart(),_e0=formEnd(),_ps=state.agenda.periods,_hit=null;_ps.forEach(function(p){if(!_hit&&p.kind==='tp'&&/^Formation/.test(p.label||''))_hit=p;});if(_hit){_hit.start=_s0;_hit.end=_e0;_hit.label='Formation Titre Pro Comptable assistant';}else _ps.push({id:agendaId(),start:_s0,end:_e0,label:'Formation Titre Pro Comptable assistant',kind:'tp'});var _tl=formTimeline();_tl.phases.forEach(function(x){var lab='Étape : '+x.p.n,ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});var sd=localDateStr(x.start),ed=localDateStr(new Date(x.end.getTime()-DAY));if(ex){ex.start=sd;ex.end=ed;}else _ps.push({id:agendaId(),start:sd,end:ed,label:lab,kind:'tp'});});formStages().forEach(function(x,i){var lab='Stage en entreprise'+(formStages().length>1?' '+(i+1):''),ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});if(ex){ex.start=x[0];ex.end=x[1];}else _ps.push({id:agendaId(),start:x[0],end:x[1],label:lab,kind:'alternance'});});var _ex=getExamDate(),_se=null;_ps.forEach(function(p){if(/^Session du titre/.test(p.label||''))_se=p;});if(_se){_se.start=_ex;_se.end=_ex;_se.label='Session du titre (date à confirmer)';}else _ps.push({id:agendaId(),start:_ex,end:_ex,label:'Session du titre (date à confirmer)',kind:'tp'});save();render();announce('Formation et étapes reportées dans l\'agenda.');}
-  else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
+  else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false,t0:Date.now()};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;var _ta9=document.getElementById('tpat-mail');if(_ta9)_ar.mail=_ta9.value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
   else if(a==='mock-start'){oralMockStart(t.dataset.k==='final'?'final':'tech');render();focusMain();}
@@ -11191,7 +11346,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : 16 ateliers dont budget de trésorerie, congés payés, seuil de rentabilité et emprunt, session du jour centrée sur ton CCP, fiches récapitulatives par CCP, plan de formation, 12 dossiers cabinet, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : 19 ateliers dont écrits professionnels, exigibilité de la TVA et ajustement des dépréciations, 14 dossiers cabinet, pièges fréquents dans les fiches CCP, atelier au hasard, session du jour centrée sur ton CCP, plan de formation, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');

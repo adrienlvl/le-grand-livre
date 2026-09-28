@@ -4262,7 +4262,7 @@ function viewAccueil(){
     act('','data-action="dash-review"',SVG.refresh,'Réviser les cartes dues',due>0?due+' carte'+(due>1?'s':'')+' en attente':'Rien à réviser pour l\'instant',due===0)+
     (_nx!==null?act('','data-action="open" data-mi="'+_nx+'"',SVG.book,'Continuer : '+escHtml(MODULES[_nx].title),'Module '+MODULES[_nx].num+' &middot; cours, mémo, quiz'):'')+
     (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
-      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','19 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
+      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','21 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
     act('','data-action="quick-start"',SVG.exam,'Quiz éclair · 3 min','5 questions sur ton étape en cours du plan')+
   '</div></section>';
@@ -4287,7 +4287,7 @@ function viewAccueil(){
     '<p class="dash-foot">'+(ui.dashEdit?'':'<button class="btn-sm" data-action="dash-edit" style="margin-right:8px">'+SVG.list+' Personnaliser l\'accueil</button>')+'Astuce : <kbd class="sc-kbd">Ctrl</kbd>+<kbd class="sc-kbd">K</kbd> pour chercher et sauter partout, <kbd class="sc-kbd">?</kbd> pour les raccourcis. Réglages : Outils &rsaquo; Apparence.</p>';
 }
 
-var MOD_AT={facture:['fac'],efacture:['fac'],reglements:['let','ba','mail'],rapprochement:['rap'],budget:['tre'],tva:['exi','ue','ndf'],'decla-tva':['exi','ca3','ue'],paie:['paie','cp'],couts:['sr'],analyse:['tdb','sr'],amortissements:['amo'],depreciations:['depaj','inv'],regularisations:['inv','emp'],stocks:['inv'],financement:['emp'],resultat:['aff'],is:['aff']};
+var MOD_AT={facture:['fac'],efacture:['fac'],reglements:['let','ba','mail'],rapprochement:['rap'],budget:['tre'],tva:['exi','ue','ndf'],'decla-tva':['exi','ca3','ue'],paie:['paie','cp'],couts:['sr'],analyse:['tdb','sr'],amortissements:['amo'],depreciations:['depaj','inv','vmp'],provisions:['prov'],regularisations:['inv','emp'],stocks:['inv'],financement:['emp'],resultat:['aff'],is:['aff']};
 function viewModule(){
   var m=MODULES[route.mi],lastKey=m.hasExo?'exo':'quiz';
   var steps=[['cours','Cours'],['memo','Mémo visuel'],[lastKey,m.hasExo?'Exercice':'Quiz']];
@@ -4637,7 +4637,9 @@ var EXAM_EXTRA=[
 ];
 /* Examen par CCP (Titre Pro) : modules du CCP et catégories de questions associées. */
 var CCP_EXAM={ccp1:{i:0,cats:['op','tva']},ccp2:{i:1,cats:['fisc','soc','gest']},ccp3:{i:2,cats:['inv','synth']}};
-function examPool(cat){if(CCP_EXAM[cat]){var ce=CCP_EXAM[cat],mods=TP_CCP[ce.i].mods,pp=[];MODULES.forEach(function(m){if(mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});EXAM_EXTRA.forEach(function(q){if(ce.cats.indexOf(q.cat)>=0)pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return pp;}var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
+/* Une même question peut figurer dans un quiz de module et dans la banque d'examen : on ne la garde qu'une fois. */
+function examPool(cat){var seen={};return examPool0(cat).filter(function(q){var k=String(q.q).trim().toLowerCase();if(seen[k])return false;seen[k]=1;return true;});}
+function examPool0(cat){if(CCP_EXAM[cat]){var ce=CCP_EXAM[cat],mods=TP_CCP[ce.i].mods,pp=[];MODULES.forEach(function(m){if(mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});EXAM_EXTRA.forEach(function(q){if(ce.cats.indexOf(q.cat)>=0)pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return pp;}var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
 
 /* ---- Générateur procédural de questions d'examen (réponses calculées => toujours justes) ---- */
 function grnd(min,max,step){step=step||1;var k=Math.floor((max-min)/step);if(k<0)k=0;return min+step*Math.floor(Math.random()*(k+1));}
@@ -5122,7 +5124,7 @@ var NAV_ITEMS=[
   {label:'Grille d\'auto-évaluation (Titre Pro)',sub:'Critères officiels des 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='grille';}},
   {label:'Dossier professionnel (DP)',sub:'Brouillon du DP par activité type, export texte',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='dp';}},
   {label:'Entraînement aux entretiens',sub:'Entretien technique et entretien final du Titre Pro',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='oral';}},
-  {label:'Ateliers pratiques Titre Pro',sub:'19 ateliers : facture, lettrage, note de frais, relances et courriels, rapprochement, trésorerie, exigibilité et CA3, TVA intracommunautaire, paie, congés payés, tableau de bord, seuil de rentabilité, amortissement, inventaire, dépréciations, emprunt, affectation (cas illimités)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';}},
+  {label:'Ateliers pratiques Titre Pro',sub:'21 ateliers : facture, lettrage, note de frais, relances et courriels, rapprochement, trésorerie, exigibilité et CA3, TVA intracommunautaire, paie, congés payés, tableau de bord, seuil de rentabilité, amortissement, placements, inventaire, dépréciations, provisions, emprunt, affectation (cas illimités)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';}},
   {label:'Mises en situation professionnelles',sub:'CCP1 (2 h), CCP2 (1 h 30), CCP3 (1 h 30), session complète (4 h)',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='msp';}}
 ];
 
@@ -5917,8 +5919,8 @@ var TP_FICHES={
   ]},
   CCP3:{sous:'Travaux de fin d\'exercice',duree:'Mise en situation de 1 h 30, puis entretien technique',blocs:[
     {h:'Amortissements',l:['Base = coût d\'acquisition HT (prix + frais accessoires)','Linéaire : base × taux × durée d\'usage de l\'année (prorata en jours sur 360 la première année)','Dégressif : taux linéaire × 1,25 (3 et 4 ans), × 1,75 (5 et 6 ans), × 2,25 (plus de 6 ans) ; passage au linéaire dès qu\'il donne plus','VNC = base − cumul des amortissements']},
-    {at:'amo',h:'Cession d\'immobilisation',t:[['Dotation complémentaire jusqu\'à la cession','Dotations aux amortissements','Amortissements'],['Sortie du bien','Amortissements (cumul) ; valeur comptable des éléments cédés (VNC)','Immobilisation (valeur d\'origine)'],['Prix de cession','Créance sur cession ou banque','Produits des cessions d\'éléments d\'actif']]},
-    {at:['inv','depaj'],h:'Stocks, créances, dépréciations',l:['Variation de stock = stock initial − stock final : on annule le stock initial, on constate le stock final','Créance douteuse : virer au compte clients douteux (TTC) ; dépréciation sur le <b>HT</b> du montant jugé irrécouvrable','Créance irrécouvrable : perte sur le HT, TVA récupérée, reprise de la dépréciation','Provision pour risque : litige, garantie ; elle se reprend quand le risque disparaît']},
+    {at:['amo','vmp'],h:'Cession d\'immobilisation',t:[['Dotation complémentaire jusqu\'à la cession','Dotations aux amortissements','Amortissements'],['Sortie du bien','Amortissements (cumul) ; valeur comptable des éléments cédés (VNC)','Immobilisation (valeur d\'origine)'],['Prix de cession','Créance sur cession ou banque','Produits des cessions d\'éléments d\'actif']]},
+    {at:['inv','depaj','prov'],h:'Stocks, créances, dépréciations',l:['Variation de stock = stock initial − stock final : on annule le stock initial, on constate le stock final','Créance douteuse : virer au compte clients douteux (TTC) ; dépréciation sur le <b>HT</b> du montant jugé irrécouvrable','Créance irrécouvrable : perte sur le HT, TVA récupérée, reprise de la dépréciation','Provision pour risque : litige, garantie ; elle se reprend quand le risque disparaît']},
     {h:'Régularisations (rattacher à l\'exercice)',t:[['Charge payée d\'avance','Charges constatées d\'avance','Compte de charge'],['Produit encaissé d\'avance','Compte de produit','Produits constatés d\'avance'],['Facture non parvenue','Charge et TVA déductible à régulariser','Fournisseurs, factures non parvenues'],['Facture à établir','Clients, factures à établir','Produit et TVA collectée à régulariser'],['Intérêts courus','Charges d\'intérêts','Intérêts courus sur emprunts']]},
     {at:'emp',h:'Emprunts',l:['Annuité constante = capital × i ÷ (1 − (1 + i)<sup>−n</sup>)','Intérêts = capital restant dû × taux ; amortissement = annuité − intérêts','Échéance : emprunts (part de capital) et charges d\'intérêts au débit, banque au crédit']},
     {at:'aff',h:'Affectation du résultat',l:['Imputer d\'abord un report à nouveau déficitaire','Réserve légale : 5 % du bénéfice, jusqu\'à ce qu\'elle atteigne 10 % du capital','Puis réserves statutaires, dividendes, autres réserves ; le reste en report à nouveau','Impôt sur les sociétés : 15 % jusqu\'à 42 500 € de bénéfice pour les PME éligibles, 25 % au delà']}
@@ -6160,7 +6162,7 @@ function tpMsp(){
     '<div style="margin-top:16px">'+cards+'</div>';
 }
 /* ==== Ateliers pratiques Titre Pro : générateurs purs (testés par verif.mjs) ==== */
-var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['tre','Budget de trésorerie','CCP1'],['mail','Écrits professionnels','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['exi','Exigibilité de la TVA','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['cp','Congés payés','CCP2'],['tdb','Tableau de bord','CCP2'],['sr','Seuil de rentabilité','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['depaj','Ajustement des dépréciations','CCP3'],['emp','Emprunt et intérêts courus','CCP3'],['aff','Affectation du résultat','CCP3']];
+var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['tre','Budget de trésorerie','CCP1'],['mail','Écrits professionnels','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['exi','Exigibilité de la TVA','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['cp','Congés payés','CCP2'],['tdb','Tableau de bord','CCP2'],['sr','Seuil de rentabilité','CCP2'],['amo','Amortissement & cession','CCP3'],['vmp','Valeurs mobilières de placement','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['depaj','Ajustement des dépréciations','CCP3'],['prov','Provisions pour risques','CCP3'],['emp','Emprunt et intérêts courus','CCP3'],['aff','Affectation du résultat','CCP3']];
 var TP_MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 var TP_BA_TR=['Non échu','Retard de 1 à 30 jours','Retard de 31 à 60 jours','Retard de plus de 60 jours'];
 var TP_BA_AC=['Aucune action (suivi)','Relance amiable (appel ou courriel)','Lettre de relance avec rappel des pénalités','Mise en demeure (recommandé AR)'];
@@ -6328,12 +6330,23 @@ function tpGenDepaj(){
   var dot=r2(a*(pA2-pA1)/100),rep=r2(b*(pB1-pB2)/100+c*pC1/100);
   return {n:noms,d:{a:a,b:b,c:c,pA1:pA1,pA2:pA2,pB1:pB1,pB2:pB2,pC1:pC1},x:{dot:dot,rep:rep,perte:c,tva:r2(c*0.2)}};
 }
-var TP_AT_GEN={mail:tpGenMail,exi:tpGenExi,depaj:tpGenDepaj,tre:tpGenTre,cp:tpGenCp,emp:tpGenEmp,sr:tpGenSr,let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
+function tpGenProv(){
+  var P1=tpRnd(4,20)*500,X=tpRnd(3,24)*500,R=tpRnd(2,16)*500,G1=tpRnd(4,20)*250,G2;do{G2=tpRnd(4,20)*250;}while(G2===G1);
+  return {sal:['un ancien salarié','une ancienne comptable','un ex-commercial'][tpRnd(0,2)],cl:['Hôtel des Tilleuls','SAS Vitalis','Garage Lemaire'][tpRnd(0,2)],d:{P1:P1,X:X,R:R,G1:G1,G2:G2},x:{dot:r2(R+Math.max(0,G2-G1)),rep:r2(P1+Math.max(0,G1-G2)),bil:r2(R+G2)}};
+}
+function tpGenVmp(){
+  var n=tpRnd(10,60)*10,c1=tpRnd(20,90)+[0,0.5][tpRnd(0,1)],m=tpRnd(2,Math.floor(n/20))*10,c2=r2(c1*(0.8+Math.random()*0.4)),c3=r2(c1*(0.75+Math.random()*0.4));
+  if(Math.abs(c2-c1)<0.1)c2=r2(c1+1.2);
+  var reste=n-m;
+  return {soc:['Crédit Maritime SA','Armor Industries','Breizh Énergies'][tpRnd(0,2)],d:{n:n,c1:c1,m:m,c2:c2,c3:c3,reste:reste},x:{vo:r2(n*c1),rc:r2(m*(c2-c1)),dep:c3<c1?r2(reste*(c1-c3)):0,brut:r2(reste*c1)}};
+}
+var TP_AT_GEN={prov:tpGenProv,vmp:tpGenVmp,mail:tpGenMail,exi:tpGenExi,depaj:tpGenDepaj,tre:tpGenTre,cp:tpGenCp,emp:tpGenEmp,sr:tpGenSr,let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
 /* ==== fin des générateurs d'ateliers ==== */
 function fmt2(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n).replace(/\u202F/g,'\u00A0')+' €';}
 function tpNum(v){if(v===null||v===undefined)return NaN;var s=String(v).replace(/[\s  €%]/g,'').replace(/[\u2212\u2013]/g,'-').replace(',','.');if(s==='')return NaN;return parseFloat(s);}
+function tpDur(sec){var m=Math.floor(sec/60),s=sec%60;return m?m+' min'+(s?' '+(s<10?'0':'')+s+' s':''):s+' s';}
 function tpFrDate(iso){var p=String(iso).split('-');return p[2]+'/'+p[1]+'/'+p[0];}
-function tpAtState(k){if(!ui.tpAtData)ui.tpAtData={};if(!ui.tpAtData[k])ui.tpAtData[k]={s:TP_AT_GEN[k](),ans:{},res:null,revealed:false};return ui.tpAtData[k];}
+function tpAtState(k){if(!ui.tpAtData)ui.tpAtData={};if(!ui.tpAtData[k])ui.tpAtData[k]={s:TP_AT_GEN[k](),ans:{},res:null,revealed:false,t0:Date.now()};return ui.tpAtData[k];}
 function tpAtFmt(k,f,v){if(k==='sr'&&f==='tmcv')return String(v).replace('.',',')+' %';if(k==='sr'&&f==='pm')return v+' jours';if(k==='tdb'&&f==='vp')return String(v).replace('.',',')+' %';if(k==='tdb')return new Intl.NumberFormat('fr-FR').format(v).replace(/\u202F/g,'\u00A0')+' €';return fmt2(v);}
 function tpAtField(k,f,label,st){
   var id='tpat-'+k+'-'+f,ans=st.ans[f],res=st.res?st.res[f]:null,show=st.res||st.revealed;
@@ -6524,6 +6537,33 @@ function tpAtBody(k){
       '<p class="tool-sub">Créance irrécouvrable : on constate la perte sur le HT et on récupère la TVA collectée à l\'origine.</p>'+
       tpAtEcr([['Pertes sur créances irrécouvrables (654)',d.c,0],['TVA collectée (44571)',x.tva,0],['Clients douteux (416)',0,r2(d.c*1.2)]])+
       '<p class="tool-sub">On ajuste toujours la dépréciation existante : on ne l\'annule pas pour en créer une nouvelle. Une dépréciation se calcule sur le HT, car la TVA sera récupérée si la créance est perdue.</p>';
+  }else if(k==='prov'){
+    en='<p>Clôture au 31/12/N. Provisions pour risques au bilan du 31/12/N-1 :</p><ul class="tp-ul">'+
+      '<li>Provision pour litige avec '+s.sal+' devant les prud\'hommes : <b>'+fmt2(d.P1)+'</b>. Le jugement est tombé en N : l\'entreprise a versé <b>'+fmt2(d.X)+'</b> d\'indemnités, enregistrées en charges au paiement. Le litige est clos.</li>'+
+      '<li>Provision pour garanties données aux clients : <b>'+fmt2(d.G1)+'</b>. D\'après les retours de l\'année, le risque est estimé à <b>'+fmt2(d.G2)+'</b> au 31/12/N.</li></ul>'+
+      '<p>Nouveau en N : le client <b>'+s.cl+'</b> réclame des dommages pour un retard de livraison. L\'avocat estime la somme probable à <b>'+fmt2(d.R)+'</b>.</p>';
+    form=tpAtField(k,'dot','Total des dotations aux provisions de N',st)+tpAtField(k,'rep','Total des reprises sur provisions de N',st)+tpAtField(k,'bil','Provisions pour risques au bilan du 31/12/N',st);
+    var gd=r2(d.G2-d.G1);
+    cor='<h3 class="tpat-h">Provision par provision</h3><ul class="tp-ul">'+
+      '<li><b>Litige prud\'homal</b> : clos, la provision de '+fmt2(d.P1)+' n\'a plus d\'objet. On la reprend en totalité, quel que soit le montant finalement payé ('+fmt2(d.X)+', déjà en charges).</li>'+
+      '<li><b>Garanties</b> : il faut '+fmt2(d.G2)+', on a '+fmt2(d.G1)+' : '+(gd>0?'dotation complémentaire de '+fmt2(gd):'reprise de '+fmt2(-gd))+'.</li>'+
+      '<li><b>Nouveau litige</b> : risque probable, montant estimable : dotation de '+fmt2(d.R)+'.</li></ul>'+
+      tpAtEcr([['Dotations aux provisions d\'exploitation (6815)',x.dot,0],['Provisions pour litiges (1511)',0,d.R],['Provisions pour garanties données aux clients (1512)',0,Math.max(0,gd)]])+
+      tpAtEcr([['Provisions pour litiges (1511)',d.P1,0],['Provisions pour garanties données aux clients (1512)',Math.max(0,-gd),0],['Reprises sur provisions d\'exploitation (7815)',0,x.rep]])+
+      '<p class="tool-sub" style="margin-top:8px">Au bilan : '+fmt2(d.R)+' + '+fmt2(d.G2)+' = '+fmt2(x.bil)+'. Une provision se crée pour un risque probable et chiffrable ; elle s\'ajuste chaque année et se reprend quand le risque disparaît, qu\'il se soit réalisé ou non.</p>';
+  }else if(k==='vmp'){
+    en='<p>Placement de trésorerie en actions <b>'+s.soc+'</b> (titres destinés à être revendus à court terme) :</p><ul class="tp-ul">'+
+      '<li>Mars N : achat de <b>'+d.n+'</b> actions à <b>'+fmt2(d.c1)+'</b> l\'une (frais d\'achat passés en charges)</li>'+
+      '<li>Septembre N : cession de <b>'+d.m+'</b> actions à <b>'+fmt2(d.c2)+'</b> l\'une</li>'+
+      '<li>31 décembre N : cours de bourse <b>'+fmt2(d.c3)+'</b></li></ul>'+
+      '<p class="tool-sub">Résultat de cession : signe moins si c\'est une perte. Dépréciation : 0 si le cours est au-dessus du prix d\'achat.</p>';
+    form=tpAtField(k,'vo','Valeur d\'entrée des titres achetés en mars',st)+tpAtField(k,'rc','Résultat de la cession de septembre',st)+tpAtField(k,'brut','Valeur brute des titres restants au 31/12',st)+tpAtField(k,'dep','Dépréciation à constater au 31/12',st);
+    var pc=r2(d.m*d.c2),vc=r2(d.m*d.c1);
+    cor='<h3 class="tpat-h">Achat</h3>'+tpAtEcr([['Valeurs mobilières de placement (503)',x.vo,0],['Banque (512)',0,x.vo]])+
+      '<h3 class="tpat-h">Cession</h3>'+tpAtEcr([['Banque (512)',pc,0],[(x.rc<0?'Charges nettes sur cessions de VMP (667)':''),x.rc<0?-x.rc:0,0],['Valeurs mobilières de placement (503)',0,vc],[(x.rc>0?'Produits nets sur cessions de VMP (767)':''),0,x.rc>0?x.rc:0]])+
+      '<p class="tool-sub">'+d.m+' × ('+fmt2(d.c2)+' − '+fmt2(d.c1)+') = '+fmt2(x.rc)+' : '+(x.rc>=0?'plus-value, un produit financier.':'moins-value, une charge financière.')+' Les titres sortent à leur prix d\'achat.</p>'+
+      '<h3 class="tpat-h">Inventaire</h3><p class="tool-sub">Il reste '+d.reste+' titres, soit '+fmt2(x.brut)+' au prix d\'achat. '+(x.dep>0?'Le cours ('+fmt2(d.c3)+') est inférieur : dépréciation de '+d.reste+' × ('+fmt2(d.c1)+' − '+fmt2(d.c3)+') = '+fmt2(x.dep)+'.':'Le cours ('+fmt2(d.c3)+') dépasse le prix d\'achat : la plus-value latente ne se comptabilise pas (prudence).')+'</p>'+
+      (x.dep>0?tpAtEcr([['Dotations aux dépréciations des éléments financiers (6866)',x.dep,0],['Dépréciations des VMP (590)',0,x.dep]]):'');
   }else if(k==='fac'){
     en='<p>Tu établis la facture de vente au client <b>'+s.cl+'</b> :</p><ul class="tp-ul"><li>'+d.q+' × <b>'+s.art+'</b> à '+fmt2(d.pu)+' HT l\'unité</li>'+
       '<li>Remise de <b>'+d.r1+' %</b>'+(d.r2?' puis remise supplémentaire de <b>'+d.r2+' %</b> (en cascade)':'')+'</li>'+
@@ -6583,9 +6623,9 @@ function tpAtBody(k){
     cor='<h3 class="tpat-h">Calcul</h3><p class="tool-sub">Facture '+w.num+' : '+w.late+' jours de retard. Pénalités = '+fmt2(w.m)+' x '+s.taux+' % x '+w.late+' / 365 = '+fmt2(x.pen)+' ; avec l\'indemnité de 40 euros : '+fmt2(x.tot)+'. Au-delà de la mise en demeure, l\'injonction de payer est décidée par le responsable ; à la clôture, une créance compromise est reclassée en 416 et dépréciée.</p>';
   }
   var total=Object.keys(x).length,good=st.res?Object.keys(st.res).filter(function(f){return st.res[f];}).length:0;
-  var score=st.res?'<div class="quiz-fb '+(good===total?'ok':'ko')+'" style="margin:14px 0 0" role="status">'+(good===total?'Sans faute : ':'Résultat : ')+good+' / '+total+' réponses justes.'+(good===total?'':' Les valeurs attendues sont indiquées en face des erreurs.')+'</div>':'';
+  var score=st.res?'<div class="quiz-fb '+(good===total?'ok':'ko')+'" style="margin:14px 0 0" role="status">'+(good===total?'Sans faute : ':'Résultat : ')+good+' / '+total+' réponses justes'+(good===total&&st.dur?', en '+tpDur(st.dur):'')+'.'+(good===total?'':' Les valeurs attendues sont indiquées en face des erreurs.')+'</div>':'';
   var stat=state.tp.at&&state.tp.at[k];
-  var statH=stat?'<span class="tool-sub" style="margin:0">'+stat.n+' cas traité'+(stat.n>1?'s':'')+' · meilleur score '+stat.best+' % · '+(stat.ok||0)+' sans faute</span>':'';
+  var statH=stat?'<span class="tool-sub" style="margin:0">'+stat.n+' cas traité'+(stat.n>1?'s':'')+' · meilleur score '+stat.best+' % · '+(stat.ok||0)+' sans faute'+(stat.bt?' · meilleur temps '+tpDur(stat.bt):'')+'</span>':'';
   return '<div class="tool-section" style="margin-top:14px"><div class="tp-comp-h"><h2 class="tool-title" style="margin:0;flex:1">'+escHtml(TP_AT.filter(function(a){return a[0]===k;})[0][1])+'</h2>'+statH+'</div>'+
     '<div class="tpat-en">'+en+'</div><div class="tpat-form'+(k==='mail'?' tpat-long':'')+'" id="tpat-form">'+form+'</div>'+score+
     '<div class="row" style="margin-top:14px"><button class="btn btn-pri" data-action="tp-at-verify">'+SVG.check+' Vérifier (Entrée)</button><button class="btn btn-gh" data-action="tp-at-new">'+SVG.refresh+' Nouveau cas</button>'+(st.res||st.revealed?'':'<button class="btn-sm" data-action="tp-at-reveal">Voir le corrigé</button>')+'</div>'+
@@ -6610,7 +6650,7 @@ function tpAteliers(){
   var cur=ui.tpAt||'ca3';
   var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
-    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, écrits professionnels, rapprochement bancaire, budget de trésorerie (CCP1) ; exigibilité et déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, travaux d\'inventaire, ajustement des dépréciations, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
+    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, écrits professionnels, rapprochement bancaire, budget de trésorerie (CCP1) ; exigibilité et déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, valeurs mobilières de placement, travaux d\'inventaire, ajustement des dépréciations, provisions pour risques, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
     '<div class="row" style="margin:14px 0 0;align-items:center"><button class="btn-sm" data-action="tp-at-rand">'+SVG.refresh+' Un atelier au hasard</button><span class="tool-sub" style="margin:0">de préférence dans le CCP en cours, parmi ceux pas encore réussis sans faute</span></div>'+
     '<div style="margin-top:10px">'+chipsH+'</div>'+tpAtBody(cur);
 }
@@ -6629,7 +6669,7 @@ function tpAtVerify(){
   st.res=res;
   var good=Object.keys(res).filter(function(f){return res[f];}).length,total=Object.keys(res).length,pct=Math.round(good/total*100);
   if(!state.tp.at||typeof state.tp.at!=='object')state.tp.at={};
-  var s=state.tp.at[k]||{n:0,best:0,ok:0};s.n++;if(pct>s.best)s.best=pct;if(good===total)s.ok=(s.ok||0)+1;state.tp.at[k]=s;
+  var s=state.tp.at[k]||{n:0,best:0,ok:0};s.n++;if(pct>s.best)s.best=pct;if(good===total)s.ok=(s.ok||0)+1;if(good===total&&!st.revealed&&st.t0&&!st.dur){st.dur=Math.max(1,Math.round((Date.now()-st.t0)/1000));if(!s.bt||st.dur<s.bt)s.bt=st.dur;}state.tp.at[k]=s;
   logSession('atelier','Atelier '+TP_AT.filter(function(a){return a[0]===k;})[0][1],{n:good,d:total});
   announce(good===total?'Sans faute : '+good+' sur '+total+'.':'Résultat : '+good+' réponses justes sur '+total+'. Les valeurs attendues sont affichées.');
 }
@@ -6642,7 +6682,7 @@ var FORM_PHASES=[
   {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
     mods:['decla-tva','paie','couts','analyse','sic'],at:['exi','ca3','ue','paie','cp','tdb','sr'],msp:'CCP2',ccp:'CCP2'},
   {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
-    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','inv','depaj','emp','aff'],msp:'CCP3',ccp:'CCP3'},
+    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','vmp','inv','depaj','prov','emp','aff'],msp:'CCP3',ccp:'CCP3'},
   {k:'final',n:'Dossier pro & session',s:'Session',w:14,d:'Finaliser le dossier professionnel, préparer les entretiens, enchaîner les mises en situation complètes.',
     mods:[],at:[],msp:'TPCA',ccp:''}
 ];
@@ -10856,7 +10896,7 @@ document.addEventListener('click',function(e){
   else if(a==='dl-tp-dp'){downloadTpDp();}
   else if(a==='dl-tp-grille'){downloadTpGrille();}
   else if(a==='dl-methodo-tp'){downloadMethodoTp();}
-  else if(a==='tp-at'){ui.tpAt=t.dataset.k||'ca3';render();}
+  else if(a==='tp-at'){ui.tpAt=t.dataset.k||'ca3';var _sa=ui.tpAtData&&ui.tpAtData[ui.tpAt];if(_sa&&!_sa.res&&!Object.keys(_sa.ans).length)_sa.t0=Date.now();render();}
   else if(a==='tp-at-rand'){var _cc2=null;try{var _t2=formTimeline(),_p2=_t2.cur>=0?_t2.phases[_t2.cur].p:null;if(_p2&&_p2.ccp)_cc2=_p2.ccp;}catch(e){}
     var _pool=TP_AT.filter(function(x){return x[0]!==ui.tpAt&&(!_cc2||x[2]===_cc2);});var _todo=_pool.filter(function(x){var s=state.tp.at&&state.tp.at[x[0]];return !(s&&s.ok>0);});if(_todo.length)_pool=_todo;if(!_pool.length)_pool=TP_AT.filter(function(x){return x[0]!==ui.tpAt;});
     var _pk=_pool[Math.floor(Math.random()*_pool.length)];ui.tpAt=_pk[0];render();focusMain();announce('Atelier tiré au sort : '+_pk[1]+'.');}
@@ -10866,7 +10906,7 @@ document.addEventListener('click',function(e){
   else if(a==='plan-at'){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';ui.tpAt=t.dataset.k||'ca3';render();focusMain();}
   else if(a==='form-dates-save'){var _fs=document.getElementById('form-start'),_fe=document.getElementById('form-end'),_ff=document.getElementById('form-fend');if(_fs&&_fs.value)setFormStart(_fs.value);if(_ff&&_ff.value)setFormEnd(_ff.value);var _fo=document.getElementById('form-order');try{if(_fo&&/^[123]{3}$/.test(_fo.value))localStorage.setItem('legl.ccpOrder',_fo.value);var _st=[];[0,1].forEach(function(i){var a1=document.getElementById('stage'+i+'-s'),b1=document.getElementById('stage'+i+'-e');if(a1&&b1&&a1.value&&b1.value){_st.push(a1.value<=b1.value?[a1.value,b1.value]:[b1.value,a1.value]);}});localStorage.setItem('legl.stages',JSON.stringify(_st));}catch(e){}if(_fe&&_fe.value)setExamDate(_fe.value);render();announce('Dates de formation enregistrées.');}
   else if(a==='form-agenda-sync'){var _s0=formStart(),_e0=formEnd(),_ps=state.agenda.periods,_hit=null;_ps.forEach(function(p){if(!_hit&&p.kind==='tp'&&/^Formation/.test(p.label||''))_hit=p;});if(_hit){_hit.start=_s0;_hit.end=_e0;_hit.label='Formation Titre Pro Comptable assistant';}else _ps.push({id:agendaId(),start:_s0,end:_e0,label:'Formation Titre Pro Comptable assistant',kind:'tp'});var _tl=formTimeline();_tl.phases.forEach(function(x){var lab='Étape : '+x.p.n,ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});var sd=localDateStr(x.start),ed=localDateStr(new Date(x.end.getTime()-DAY));if(ex){ex.start=sd;ex.end=ed;}else _ps.push({id:agendaId(),start:sd,end:ed,label:lab,kind:'tp'});});formStages().forEach(function(x,i){var lab='Stage en entreprise'+(formStages().length>1?' '+(i+1):''),ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});if(ex){ex.start=x[0];ex.end=x[1];}else _ps.push({id:agendaId(),start:x[0],end:x[1],label:lab,kind:'alternance'});});var _ex=getExamDate(),_se=null;_ps.forEach(function(p){if(/^Session du titre/.test(p.label||''))_se=p;});if(_se){_se.start=_ex;_se.end=_ex;_se.label='Session du titre (date à confirmer)';}else _ps.push({id:agendaId(),start:_ex,end:_ex,label:'Session du titre (date à confirmer)',kind:'tp'});save();render();announce('Formation et étapes reportées dans l\'agenda.');}
-  else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
+  else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false,t0:Date.now()};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;var _ta9=document.getElementById('tpat-mail');if(_ta9)_ar.mail=_ta9.value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
   else if(a==='mock-start'){oralMockStart(t.dataset.k==='final'?'final':'tech');render();focusMain();}
