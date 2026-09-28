@@ -8278,14 +8278,15 @@ function cabDocHTML(d){
 function cabAcctList(){var seen={},out=[];PLAN_COMPTABLE.forEach(function(p){if(!seen[p.num]){seen[p.num]=1;out.push(p);}});return out;}
 function cabDatalist(){return '<datalist id="cab-accts">'+cabAcctList().map(function(p){return '<option value="'+escHtml(p.num)+'" label="'+escHtml(p.lib)+'">'+escHtml(p.lib)+'</option>';}).join('')+'</datalist>';}
 function cabEcrInput(st,prev){
-  var rows='';
-  for(var i=0;i<st.sol.length;i++){
-    var pv=(prev&&prev[i])||{acc:'',side:i<st.sol.filter(function(l){return l.side==='D';}).length?'D':'C',amt:''};
+  /* Comme à l'examen, le nombre de lignes n'est pas donné : 2 lignes au départ, on en ajoute au besoin. */
+  var rows='',nr=Math.max(2,prev&&prev.length?prev.length:2);
+  for(var i=0;i<nr;i++){
+    var pv=(prev&&prev[i])||{acc:'',side:i===0?'D':'C',amt:''};
     rows+='<tr class="cab-row"><td><input class="cab-acc" list="cab-accts" aria-label="Compte, ligne '+(i+1)+'" value="'+escHtml(pv.acc)+'" placeholder="Tape un nom : banque, clients…" autocomplete="off"><span class="cab-lib">'+escHtml(pcLib(pv.acc))+'</span></td>'+
       '<td><select class="cab-side" aria-label="Sens, ligne '+(i+1)+'"><option value="D"'+(pv.side==='D'?' selected':'')+'>Débit</option><option value="C"'+(pv.side==='C'?' selected':'')+'>Crédit</option></select></td>'+
       '<td><input class="cab-amt" inputmode="decimal" aria-label="Montant, ligne '+(i+1)+'" value="'+escHtml(pv.amt===''||pv.amt==null?'':String(pv.amt).replace('.',','))+'" placeholder="0,00"></td></tr>';
   }
-  return cabDatalist()+'<table class="cab-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+  return cabDatalist()+'<table class="cab-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+(nr<10?'<button class="btn-sm cab-add" data-action="cab-addrow">+ Ajouter une ligne</button>':'')+
     '<div class="cab-eq" id="cab-eq"></div><p class="kbd-hint">Tape le nom du compte (banque, TVA collectée…) et choisis dans la liste : le numéro s\'inscrit tout seul. Entrée pour vérifier.</p>';
 }
 function cabReadRows(){var rows=document.querySelectorAll('.cab-row'),out=[];for(var i=0;i<rows.length;i++){out.push({acc:((rows[i].querySelector('.cab-acc')||{}).value||'').trim(),side:(rows[i].querySelector('.cab-side')||{}).value||'D',amt:parseAmt((rows[i].querySelector('.cab-amt')||{}).value)});}return out;}
@@ -8296,9 +8297,11 @@ function cabReadDOM(){
   if(st.type==='redac'){var ta=document.getElementById('cab-redac');if(ta)run.draft=ta.value;}
 }
 function cabVerifyEcr(sol,rows){
+  rows=rows.filter(function(r){return r.acc||r.amt;});
   var used=[],det=sol.map(function(s){for(var i=0;i<rows.length;i++){if(used.indexOf(i)<0&&(rows[i].acc===s.acc||(s.alt&&s.alt.indexOf(rows[i].acc)>=0))&&rows[i].side===s.side&&Math.abs(rows[i].amt-s.amt)<0.005){used.push(i);return true;}}return false;});
   var td=0,tc=0;rows.forEach(function(r){if(r.side==='D')td=r2(td+r.amt);else tc=r2(tc+r.amt);});
-  return {ok:det.every(Boolean),det:det,td:td,tc:tc,bal:td>0&&td===tc};
+  var extra=rows.length-used.length;
+  return {ok:det.every(Boolean)&&extra===0,det:det,td:td,tc:tc,bal:td>0&&td===tc,extra:extra};
 }
 function cabCompLabel(d,ci){var c=null;TP_CCP.forEach(function(x){if(x.code===d.ccp)c=x;});return c&&c.comps[ci]?c.comps[ci].t:d.ccp;}
 function cabStepScore(st,r){if(!r||!r.v)return null;if(st.type==='redac')return r.crit?r.crit.filter(Boolean).length/st.crit.length:0;return r.ok?1:0;}
@@ -8348,7 +8351,7 @@ function cabPrintHTML(d,corr){
     var h='<section class="cp-step"><h3>'+(i+1)+'. '+escHtml(st.titre)+' <span class="cp-comp">'+escHtml(cabCompLabel(d,st.comp))+'</span></h3>'+cabDocHTML(st.doc)+(st.consigne?'<p class="cp-cons">'+escHtml(st.consigne)+'</p>':'');
     if(st.type==='ecr'){h+='<p class="cp-meta">Journal '+escHtml(st.journal)+' · date '+escHtml(st.date)+' · pièce '+escHtml(st.piece)+'</p>';
       if(corr)h+='<table class="cf-tbl cp-grid"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>'+st.sol.map(function(l){return '<tr><td>'+l.acc+' '+escHtml(pcLib(l.acc)||'')+'</td><td class="n">'+(l.side==='D'?cabMoney(l.amt):'')+'</td><td class="n">'+(l.side==='C'?cabMoney(l.amt):'')+'</td></tr>';}).join('')+'</tbody></table>';
-      else{var rows='';for(var k=0;k<st.sol.length+1;k++)rows+='<tr><td>&nbsp;</td><td></td><td></td></tr>';h+='<table class="cf-tbl cp-grid cp-blank"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>'+rows+'</tbody></table>';}}
+      else{var rows='';for(var k=0;k<Math.max(5,st.sol.length+1);k++)rows+='<tr><td>&nbsp;</td><td></td><td></td></tr>';h+='<table class="cf-tbl cp-grid cp-blank"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>'+rows+'</tbody></table>';}}
     else if(st.type==='calc')h+='<table class="cf-tbl cp-grid'+(corr?'':' cp-blank')+'"><tbody>'+st.f.map(function(f){return '<tr><td>'+escHtml(f.l)+'</td><td class="n">'+(corr?String(f.v).replace('.',','):'&nbsp;')+'</td></tr>';}).join('')+'</tbody></table>';
     else if(st.type==='qcm')h+='<p class="cp-cons">'+escHtml(st.q)+'</p><ol type="A" class="cp-qcm">'+st.o.map(function(o,k){return '<li'+(corr&&k===st.c?' class="cp-good"':'')+'>'+escHtml(o)+'</li>';}).join('')+'</ol>';
     else if(st.type==='redac')h+=corr?'<div class="cab-model">'+st.modele.map(function(p){return '<p>'+escHtml(p)+'</p>';}).join('')+'</div><ul class="tp-ul">'+st.crit.map(function(c){return '<li>'+escHtml(c)+'</li>';}).join('')+'</ul>':'<div class="cp-lines"></div>';
@@ -8369,7 +8372,7 @@ function cabStepHTML(d,cs){
     else{
       var sol=st.sol.map(function(l,k){var ok=r.det&&r.det[k];return '<tr class="'+(ok?'ok':'ko')+'"><td>'+escHtml(pcLib(l.acc)||l.acc)+' <span class="mono">('+l.acc+')</span></td><td class="n">'+(l.side==='D'?cabMoney(l.amt):'')+'</td><td class="n">'+(l.side==='C'?cabMoney(l.amt):'')+'</td><td class="mk">'+(ok?SVG.check:SVG.x)+'</td></tr>';}).join('');
       var mine=(r.u||[]).map(function(l){return '<tr><td>'+escHtml(pcLib(l.acc)||l.acc||'—')+(l.acc?' <span class="mono">('+escHtml(l.acc)+')</span>':'')+'</td><td class="n">'+(l.side==='D'&&l.amt?cabMoney(l.amt):'')+'</td><td class="n">'+(l.side==='C'&&l.amt?cabMoney(l.amt):'')+'</td></tr>';}).join('');
-      body+='<div class="quiz-fb '+(r.ok?'ok':'ko')+'">'+(r.ok?SVG.check+'&nbsp; Écriture juste et équilibrée.':(r.skip?SVG.eye+'&nbsp; Corrigé affiché, étape comptée comme à revoir.':SVG.x+'&nbsp; Pas tout à fait. Compare avec le corrigé.'))+'</div>'+
+      body+='<div class="quiz-fb '+(r.ok?'ok':'ko')+'">'+(r.ok?SVG.check+'&nbsp; Écriture juste et équilibrée.':(r.extra>0&&r.det&&r.det.every(Boolean)?SVG.x+'&nbsp; Les bonnes lignes y sont, mais '+(r.extra>1?r.extra+' lignes sont en trop':'une ligne est en trop')+'.':'')+(r.extra>0&&r.det&&r.det.every(Boolean)?'':(r.skip?SVG.eye+'&nbsp; Corrigé affiché, étape comptée comme à revoir.':SVG.x+'&nbsp; Pas tout à fait. Compare avec le corrigé.')))+'</div>'+
         '<div class="cab-corr"><div><div class="eyebrow">Corrigé</div><table class="cf-tbl cab-sol"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th><th></th></tr></thead><tbody>'+sol+'</tbody></table></div>'+
         (mine&&!r.skip&&!r.ok?'<div><div class="eyebrow">Ta saisie</div><table class="cf-tbl"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>'+mine+'</tbody></table></div>':'')+'</div>'+
         '<div class="qexpl"><span style="color:var(--debit);flex-shrink:0">'+SVG.dot+'</span><span>'+escHtml(st.e)+'</span></div>';
@@ -8430,13 +8433,14 @@ function cabAction(a,t){
   var st=d.steps[cs.i];
   if(a==='cab-go'){cs.i=Math.max(0,Math.min(d.steps.length-1,parseInt(t.dataset.i,10)||0));run.bilan=false;run.draft=null;run.showModel=false;run.crit=null;save();render();return;}
   if(a==='cab-bilan'){run.bilan=true;render();return;}
+  if(a==='cab-addrow'){var dr=(run.draft&&run.draft.length)?run.draft:cabReadRows();dr.push({acc:'',side:'C',amt:''});run.draft=dr;render();window.scrollTo(0,y);var ins=document.querySelectorAll('.cab-row .cab-acc');if(ins.length)ins[ins.length-1].focus();return;}
   if(a==='cab-print'){run.print=t.dataset.k==='corrige'?'corrige':'enonce';render();window.scrollTo(0,0);return;}
   if(a==='cab-print-close'){run.print=null;render();return;}
   if(a==='cab-prev'){if(cs.i>0){cs.i--;run.draft=null;run.showModel=false;save();}render();return;}
   if(a==='cab-next'){run.draft=null;run.showModel=false;run.crit=null;if(cs.i<d.steps.length-1){cs.i++;save();}else{run.bilan=true;cabFinish(d);}render();return;}
   if(a==='cab-restart'){state.tp.cab[d.id]={i:0,r:{},done:cs.done,best:cs.best,n:cs.n};ui.cab={id:d.id};save();render();return;}
   if(a==='cab-verify'){
-    if(st.type==='ecr'){var rows=cabReadRows(),v=cabVerifyEcr(st.sol,rows);cs.r[cs.i]={v:1,ok:v.ok,det:v.det,u:rows};announce(v.ok?'Écriture juste.':'Écriture à revoir, le corrigé est affiché.');}
+    if(st.type==='ecr'){var rows=cabReadRows(),v=cabVerifyEcr(st.sol,rows);cs.r[cs.i]={v:1,ok:v.ok,det:v.det,u:rows.filter(function(r){return r.acc||r.amt;}),extra:v.extra};announce(v.ok?'Écriture juste.':'Écriture à revoir, le corrigé est affiché.');}
     else if(st.type==='calc'){var els=document.querySelectorAll('.cab-f'),u={},det={},ok=true;for(var i=0;i<els.length;i++)u[els[i].dataset.k]=els[i].value;st.f.forEach(function(f){var n=tpNum(u[f.k]);det[f.k]=isFinite(n)&&Math.abs(n-f.v)<=(f.tol||0.011);if(!det[f.k])ok=false;});cs.r[cs.i]={v:1,ok:ok,det:det,u:u};announce(ok?'Tout est juste.':'Certaines valeurs sont à revoir.');}
     run.draft=null;save();render();window.scrollTo(0,y);return;
   }
