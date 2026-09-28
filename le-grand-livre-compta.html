@@ -4397,7 +4397,7 @@ function viewFiche(){
 }
 /* ==== Mes cartes : flashcards personnelles tirées des notes de cours (stockées dans state.tp.mycards) ==== */
 function myCards(){if(!state.tp.mycards||!Array.isArray(state.tp.mycards))state.tp.mycards=[];return state.tp.mycards;}
-function mergeMyCards(){for(var i=CARDS.length-1;i>=0;i--){if(CARDS[i].t==='perso')CARDS.splice(i,1);}myCards().forEach(function(c){CARDS.push({id:c.id,t:'perso',q:escHtml(c.q),a:escHtml(c.a)});});}
+function mergeMyCards(){_srchIdx=null;for(var i=CARDS.length-1;i>=0;i--){if(CARDS[i].t==='perso')CARDS.splice(i,1);}myCards().forEach(function(c){CARDS.push({id:c.id,t:'perso',q:escHtml(c.q),a:escHtml(c.a)});});}
 function parseMyCardLines(txt){
   var out=[];String(txt||'').split(/\n+/).forEach(function(l){l=l.trim();if(!l)return;var q,a,m;
     if((m=/^(.+?)\s*(?:\||::|=>|→)\s*(.+)$/.exec(l))){q=m[1];a=m[2];}
@@ -10376,8 +10376,11 @@ function buildSearchIndex(){
   (typeof NAV_ITEMS!=='undefined'?NAV_ITEMS:[]).forEach(function(n){
     idx.push({type:'nav',label:n.label,sub:n.sub||'',action:function(){n.go();render();}});
   });
-  MODULES.forEach(function(m){
-    idx.push({type:'module',label:m.title,sub:m.sub||'',action:function(){ui.tab='parcours';route={name:'module',mi:m.mi||0,step:0};ui.quiz=null;render();}});
+  MODULES.forEach(function(m,mi){
+    idx.push({type:'module',label:m.title,sub:m.sub||'',action:function(){ui.tab='parcours';route={name:'module',mi:mi,step:0};ui.quiz=null;render();}});
+  });
+  (typeof CAB_DOSSIERS!=='undefined'?CAB_DOSSIERS:[]).forEach(function(d){
+    idx.push({type:'dossier cabinet',label:d.client,sub:d.ccp+' · '+d.secteur+' · '+d.steps.map(function(x){return x.titre;}).join(', '),action:function(){ui.tab='terrain';ui.terrainTab='cabinet';ui.cab={id:d.id};render();}});
   });
   CARDS.forEach(function(c){
     idx.push({type:'card',label:c.q,sub:c.a,action:function(){ui.tab='cards';ui.session=null;ui.cardsFilter=c.t;render();}});
