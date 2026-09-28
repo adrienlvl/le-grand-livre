@@ -4463,6 +4463,14 @@ function viewSession(){
 
 /* Banque de questions supplémentaires pour l'examen blanc (élargit le tirage). */
 var EXAM_EXTRA=[
+{q:"Dans un budget de trésorerie, une vente de 1 000 € HT (TVA 20 %) payable à 30 jours, facturée en mars, figure…",o:["en mars pour 1 000 €","en avril pour 1 200 €","en mars pour 1 200 €","en avril pour 1 000 €"],c:1,e:"Le budget suit l'argent : le client paie 1 200 € TTC en avril.",cat:"op",mod:"Trésorerie"},
+{q:"Quel élément n'apparaît jamais dans un budget de trésorerie ?",o:["La TVA à décaisser","Le remboursement d'un emprunt","La dotation aux amortissements","Le paiement des salaires"],c:2,e:"La dotation est une charge calculée, sans mouvement d'argent.",cat:"op",mod:"Trésorerie"},
+{q:"Note de frais : sur quelle dépense la TVA est-elle récupérable ?",o:["Billet de train du salarié","Nuit d'hôtel du salarié","Fournitures achetées pour l'entreprise, avec facture","Aucune, une note de frais n'ouvre jamais droit à déduction"],c:2,e:"La TVA sur le transport de personnes et l'hébergement du personnel n'est pas déductible ; celle des fournitures l'est avec une facture.",cat:"op",mod:"Note de frais"},
+{q:"CA 400 000 €, charges variables 240 000 €, charges fixes 120 000 €. Seuil de rentabilité ?",o:["300 000 €","360 000 €","200 000 €","160 000 €"],c:0,e:"Taux de marge sur coût variable = 160 000 ÷ 400 000 = 40 %. Seuil = 120 000 ÷ 40 % = 300 000 €.",cat:"gest",mod:"Seuil de rentabilité"},
+{q:"Seuil 300 000 € pour un CA annuel de 400 000 € réguliers : point mort ?",o:["Fin juin","Fin septembre","Fin octobre","Fin août"],c:1,e:"300 000 ÷ 400 000 × 12 mois = 9 mois : fin septembre (270 jours).",cat:"gest",mod:"Seuil de rentabilité"},
+{q:"Salaire mensuel 2 000 €, pas d'élément variable, 12 jours ouvrables de congés. Indemnité selon le dixième ?",o:["800 €","960 €","923,08 €","1 000 €"],c:1,e:"24 000 × 10 % × 12 / 30 = 960 €. Le maintien (2 000 ÷ 26 × 12 = 923,08 €) est moins favorable : on verse 960 €.",cat:"soc",mod:"Congés payés"},
+{q:"Emprunt de 50 000 € à 4 % le 1er octobre, échéance annuelle. Intérêts courus au 31 décembre ?",o:["2 000 €","500 €","1 500 €","166,67 €"],c:1,e:"50 000 × 4 % × 3/12 = 500 €, en charge d'intérêts contre une dette d'intérêts courus.",cat:"inv",mod:"Emprunts"},
+{q:"Dans une annuité d'emprunt, ce qui diminue le résultat, c'est…",o:["l'annuité entière","le capital remboursé","les intérêts","rien, c'est un mouvement de trésorerie"],c:2,e:"Seuls les intérêts sont des charges ; le capital remboursé diminue la dette.",cat:"inv",mod:"Emprunts"},
 {q:"Un salarié à 35 h fait 10 heures supplémentaires dans la semaine. Comment sont-elles majorées (sans accord particulier) ?",o:["8 heures à 25 % et 2 heures à 50 %", "10 heures à 25 %", "10 heures à 50 %", "5 heures à 25 % et 5 heures à 50 %"],c:0,e:"Les 8 premières heures supplémentaires sont majorées de 25 %, les suivantes de 50 %.",cat:"soc",mod:"Paie & social"},
 {q:"Pour une année complète de travail, combien de jours ouvrables de congés payés ?",o:["25 jours ouvrables", "30 jours ouvrables", "35 jours ouvrables", "20 jours ouvrables"],c:1,e:"2,5 jours ouvrables par mois × 12 = 30 jours ouvrables, soit 5 semaines.",cat:"soc",mod:"Paie & social"},
 {q:"L'indemnité de congés payés retenue est…",o:["toujours le maintien de salaire", "toujours 10 % de la rémunération annuelle", "la plus favorable entre maintien de salaire et règle du dixième", "fixée par l'URSSAF chaque année"],c:2,e:"On compare les deux méthodes et on retient la plus avantageuse pour le salarié.",cat:"soc",mod:"Paie & social"},
@@ -4767,9 +4775,12 @@ function buildAdaptiveExam(want){
 function buildDayplan(len){
   var std=len==='standard';
   var nCards=std?12:6,nQ=std?4:2,nExo=std?2:1;
-  var all=deck('all');
+  /* Titre Pro : pendant l'étape d'un CCP du plan de formation, la session porte d'abord sur ce CCP. */
+  var _cc=null;if(isTP()){try{var _tl=formTimeline(),_ph=_tl.cur>=0?_tl.phases[_tl.cur].p:null;if(_ph&&_ph.ccp)_cc=_ph.ccp.toLowerCase();}catch(e){}}
+  var all=deck(_cc||'all');
   // Cartes : les dues d'abord, puis les plus faibles (boîte < 4) des thèmes les moins maîtrisés
-  var due=shuffle(dueList('all'));
+  var due=shuffle(dueList(_cc||'all'));
+  if(_cc){var _hv={};due.forEach(function(c){_hv[c.id]=1;});due=due.concat(shuffle(dueList('all').filter(function(c){return !_hv[c.id];})));}
   var cards=due.slice(0,nCards);
   if(cards.length<nCards){
     var have={};cards.forEach(function(c){have[c.id]=true;});
@@ -4780,7 +4791,7 @@ function buildDayplan(len){
   }
   // Questions d'examen : ciblées sur la catégorie la moins réussie
   var weakCat=weakestExamCat();
-  var qs=examGenerate(weakCat,nQ);
+  var qs=_cc?examGenerate(_cc,nQ-1).concat(examGenerate(weakCat,1)):examGenerate(weakCat,nQ);
   if(qs.length<nQ)qs=qs.concat(examGenerate('all',nQ-qs.length));
   // Exercices de saisie : type priorisé par la répétition espacée des exercices
   var exos=[];for(var e=0;e<nExo;e++)exos.push(genExo());
