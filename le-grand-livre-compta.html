@@ -8530,8 +8530,8 @@ function erpJournalHTML(){
   var items=entries.slice().reverse().map(function(en){
     var lignes=en.lignes.map(function(l){
       var dval=parseFloat(l.debit)||0,cval=parseFloat(l.credit)||0;
-      var dCell=dval?'<span class="pc-bdg pc-dz">'+fmt(dval)+'</span>':'';
-      var cCell=cval?'<span class="pc-bdg pc-cr2">'+fmt(cval)+'</span>':'';
+      var dCell=dval?'<span class="pc-bdg pc-dz">'+fmt2(dval)+'</span>':'';
+      var cCell=cval?'<span class="pc-bdg pc-cr2">'+fmt2(cval)+'</span>':'';
       return '<tr>'+
         '<td style="padding:4px 8px 4px 0;font-size:13px"><span class="mono" style="font-size:12px;color:var(--ink2)">'+escHtml(l.compte)+'</span> '+escHtml(pcLib(l.compte))+'</td>'+
         '<td style="padding:4px 0;text-align:right">'+dCell+'</td>'+
@@ -8549,7 +8549,7 @@ function erpJournalHTML(){
     '</div>';
   }).join('');
   return '<div class="eyebrow" style="margin:28px 0 6px">Journal des écritures</div>'+
-    '<p style="color:var(--ink2);font-size:13px;margin:0 0 12px">'+entries.length+' écriture'+(entries.length>1?'s':'')+' enregistrée'+(entries.length>1?'s':'')+' · total cumulé au débit '+fmt(totD)+'</p>'+
+    '<p style="color:var(--ink2);font-size:13px;margin:0 0 12px">'+entries.length+' écriture'+(entries.length>1?'s':'')+' enregistrée'+(entries.length>1?'s':'')+' · total cumulé au débit '+fmt2(totD)+'</p>'+
     items;
 }
 var ERP_JLAB={ACH:'Achats',VTE:'Ventes',BQ:'Banque',OD:'OD'};
@@ -8579,20 +8579,20 @@ function erpControles(){
     var d=0,c=0;(en.lignes||[]).forEach(function(l){d+=parseFloat(l.debit)||0;c+=parseFloat(l.credit)||0;});
     d=r2(d);c=r2(c);gd+=d;gc+=c;
     var ref=(ERP_JLAB[en.journal]||en.journal||'')+(en.piece?' · pièce '+en.piece:'')+(en.libelle?' — '+en.libelle:'');
-    if(d!==c)out.push({lvl:'err',t:'Pièce déséquilibrée',d:ref+' : débit '+fmt(d)+' ≠ crédit '+fmt(c)+' (écart '+fmt(r2(Math.abs(d-c)))+').'});
+    if(d!==c)out.push({lvl:'err',t:'Pièce déséquilibrée',d:ref+' : débit '+fmt2(d)+' ≠ crédit '+fmt2(c)+' (écart '+fmt2(r2(Math.abs(d-c)))+').'});
     var nz=(en.lignes||[]).filter(function(l){return (parseFloat(l.debit)||0)>0||(parseFloat(l.credit)||0)>0;});
     if(nz.length<2)out.push({lvl:'warn',t:'Écriture incomplète',d:ref+' : la partie double impose de mouvementer au moins deux comptes.'});
   });
   gd=r2(gd);gc=r2(gc);
-  if(gd!==gc)out.push({lvl:'err',t:'Balance déséquilibrée',d:'Total des débits '+fmt(gd)+' ≠ total des crédits '+fmt(gc)+' (écart '+fmt(r2(Math.abs(gd-gc)))+'). Une écriture est incomplète.'});
+  if(gd!==gc)out.push({lvl:'err',t:'Balance déséquilibrée',d:'Total des débits '+fmt2(gd)+' ≠ total des crédits '+fmt2(gc)+' (écart '+fmt2(r2(Math.abs(gd-gc)))+'). Une écriture est incomplète.'});
   erpAgg().forEach(function(c){
     var num=c.num,acc=erpAccount(num),sd=r2(c.td-c.tc);
     if(!acc){out.push({lvl:'warn',t:'Compte hors plan',d:'Le compte '+num+' est absent du plan comptable — vérifie le numéro.'});return;}
-    if(acc.cl===6&&sd<-0.005)out.push({lvl:'warn',t:'Charge au solde créditeur',d:num+' '+c.lib+' (classe 6) est créditeur de '+fmt(-sd)+'. Une charge est normalement débitrice — vérifie le sens.'});
-    else if(acc.cl===7&&sd>0.005)out.push({lvl:'warn',t:'Produit au solde débiteur',d:num+' '+c.lib+' (classe 7) est débiteur de '+fmt(sd)+'. Un produit est normalement créditeur — vérifie le sens.'});
+    if(acc.cl===6&&sd<-0.005)out.push({lvl:'warn',t:'Charge au solde créditeur',d:num+' '+c.lib+' (classe 6) est créditeur de '+fmt2(-sd)+'. Une charge est normalement débitrice — vérifie le sens.'});
+    else if(acc.cl===7&&sd>0.005)out.push({lvl:'warn',t:'Produit au solde débiteur',d:num+' '+c.lib+' (classe 7) est débiteur de '+fmt2(sd)+'. Un produit est normalement créditeur — vérifie le sens.'});
     if(/^44566/.test(num)&&sd<-0.005)out.push({lvl:'warn',t:'TVA déductible inhabituelle',d:num+' (TVA déductible) est au solde créditeur : sens inhabituel, vérifie.'});
     if(/^44571/.test(num)&&sd>0.005)out.push({lvl:'warn',t:'TVA collectée inhabituelle',d:num+' (TVA collectée) est au solde débiteur : sens inhabituel, vérifie.'});
-    if(/^512/.test(num)&&sd<-0.005)out.push({lvl:'info',t:'Banque créditrice',d:num+' '+c.lib+' est créditeur de '+fmt(-sd)+' : situation de découvert, à confirmer.'});
+    if(/^512/.test(num)&&sd<-0.005)out.push({lvl:'info',t:'Banque créditrice',d:num+' '+c.lib+' est créditeur de '+fmt2(-sd)+' : situation de découvert, à confirmer.'});
     if(/^411/.test(num)&&sd<-0.005)out.push({lvl:'info',t:'Client créditeur',d:num+' '+c.lib+' est créditeur : avance reçue ou avoir à établir, à confirmer.'});
     if(/^401/.test(num)&&sd>0.005)out.push({lvl:'info',t:'Fournisseur débiteur',d:num+' '+c.lib+' est débiteur : avance versée ou avoir à recevoir, à confirmer.'});
   });
@@ -8641,16 +8641,16 @@ function erpTComptes(comptes){
     var creds=c.mvts.filter(function(m){return (m.credit||0)>0;});
     var side=function(list,key){
       if(!list.length)return '<div class="tacc-mv" style="opacity:.4"><span class="lbl">—</span></div>';
-      return list.map(function(m){var lab=m.libelle||m.piece||ERP_JLAB[m.journal]||'—';return '<div class="tacc-mv"><span class="lbl" title="'+escHtml((m.libelle||'')+(m.piece?' · '+m.piece:''))+'">'+escHtml(lab)+'</span><span class="amt">'+fmt(m[key])+'</span></div>';}).join('');
+      return list.map(function(m){var lab=m.libelle||m.piece||ERP_JLAB[m.journal]||'—';return '<div class="tacc-mv"><span class="lbl" title="'+escHtml((m.libelle||'')+(m.piece?' · '+m.piece:''))+'">'+escHtml(lab)+'</span><span class="amt">'+fmt2(m[key])+'</span></div>';}).join('');
     };
-    var solde=c.td>c.tc?'<span class="pc-bdg pc-dz">Solde débiteur '+fmt(r2(c.td-c.tc))+'</span>':(c.tc>c.td?'<span class="pc-bdg pc-cr2">Solde créditeur '+fmt(r2(c.tc-c.td))+'</span>':'<span style="color:var(--ink2);font-size:12px">soldé</span>');
+    var solde=c.td>c.tc?'<span class="pc-bdg pc-dz">Solde débiteur '+fmt2(r2(c.td-c.tc))+'</span>':(c.tc>c.td?'<span class="pc-bdg pc-cr2">Solde créditeur '+fmt2(r2(c.tc-c.td))+'</span>':'<span style="color:var(--ink2);font-size:12px">soldé</span>');
     return '<div class="tacc">'+
       '<div class="tacc-h"><span class="mono" style="font-weight:700">'+escHtml(c.num)+'</span><span style="font-weight:600">'+escHtml(c.lib)+'</span></div>'+
       '<div class="tacc-cols">'+
         '<div class="tacc-side deb"><div class="tacc-sh">Débit</div>'+side(debs,'debit')+'</div>'+
         '<div class="tacc-side cred"><div class="tacc-sh">Crédit</div>'+side(creds,'credit')+'</div>'+
       '</div>'+
-      '<div class="tacc-foot"><span>Total D <span class="mono">'+fmt(c.td)+'</span></span><span>Total C <span class="mono">'+fmt(c.tc)+'</span></span></div>'+
+      '<div class="tacc-foot"><span>Total D <span class="mono">'+fmt2(c.td)+'</span></span><span>Total C <span class="mono">'+fmt2(c.tc)+'</span></span></div>'+
       '<div class="tacc-solde">'+solde+'</div>'+
     '</div>';
   }).join('');
@@ -8670,17 +8670,17 @@ function viewErpGrandLivre(){
         '<td class="mono" style="padding:4px 8px;font-size:12px;color:var(--ink2)">'+escHtml(ERP_JLAB[m.journal]||m.journal||'')+'</td>'+
         '<td class="mono" style="padding:4px 8px;font-size:12px;color:var(--ink2)">'+escHtml(m.piece||'')+'</td>'+
         '<td style="padding:4px 8px;font-size:13px">'+escHtml(m.libelle||'')+'</td>'+
-        '<td class="mono" style="padding:4px 8px;text-align:right;font-size:13px">'+(m.debit?fmt(m.debit):'')+'</td>'+
-        '<td class="mono" style="padding:4px 0 4px 8px;text-align:right;font-size:13px">'+(m.credit?fmt(m.credit):'')+'</td>'+
+        '<td class="mono" style="padding:4px 8px;text-align:right;font-size:13px">'+(m.debit?fmt2(m.debit):'')+'</td>'+
+        '<td class="mono" style="padding:4px 0 4px 8px;text-align:right;font-size:13px">'+(m.credit?fmt2(m.credit):'')+'</td>'+
       '</tr>';
     }).join('');
-    var solde=c.td>c.tc?'<span class="pc-bdg pc-dz">Solde débiteur '+fmt(r2(c.td-c.tc))+'</span>':(c.tc>c.td?'<span class="pc-bdg pc-cr2">Solde créditeur '+fmt(r2(c.tc-c.td))+'</span>':'<span style="color:var(--ink2);font-size:12px">soldé</span>');
+    var solde=c.td>c.tc?'<span class="pc-bdg pc-dz">Solde débiteur '+fmt2(r2(c.td-c.tc))+'</span>':(c.tc>c.td?'<span class="pc-bdg pc-cr2">Solde créditeur '+fmt2(r2(c.tc-c.td))+'</span>':'<span style="color:var(--ink2);font-size:12px">soldé</span>');
     return '<div class="panel" style="margin-bottom:14px">'+
       '<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px"><span class="mono" style="font-weight:700">'+escHtml(c.num)+'</span><span style="font-weight:600">'+escHtml(c.lib)+'</span></div>'+
       '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:460px">'+
         '<thead><tr>'+th('Date')+th('Jal')+th('Pièce')+th('Libellé')+th('Débit',1)+th('Crédit',1)+'</tr></thead>'+
         '<tbody>'+mvts+'</tbody></table></div>'+
-      '<div class="je-foot" style="border-top:1px solid var(--edge);margin-top:6px"><span>Total débit <span class="mono">'+fmt(c.td)+'</span></span><span>Total crédit <span class="mono">'+fmt(c.tc)+'</span></span>'+solde+'</div>'+
+      '<div class="je-foot" style="border-top:1px solid var(--edge);margin-top:6px"><span>Total débit <span class="mono">'+fmt2(c.td)+'</span></span><span>Total crédit <span class="mono">'+fmt2(c.tc)+'</span></span>'+solde+'</div>'+
     '</div>';
   }).join('');
   return glHead+sections;
@@ -8695,10 +8695,10 @@ function viewErpBalance(){
     return '<tr>'+
       '<td class="mono" style="padding:6px 8px 6px 0;font-size:13px">'+escHtml(c.num)+'</td>'+
       '<td style="padding:6px 8px;font-size:13px">'+escHtml(c.lib)+'</td>'+
-      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(c.td?fmt(c.td):'')+'</td>'+
-      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(c.tc?fmt(c.tc):'')+'</td>'+
-      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(sd?fmt(sd):'')+'</td>'+
-      '<td class="mono" style="padding:6px 0 6px 8px;text-align:right;font-size:13px">'+(sc?fmt(sc):'')+'</td>'+
+      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(c.td?fmt2(c.td):'')+'</td>'+
+      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(c.tc?fmt2(c.tc):'')+'</td>'+
+      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(sd?fmt2(sd):'')+'</td>'+
+      '<td class="mono" style="padding:6px 0 6px 8px;text-align:right;font-size:13px">'+(sc?fmt2(sc):'')+'</td>'+
     '</tr>';
   }).join('');
   sumD=r2(sumD);sumC=r2(sumC);sumSD=r2(sumSD);sumSC=r2(sumSC);
@@ -8706,10 +8706,10 @@ function viewErpBalance(){
   var th=function(txt,right){return '<th style="text-align:'+(right?'right':'left')+';font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:0 8px 8px">'+txt+'</th>';};
   var foot='<tr style="border-top:2px solid var(--edge);font-weight:700">'+
     '<td colspan="2" style="padding:8px 8px 0 0">Totaux</td>'+
-    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt(sumD)+'</td>'+
-    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt(sumC)+'</td>'+
-    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt(sumSD)+'</td>'+
-    '<td class="mono" style="padding:8px 0 0 8px;text-align:right">'+fmt(sumSC)+'</td>'+
+    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt2(sumD)+'</td>'+
+    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt2(sumC)+'</td>'+
+    '<td class="mono" style="padding:8px 8px 0;text-align:right">'+fmt2(sumSD)+'</td>'+
+    '<td class="mono" style="padding:8px 0 0 8px;text-align:right">'+fmt2(sumSC)+'</td>'+
   '</tr>';
   var indicator='<div class="je-foot" style="justify-content:flex-start;margin-top:4px"><span class="'+(eq?'eq':'ne')+'">'+(eq?'Balance équilibrée ✓':'Balance déséquilibrée')+'</span></div>';
   return '<div class="eyebrow" style="margin-bottom:10px">Balance générale</div>'+
@@ -8729,13 +8729,13 @@ function downloadErp(){
     var entries=(state.erp&&state.erp.entries)?state.erp.entries:[];
     entries.slice().sort(function(a,b){return erpDateKey(a.date)<erpDateKey(b.date)?-1:(erpDateKey(a.date)>erpDateKey(b.date)?1:0);}).forEach(function(en){
       L.push('['+(ERP_JLAB[en.journal]||en.journal)+'] '+(en.date||'')+(en.piece?' · pièce '+en.piece:'')+(en.libelle?' · '+en.libelle:''));
-      (en.lignes||[]).forEach(function(l){var dv=parseFloat(l.debit)||0,cv=parseFloat(l.credit)||0;L.push('    '+l.compte+' '+pcLib(l.compte)+'   '+(dv?'D '+fmt(dv):'')+(cv?'C '+fmt(cv):''));});
+      (en.lignes||[]).forEach(function(l){var dv=parseFloat(l.debit)||0,cv=parseFloat(l.credit)||0;L.push('    '+l.compte+' '+pcLib(l.compte)+'   '+(dv?'D '+fmt2(dv):'')+(cv?'C '+fmt2(cv):''));});
     });
     L.push('');
     L.push('=== BALANCE ===');
     var sumSD=0,sumSC=0;
-    comptes.forEach(function(c){var soldeD=c.td>c.tc?r2(c.td-c.tc):0,soldeC=c.tc>c.td?r2(c.tc-c.td):0;sumSD=r2(sumSD+soldeD);sumSC=r2(sumSC+soldeC);L.push('  '+c.num+' '+c.lib+'   débit '+fmt(c.td)+' · crédit '+fmt(c.tc)+' · solde '+(soldeD?('D '+fmt(soldeD)):(soldeC?('C '+fmt(soldeC)):'0')));});
-    L.push('  TOTAUX des soldes : débiteurs '+fmt(sumSD)+' · créditeurs '+fmt(sumSC));
+    comptes.forEach(function(c){var soldeD=c.td>c.tc?r2(c.td-c.tc):0,soldeC=c.tc>c.td?r2(c.tc-c.td):0;sumSD=r2(sumSD+soldeD);sumSC=r2(sumSC+soldeC);L.push('  '+c.num+' '+c.lib+'   débit '+fmt2(c.td)+' · crédit '+fmt2(c.tc)+' · solde '+(soldeD?('D '+fmt2(soldeD)):(soldeC?('C '+fmt2(soldeC)):'0')));});
+    L.push('  TOTAUX des soldes : débiteurs '+fmt2(sumSD)+' · créditeurs '+fmt2(sumSC));
     L.push('');
     var totCh=0,totPr=0,totAc=0,totPa=0;
     comptes.forEach(function(c){var cls=(c.num||'').charAt(0),solde=r2(c.td-c.tc);
@@ -8745,13 +8745,13 @@ function downloadErp(){
     });
     var resultat=r2(totPr-totCh);
     L.push('=== COMPTE DE RÉSULTAT ===');
-    L.push('  Total charges (classe 6) : '+fmt(totCh));
-    L.push('  Total produits (classe 7) : '+fmt(totPr));
-    L.push('  Résultat de l\'exercice : '+fmt(resultat)+' ('+(resultat>=0?'bénéfice':'perte')+')');
+    L.push('  Total charges (classe 6) : '+fmt2(totCh));
+    L.push('  Total produits (classe 7) : '+fmt2(totPr));
+    L.push('  Résultat de l\'exercice : '+fmt2(resultat)+' ('+(resultat>=0?'bénéfice':'perte')+')');
     L.push('');
     L.push('=== BILAN ===');
-    L.push('  Total actif : '+fmt(totAc));
-    L.push('  Total passif (dettes et capitaux) + résultat : '+fmt(totPa)+' + '+fmt(resultat)+' = '+fmt(r2(totPa+resultat)));
+    L.push('  Total actif : '+fmt2(totAc));
+    L.push('  Total passif (dettes et capitaux) + résultat : '+fmt2(totPa)+' + '+fmt2(resultat)+' = '+fmt2(r2(totPa+resultat)));
     L.push('  '+(totAc===r2(totPa+resultat)?'Bilan équilibré (Actif = Passif).':'ATTENTION : bilan déséquilibré.'));
     L.push('');
     L.push('=== CONTRÔLE DE COHÉRENCE ===');
@@ -8786,18 +8786,18 @@ function viewErpSynthese(){
   var resultat=r2(totPr-totCh),totPaR=r2(totPa+resultat),eqB=(totAc===totPaR);
   var line=function(o){return '<tr><td class="mono" style="padding:5px 8px 5px 0;font-size:12px;color:var(--ink2)">'+escHtml(o.num||'')+'</td>'+
     '<td style="padding:5px 8px;font-size:13px">'+escHtml(o.lib||pcLib(o.num))+'</td>'+
-    '<td class="mono" style="padding:5px 0 5px 8px;text-align:right;font-size:13px">'+fmt(o.m)+'</td></tr>';};
+    '<td class="mono" style="padding:5px 0 5px 8px;text-align:right;font-size:13px">'+fmt2(o.m)+'</td></tr>';};
   var tbl=function(title,rowsArr,totLabel,totVal,accent){
     var body=rowsArr.length?rowsArr.map(line).join(''):'<tr><td colspan="3" style="padding:6px 0;color:var(--ink2);font-size:13px">&mdash;</td></tr>';
     return '<div class="panel" style="flex:1;min-width:240px"><div style="font-weight:700;margin-bottom:8px;color:var(--'+accent+')">'+title+'</div>'+
       '<table style="width:100%;border-collapse:collapse"><tbody>'+body+
       '<tr style="border-top:2px solid var(--edge);font-weight:700"><td colspan="2" style="padding:8px 8px 0 0">'+totLabel+'</td>'+
-      '<td class="mono" style="padding:8px 0 0 8px;text-align:right">'+fmt(totVal)+'</td></tr></tbody></table></div>';};
+      '<td class="mono" style="padding:8px 0 0 8px;text-align:right">'+fmt2(totVal)+'</td></tr></tbody></table></div>';};
   var chRows=charges.slice(),prRows=produits.slice(),totChBal=totCh,totPrBal=totPr;
   if(resultat>=0){chRows=chRows.concat([{num:'',lib:"Résultat de l'exercice (bénéfice)",m:resultat}]);totChBal=r2(totCh+resultat);}
   else{prRows=prRows.concat([{num:'',lib:"Résultat de l'exercice (perte)",m:r2(-resultat)}]);totPrBal=r2(totPr+(-resultat));}
   var resTables='<div style="display:flex;gap:14px;flex-wrap:wrap">'+tbl('Charges',chRows,'Total',totChBal,'credit')+tbl('Produits',prRows,'Total',totPrBal,'valid')+'</div>';
-  var resBadge='<div class="je-foot" style="justify-content:flex-start;margin-top:8px"><span class="'+(resultat>=0?'eq':'ne')+'">Résultat de l\'exercice : '+fmt(resultat)+' ('+(resultat>=0?'bénéfice':'perte')+')</span></div>';
+  var resBadge='<div class="je-foot" style="justify-content:flex-start;margin-top:8px"><span class="'+(resultat>=0?'eq':'ne')+'">Résultat de l\'exercice : '+fmt2(resultat)+' ('+(resultat>=0?'bénéfice':'perte')+')</span></div>';
   var paRows=passif.concat([{num:'',lib:"Résultat de l'exercice"+(resultat<0?' (perte)':''),m:resultat}]);
   var bilTables='<div style="display:flex;gap:14px;flex-wrap:wrap">'+tbl('Actif',actif,'Total actif',totAc,'debit')+tbl('Passif',paRows,'Total passif',totPaR,'debit')+'</div>';
   var bilBadge='<div class="je-foot" style="justify-content:flex-start;margin-top:8px"><span class="'+(eqB?'eq':'ne')+'">'+(eqB?'Bilan équilibré ✓ (Actif = Passif)':'Bilan déséquilibré')+'</span></div>';
@@ -8858,8 +8858,8 @@ function viewErpJournaux(){
       var dv=parseFloat(l.debit)||0,cv=parseFloat(l.credit)||0;totD+=dv;totC+=cv;
       return '<tr>'+
         '<td style="padding:4px 8px 4px 0;font-size:13px"><span class="mono" style="font-size:12px;color:var(--ink2)">'+escHtml(l.compte)+'</span> '+escHtml(pcLib(l.compte))+'</td>'+
-        '<td style="padding:4px 0;text-align:right">'+(dv?'<span class="pc-bdg pc-dz">'+fmt(dv)+'</span>':'')+'</td>'+
-        '<td style="padding:4px 0 4px 8px;text-align:right">'+(cv?'<span class="pc-bdg pc-cr2">'+fmt(cv)+'</span>':'')+'</td>'+
+        '<td style="padding:4px 0;text-align:right">'+(dv?'<span class="pc-bdg pc-dz">'+fmt2(dv)+'</span>':'')+'</td>'+
+        '<td style="padding:4px 0 4px 8px;text-align:right">'+(cv?'<span class="pc-bdg pc-cr2">'+fmt2(cv)+'</span>':'')+'</td>'+
       '</tr>';
     }).join('');
     return '<div style="border:1px solid var(--edge);border-radius:11px;padding:14px 16px;margin-bottom:10px;background:var(--card)">'+
@@ -8872,7 +8872,7 @@ function viewErpJournaux(){
     '</div>';
   }).join('');
   totD=r2(totD);totC=r2(totC);
-  var foot='<div class="je-foot"><span>Total débit <span class="mono">'+fmt(totD)+'</span></span><span>Total crédit <span class="mono">'+fmt(totC)+'</span></span></div>';
+  var foot='<div class="je-foot"><span>Total débit <span class="mono">'+fmt2(totD)+'</span></span><span>Total crédit <span class="mono">'+fmt2(totC)+'</span></span></div>';
   return head+items+foot;
 }
 function erpAccountLines(num){
@@ -8916,15 +8916,15 @@ function viewErpLettrage(){
       '<td class="mono" style="padding:6px 8px 6px 0;font-size:12px;color:var(--ink2)">'+escHtml(m.date||'—')+'</td>'+
       '<td class="mono" style="padding:6px 8px;font-size:12px;color:var(--ink2)">'+escHtml(m.piece||'')+'</td>'+
       '<td style="padding:6px 8px;font-size:13px">'+escHtml(m.libelle||'')+'</td>'+
-      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(m.debit?fmt(m.debit):'')+'</td>'+
-      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(m.credit?fmt(m.credit):'')+'</td>'+
+      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(m.debit?fmt2(m.debit):'')+'</td>'+
+      '<td class="mono" style="padding:6px 8px;text-align:right;font-size:13px">'+(m.credit?fmt2(m.credit):'')+'</td>'+
       '<td style="padding:6px 0 6px 8px;text-align:center">'+lastCell+'</td>'+
     '</tr>';
   }).join('');
   td=r2(td);tc=r2(tc);unl=r2(unl);
   var th=function(txt,al){return '<th style="text-align:'+(al||'left')+';font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:0 8px 8px">'+txt+'</th>';};
   var soldeLabel=unl>0?'Solde non lettré (débiteur) ':(unl<0?'Solde non lettré (créditeur) ':'Solde non lettré ');
-  var foot='<div class="je-foot" style="flex-wrap:wrap;gap:18px"><span>Total débit <span class="mono">'+fmt(td)+'</span></span><span>Total crédit <span class="mono">'+fmt(tc)+'</span></span><span>'+soldeLabel+'<span class="mono">'+fmt(Math.abs(unl))+'</span></span></div>';
+  var foot='<div class="je-foot" style="flex-wrap:wrap;gap:18px"><span>Total débit <span class="mono">'+fmt2(td)+'</span></span><span>Total crédit <span class="mono">'+fmt2(tc)+'</span></span><span>'+soldeLabel+'<span class="mono">'+fmt2(Math.abs(unl))+'</span></span></div>';
   var undoBtns=Object.keys(usedLetters).sort().map(function(L){return '<button class="btn-sm" data-action="erp-let-undo" data-lettre="'+escHtml(L)+'" style="padding:4px 10px;font-size:12px">Délettrer '+escHtml(L)+'</button>';}).join(' ');
   var actions='<div class="row" style="margin-top:14px;align-items:center"><button class="btn btn-pri" data-action="erp-let-do">Lettrer la sélection</button>'+(undoBtns?'<span style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center">'+undoBtns+'</span>':'')+'</div>';
   var suggestions=erpLettrageSuggestions(lines);
@@ -8932,7 +8932,7 @@ function viewErpLettrage(){
   var sugHtml='';
   if(suggestions.length){
     var items=suggestions.map(function(s){
-      return '<div class="let-sug"><span class="let-sug-txt"><span class="amt">'+fmt(s.montant)+'</span> &middot; débit '+lbl(s.d)+' <span class="side">↔</span> crédit '+lbl(s.c)+'</span><button class="btn-sm" data-action="erp-let-suggest" data-keys="'+escHtml(s.keys.join('|'))+'">Sélectionner</button></div>';
+      return '<div class="let-sug"><span class="let-sug-txt"><span class="amt">'+fmt2(s.montant)+'</span> &middot; débit '+lbl(s.d)+' <span class="side">↔</span> crédit '+lbl(s.c)+'</span><button class="btn-sm" data-action="erp-let-suggest" data-keys="'+escHtml(s.keys.join('|'))+'">Sélectionner</button></div>';
     }).join('');
     sugHtml='<div class="panel" style="margin-bottom:14px"><span class="eyebrow">Suggestions de lettrage &middot; '+suggestions.length+'</span>'+
       '<p style="color:var(--ink2);font-size:12.5px;margin:8px 0 10px;line-height:1.5">Rapprochements évidents détectés (un débit et un crédit de même montant, non lettrés). Sélectionne-en un, vérifie les lignes cochées, puis « Lettrer la sélection ».</p>'+
@@ -8974,8 +8974,8 @@ function viewErpSaisie(){
         '<th style="text-align:right;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:0 6px 6px">Débit</th>'+
         '<th style="text-align:right;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:0 0 6px">Crédit</th>'+
       '</tr></thead><tbody id="erp-body">'+rows+'</tbody></table>'+
-    '<div class="je-foot"><span>Total débit <span class="mono" id="erp-tot-d">'+fmt(t.td)+'</span></span>'+
-      '<span>Total crédit <span class="mono" id="erp-tot-c">'+fmt(t.tc)+'</span></span>'+
+    '<div class="je-foot"><span>Total débit <span class="mono" id="erp-tot-d">'+fmt2(t.td)+'</span></span>'+
+      '<span>Total crédit <span class="mono" id="erp-tot-c">'+fmt2(t.tc)+'</span></span>'+
       '<span id="erp-eq" role="status" aria-live="polite" class="'+(bal?'eq':'ne')+'">'+(bal?'équilibré ✓':'déséquilibré')+'</span></div>'+
     '<div id="erp-warn" class="erp-warn" style="display:none" role="status" aria-live="polite"></div>'+
     '<div class="row" style="margin-top:16px">'+
