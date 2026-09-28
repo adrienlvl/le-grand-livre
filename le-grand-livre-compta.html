@@ -3653,9 +3653,9 @@ function memo(id){
     '<div class="exo-card" style="margin-top:24px;margin-bottom:0"><span class="lab">Calculateur \u00B7 HT \u2192 TVA \u2192 TTC</span>'+
     '<div style="display:flex;gap:14px;flex-wrap:wrap;margin:16px 0 18px"><label style="flex:1;min-width:130px"><div class="mono" style="font-size:12px;color:var(--ink2);margin-bottom:6px">Montant HT</div><input id="ht" class="jin" style="text-align:left" type="number" value="1000"></label>'+
     '<label style="width:110px"><div class="mono" style="font-size:12px;color:var(--ink2);margin-bottom:6px">Taux %</div><input id="taux" class="jin" style="text-align:left" type="number" value="20"></label></div>'+
-    '<div class="flow"><div class="fnode"><div class="fmono">HT</div><div class="fbig mono" id="ht-out">'+fmt(1000)+'</div></div><span class="farrow">'+SVG.arR+'</span>'+
-    '<div class="fnode collect"><div class="fmono">TVA</div><div class="fbig mono" id="tva-out">'+fmt(200)+'</div></div><span class="farrow">'+SVG.arR+'</span>'+
-    '<div class="fnode pay"><div class="fmono">TTC</div><div class="fbig mono" id="ttc-out">'+fmt(1200)+'</div></div></div></div>';
+    '<div class="flow"><div class="fnode"><div class="fmono">HT</div><div class="fbig mono" id="ht-out">'+fmt2(1000)+'</div></div><span class="farrow">'+SVG.arR+'</span>'+
+    '<div class="fnode collect"><div class="fmono">TVA</div><div class="fbig mono" id="tva-out">'+fmt2(200)+'</div></div><span class="farrow">'+SVG.arR+'</span>'+
+    '<div class="fnode pay"><div class="fmono">TTC</div><div class="fbig mono" id="ttc-out">'+fmt2(1200)+'</div></div></div></div>';
   if(id==='facture')return '<p class="memo-cap">La cascade, sur un exemple : 1 000 \u20AC brut, remise 10 %, escompte 2 %, TVA 20 %.</p>'+
     '<div class="cascade"><div class="crow2"><span class="op">Brut</span><span class="lib">Montant brut HT</span><span class="mono">1 000,00 \u20AC</span></div>'+
     '<div class="crow2"><span class="op">\u2212 10 %</span><span class="lib">Remise commerciale</span><span class="mono">\u2212100,00 \u20AC</span></div>'+
@@ -3721,12 +3721,12 @@ function exoHTML(){
     rows+='<tr><td><select class="jsel exo-acc" aria-label="Compte, ligne '+(i+1)+'">'+opts+'</select></td><td><input class="jin exo-d" type="number" aria-label="Débit, ligne '+(i+1)+'" placeholder="0"></td><td><input class="jin exo-c" type="number" aria-label="Crédit, ligne '+(i+1)+'" placeholder="0"></td></tr>';}
   return '<div id="exo"><div class="exo-card"><span class="lab">Énoncé \u00B7 à toi de jouer</span><p>Le 12/09, vente de marchandises au client Morgane : <b>2 000 \u20AC HT</b>, TVA à <b>20 %</b>, à crédit. Passe l\'écriture.</p></div>'+
     '<table class="jtable"><thead><tr><th style="width:46%">Compte</th><th class="num" style="width:27%">Débit</th><th class="num" style="width:27%">Crédit</th></tr></thead><tbody>'+rows+'</tbody></table>'+
-    '<div class="jfoot"><span>Total débit <span class="mono" id="exo-td">'+fmt(0)+'</span></span><span>Total crédit <span class="mono" id="exo-tc">'+fmt(0)+'</span></span><span id="exo-bal" class="ne">déséquilibré</span></div>'+
+    '<div class="jfoot"><span>Total débit <span class="mono" id="exo-td">'+fmt2(0)+'</span></span><span>Total crédit <span class="mono" id="exo-tc">'+fmt2(0)+'</span></span><span id="exo-bal" class="ne">déséquilibré</span></div>'+
     '<div class="row"><button class="btn btn-pri" data-action="exo-verify">'+SVG.list+' Vérifier l\'écriture</button><button class="btn btn-gh" data-action="exo-reset">'+SVG.refresh+' Effacer</button></div><div id="exo-feedback"></div></div>';
 }
 function exoRead(){var accs=document.querySelectorAll('.exo-acc'),ds=document.querySelectorAll('.exo-d'),cs=document.querySelectorAll('.exo-c');var got=[],td=0,tc=0;
   for(var i=0;i<accs.length;i++){var acc=accs[i].value,d=parseFloat(ds[i].value)||0,c=parseFloat(cs[i].value)||0;td+=d;tc+=c;if(acc&&(d||c))got.push({acc:acc,side:d?'d':'c',amt:d||c});}return {got:got,td:td,tc:tc};}
-function exoUpdateTotals(){var r=exoRead(),td=document.getElementById('exo-td');if(!td)return;document.getElementById('exo-tc');td.textContent=fmt(r.td);document.getElementById('exo-tc').textContent=fmt(r.tc);var bal=document.getElementById('exo-bal'),ok=r.td===r.tc&&r.td>0;bal.textContent=ok?'équilibré \u2713':'déséquilibré';bal.className=ok?'eq':'ne';}
+function exoUpdateTotals(){var r=exoRead(),td=document.getElementById('exo-td');if(!td)return;document.getElementById('exo-tc');td.textContent=fmt2(r.td);document.getElementById('exo-tc').textContent=fmt2(r.tc);var bal=document.getElementById('exo-bal'),ok=r.td===r.tc&&r.td>0;bal.textContent=ok?'équilibré \u2713':'déséquilibré';bal.className=ok?'eq':'ne';}
 
 /* ---- views ---- */
 /* Barre latérale (ordinateur, >= 1024 px) : navigation permanente, action du jour, raccourcis Titre Pro. */
@@ -9121,8 +9121,8 @@ function simSceneHTML(i){
         '<table class="sim-je"><thead><tr><th>Compte</th><th>Libellé</th><th>Débit</th><th>Crédit</th></tr></thead><tbody>'+
         s.entry.map(function(e){
           return '<tr><td class="mono">'+escHtml(e.c)+'</td><td>'+escHtml(e.l)+'</td>'+
-            '<td class="num debit">'+(e.d?fmt(e.d):'')+'</td>'+
-            '<td class="num credit">'+(e.cr?fmt(e.cr):'')+'</td></tr>';
+            '<td class="num debit">'+(e.d?fmt2(e.d):'')+'</td>'+
+            '<td class="num credit">'+(e.cr?fmt2(e.cr):'')+'</td></tr>';
         }).join('')+'</tbody></table>';
     }
     var nav='';
@@ -10347,24 +10347,24 @@ function trainVerify(exo,userRows){
 /* ---- Énoncé texte ---- */
 function exoEnonce(exo){
   var t=exo.type;
-  if(t==='vente')return 'Vente de marchandises au client <b>Dupont SA</b> &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>. R&egrave;glement &agrave; 30&nbsp;jours.';
-  if(t==='achat')return 'Achat de marchandises au fournisseur <b>Martin &amp; Fils</b> &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>. R&egrave;glement &agrave; 30&nbsp;jours.';
-  if(t==='reglt_client')return 'R&egrave;glement re&ccedil;u du client <b>Dupont SA</b> par virement bancaire : <b>'+fmt(exo.ttc)+'</b>.';
-  if(t==='vente_cpt')return 'Vente de marchandises <b>au comptant</b>, encaiss&eacute;e par virement bancaire &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>.';
-  if(t==='achat_cpt')return 'Achat de marchandises <b>r&eacute;gl&eacute; imm&eacute;diatement</b> par virement bancaire &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>.';
-  if(t==='immo')return 'Acquisition d\'un <b>mat&eacute;riel informatique</b> &agrave; cr&eacute;dit (fournisseur d\'immobilisations) &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>.';
-  if(t==='amort')return 'Dotation aux amortissements du <b>mat&eacute;riel industriel</b> : valeur d\'origine <b>'+fmt(exo.vo)+'</b>, amorti en lin&eacute;aire sur <b>'+exo.duree+' ans</b>. Calcule et comptabilise l\'annuit&eacute; de l\'exercice.';
-  if(t==='dep_creance')return 'Le client <b>Dubois</b> (cr&eacute;ance HT de <b>'+fmt(exo.htc)+'</b>) est douteux : la perte probable est estim&eacute;e &agrave; <b>'+exo.p+'&nbsp;%</b>. Calcule et comptabilise la <b>dotation &agrave; la d&eacute;pr&eacute;ciation</b> (sur le HT).';
-  if(t==='salaire')return 'Paie du mois : salaire <b>brut</b> de <b>'+fmt(exo.brut)+'</b>, cotisations salariales de <b>'+exo.tp+'&nbsp;%</b>. Calcule le net et comptabilise l\'&eacute;criture de paie (641, 421, 431).';
-  if(t==='cession')return 'Cession d\'un mat&eacute;riel : <b>prix de vente</b> HT <b>'+fmt(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>. Comptabilise l\'&eacute;criture du <b>prix de cession</b> (462, 775, 44571).';
-  if(t==='liq_tva')return 'Liquidation de TVA : TVA collect&eacute;e <b>'+fmt(exo.coll)+'</b>, TVA d&eacute;ductible <b>'+fmt(exo.ded)+'</b>. Comptabilise l\'&eacute;criture de liquidation (44571, 44566, 44551).';
-  if(t==='is_ecr')return 'Le r&eacute;sultat fiscal de l\'exercice est de <b>'+fmt(exo.rf)+'</b>. Calcule et comptabilise l\'<b>imp&ocirc;t sur les soci&eacute;t&eacute;s</b> au taux de 25 % (comptes 695 et 444).';
-  if(t==='cca')return 'Prime d\'assurance de <b>'+fmt(exo.xa)+'</b> pour 12 mois, dont <b>'+exo.nm+' mois</b> concernent l\'exercice suivant. Comptabilise la <b>charge constat&eacute;e d\'avance</b> (comptes 486 et 616).';
-  if(t==='pca')return 'Une prestation de <b>'+fmt(exo.xp)+'</b> factur&eacute;e pour 12 mois, dont <b>'+exo.np+' mois</b> concernent l\'exercice suivant. Comptabilise le <b>produit constat&eacute; d\'avance</b> (comptes 706 et 487).';
-  if(t==='ccp')return '&Agrave; l\'inventaire, des marchandises re&ccedil;ues ne sont <b>pas encore factur&eacute;es</b> &mdash; HT : <b>'+fmt(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt(exo.tva)+'</b>, TTC : <b>'+fmt(exo.ttc)+'</b>. Comptabilise la <b>charge &agrave; payer</b> (comptes 607, 44586, 408).';
-  if(t==='patronale')return 'Charges patronales du mois : cotisations de <b>'+exo.tp+'&nbsp;%</b> sur un salaire brut de <b>'+fmt(exo.brut)+'</b>. Calcule et comptabilise l\'&eacute;criture des <b>charges patronales</b> (comptes 645 et 431).';
-  if(t==='dep_stock')return '&Agrave; l\'inventaire, un stock de marchandises de valeur <b>'+fmt(exo.vst)+'</b> subit une d&eacute;pr&eacute;ciation de <b>'+exo.pst+'&nbsp;%</b>. Calcule et comptabilise la <b>dotation &agrave; la d&eacute;pr&eacute;ciation du stock</b> (comptes 68173 et 397).';
-  return 'R&egrave;glement effectu&eacute; au fournisseur <b>Martin &amp; Fils</b> par virement bancaire : <b>'+fmt(exo.ttc)+'</b>.';
+  if(t==='vente')return 'Vente de marchandises au client <b>Dupont SA</b> &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>. R&egrave;glement &agrave; 30&nbsp;jours.';
+  if(t==='achat')return 'Achat de marchandises au fournisseur <b>Martin &amp; Fils</b> &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>. R&egrave;glement &agrave; 30&nbsp;jours.';
+  if(t==='reglt_client')return 'R&egrave;glement re&ccedil;u du client <b>Dupont SA</b> par virement bancaire : <b>'+fmt2(exo.ttc)+'</b>.';
+  if(t==='vente_cpt')return 'Vente de marchandises <b>au comptant</b>, encaiss&eacute;e par virement bancaire &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>.';
+  if(t==='achat_cpt')return 'Achat de marchandises <b>r&eacute;gl&eacute; imm&eacute;diatement</b> par virement bancaire &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA '+exo.taux+'&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>.';
+  if(t==='immo')return 'Acquisition d\'un <b>mat&eacute;riel informatique</b> &agrave; cr&eacute;dit (fournisseur d\'immobilisations) &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>.';
+  if(t==='amort')return 'Dotation aux amortissements du <b>mat&eacute;riel industriel</b> : valeur d\'origine <b>'+fmt2(exo.vo)+'</b>, amorti en lin&eacute;aire sur <b>'+exo.duree+' ans</b>. Calcule et comptabilise l\'annuit&eacute; de l\'exercice.';
+  if(t==='dep_creance')return 'Le client <b>Dubois</b> (cr&eacute;ance HT de <b>'+fmt2(exo.htc)+'</b>) est douteux : la perte probable est estim&eacute;e &agrave; <b>'+exo.p+'&nbsp;%</b>. Calcule et comptabilise la <b>dotation &agrave; la d&eacute;pr&eacute;ciation</b> (sur le HT).';
+  if(t==='salaire')return 'Paie du mois : salaire <b>brut</b> de <b>'+fmt2(exo.brut)+'</b>, cotisations salariales de <b>'+exo.tp+'&nbsp;%</b>. Calcule le net et comptabilise l\'&eacute;criture de paie (641, 421, 431).';
+  if(t==='cession')return 'Cession d\'un mat&eacute;riel : <b>prix de vente</b> HT <b>'+fmt2(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>. Comptabilise l\'&eacute;criture du <b>prix de cession</b> (462, 775, 44571).';
+  if(t==='liq_tva')return 'Liquidation de TVA : TVA collect&eacute;e <b>'+fmt2(exo.coll)+'</b>, TVA d&eacute;ductible <b>'+fmt2(exo.ded)+'</b>. Comptabilise l\'&eacute;criture de liquidation (44571, 44566, 44551).';
+  if(t==='is_ecr')return 'Le r&eacute;sultat fiscal de l\'exercice est de <b>'+fmt2(exo.rf)+'</b>. Calcule et comptabilise l\'<b>imp&ocirc;t sur les soci&eacute;t&eacute;s</b> au taux de 25 % (comptes 695 et 444).';
+  if(t==='cca')return 'Prime d\'assurance de <b>'+fmt2(exo.xa)+'</b> pour 12 mois, dont <b>'+exo.nm+' mois</b> concernent l\'exercice suivant. Comptabilise la <b>charge constat&eacute;e d\'avance</b> (comptes 486 et 616).';
+  if(t==='pca')return 'Une prestation de <b>'+fmt2(exo.xp)+'</b> factur&eacute;e pour 12 mois, dont <b>'+exo.np+' mois</b> concernent l\'exercice suivant. Comptabilise le <b>produit constat&eacute; d\'avance</b> (comptes 706 et 487).';
+  if(t==='ccp')return '&Agrave; l\'inventaire, des marchandises re&ccedil;ues ne sont <b>pas encore factur&eacute;es</b> &mdash; HT : <b>'+fmt2(exo.ht)+'</b>, TVA 20&nbsp;% : <b>'+fmt2(exo.tva)+'</b>, TTC : <b>'+fmt2(exo.ttc)+'</b>. Comptabilise la <b>charge &agrave; payer</b> (comptes 607, 44586, 408).';
+  if(t==='patronale')return 'Charges patronales du mois : cotisations de <b>'+exo.tp+'&nbsp;%</b> sur un salaire brut de <b>'+fmt2(exo.brut)+'</b>. Calcule et comptabilise l\'&eacute;criture des <b>charges patronales</b> (comptes 645 et 431).';
+  if(t==='dep_stock')return '&Agrave; l\'inventaire, un stock de marchandises de valeur <b>'+fmt2(exo.vst)+'</b> subit une d&eacute;pr&eacute;ciation de <b>'+exo.pst+'&nbsp;%</b>. Calcule et comptabilise la <b>dotation &agrave; la d&eacute;pr&eacute;ciation du stock</b> (comptes 68173 et 397).';
+  return 'R&egrave;glement effectu&eacute; au fournisseur <b>Martin &amp; Fils</b> par virement bancaire : <b>'+fmt2(exo.ttc)+'</b>.';
 }
 
 /* ---- Input table ---- */
@@ -10393,7 +10393,7 @@ function trainResultTable(exo,res){
     var ok=res.details[i].ok;
     return '<tr><td>'+escHtml(pcLib(s.acc)||s.acc)+' <span class="mono" style="color:var(--ink2);font-size:12px">('+s.acc+')</span></td>'+
       '<td>'+escHtml(s.side==='D'?'Débit':'Crédit')+'</td>'+
-      '<td class="mono" style="text-align:right">'+fmt(s.amt)+'</td>'+
+      '<td class="mono" style="text-align:right">'+fmt2(s.amt)+'</td>'+
       '<td style="text-align:center;font-size:18px">'+(ok?'<span class="tr-ok">&#10003;</span>':'<span class="tr-ko">&#10007;</span>')+'</td></tr>';
   }).join('');
   return '<table class="train-tbl"><thead><tr><th>Compte attendu</th><th>Sens</th><th>Montant</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
@@ -10457,7 +10457,7 @@ function viewTrainGen(){
         ?'<div class="quiz-fb ok">&#10003;&nbsp; Bravo ! &Eacute;criture juste et &eacute;quilibr&eacute;e.</div>'
         :'<div class="quiz-fb ko">&#10007;&nbsp; Pas tout &agrave; fait. Voici la correction :</div>')+
       trainResultTable(exo,res)+
-      (!res.balanced&&!res.ok?'<div style="font-size:13px;color:var(--credit);margin-bottom:8px">Attention : d&eacute;bit ('+fmt(res.td)+') &ne; cr&eacute;dit ('+fmt(res.tc)+')</div>':'')+
+      (!res.balanced&&!res.ok?'<div style="font-size:13px;color:var(--credit);margin-bottom:8px">Attention : d&eacute;bit ('+fmt2(res.td)+') &ne; cr&eacute;dit ('+fmt2(res.tc)+')</div>':'')+
       '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">'+
         '<button class="btn-primary" data-action="train-new-gen">Autre exercice</button>'+
         '<button class="btn-sec" data-action="train-back">Menu</button>'+
@@ -10489,8 +10489,8 @@ function viewTrainErreur(){
   }
   var typeLabel=exo.type==='vente'?'Vente de marchandises':'Achat de marchandises';
   var entryRows=exo.rows.map(function(r){
-    var dz=r.side==='D'?'<span class="dz">'+fmt(r.amt)+'</span>':'';
-    var cr=r.side==='C'?'<span class="cr">'+fmt(r.amt)+'</span>':'';
+    var dz=r.side==='D'?'<span class="dz">'+fmt2(r.amt)+'</span>':'';
+    var cr=r.side==='C'?'<span class="cr">'+fmt2(r.amt)+'</span>':'';
     return '<tr><td>'+escHtml(pcLib(r.acc)||r.acc)+' <span class="mono" style="color:var(--ink2);font-size:12px">('+r.acc+')</span></td>'+
       '<td>'+escHtml(r.side==='D'?'Débit':'Crédit')+'</td>'+
       '<td class="mono" style="text-align:right">'+dz+cr+'</td></tr>';
@@ -10498,7 +10498,7 @@ function viewTrainErreur(){
   var table='<table class="train-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant</th></tr></thead><tbody>'+entryRows+'</tbody></table>';
   var html=back+'<div class="train-exo-panel">'+
     '<div class="eyebrow" style="margin-bottom:6px">Trouve l\'erreur</div>'+
-    '<div style="font-weight:600;margin-bottom:4px">'+typeLabel+' &mdash; HT '+fmt(exo.ht)+' / TVA '+exo.taux+'% / TTC '+fmt(exo.ttc)+'</div>'+
+    '<div style="font-weight:600;margin-bottom:4px">'+typeLabel+' &mdash; HT '+fmt2(exo.ht)+' / TVA '+exo.taux+'% / TTC '+fmt2(exo.ttc)+'</div>'+
     '<div style="font-size:13px;color:var(--credit);margin-bottom:12px">Cette &eacute;criture contient une erreur. Laquelle ?</div>'+
     table;
   if(exo.picked===null){
@@ -10704,7 +10704,7 @@ function bindDynamic(){
     });})(doneChks[_ci]);
   }
   var ht=document.getElementById('ht');
-  if(ht){var taux=document.getElementById('taux');var upd=function(){var h=parseFloat(ht.value)||0,t=parseFloat(taux.value)||0,tv=h*t/100;document.getElementById('ht-out').textContent=fmt(h);document.getElementById('tva-out').textContent=fmt(tv);document.getElementById('ttc-out').textContent=fmt(h+tv);};ht.addEventListener('input',upd);taux.addEventListener('input',upd);}
+  if(ht){var taux=document.getElementById('taux');var upd=function(){var h=parseFloat(ht.value)||0,t=parseFloat(taux.value)||0,tv=h*t/100;document.getElementById('ht-out').textContent=fmt2(h);document.getElementById('tva-out').textContent=fmt2(tv);document.getElementById('ttc-out').textContent=fmt2(h+tv);};ht.addEventListener('input',upd);taux.addEventListener('input',upd);}
   var exo=document.getElementById('exo');
   if(exo){exo.addEventListener('input',function(e){if(e.target.classList.contains('exo-d')){var c=e.target.closest('tr').querySelector('.exo-c');if(e.target.value)c.value='';}if(e.target.classList.contains('exo-c')){var d=e.target.closest('tr').querySelector('.exo-d');if(e.target.value)d.value='';}exoUpdateTotals();});}
   /* Chrono : setInterval sans re-render complet */
@@ -10746,8 +10746,8 @@ function bindTools(){
       for(var i=0;i<dbs.length;i++)td+=parseFloat(dbs[i].value)||0;
       for(var i=0;i<crs.length;i++)tc+=parseFloat(crs[i].value)||0;
       td=r2(td);tc=r2(tc);
-      document.getElementById('je-td').textContent=fmt(td);
-      document.getElementById('je-tc').textContent=fmt(tc);
+      document.getElementById('je-td').textContent=fmt2(td);
+      document.getElementById('je-tc').textContent=fmt2(tc);
       var bal=document.getElementById('je-bal');
       if(td>0&&tc>0&&td===tc){bal.textContent='équilibré ✓';bal.className='eq';}
       else{bal.textContent='déséquilibré';bal.className='ne';}
@@ -10770,8 +10770,8 @@ function bindTools(){
       for(var i=0;i<dbs.length;i++)td+=parseFloat(dbs[i].value)||0;
       for(var j=0;j<crs.length;j++)tc+=parseFloat(crs[j].value)||0;
       td=r2(td);tc=r2(tc);
-      var de=document.getElementById('erp-tot-d');if(de)de.textContent=fmt(td);
-      var ce=document.getElementById('erp-tot-c');if(ce)ce.textContent=fmt(tc);
+      var de=document.getElementById('erp-tot-d');if(de)de.textContent=fmt2(td);
+      var ce=document.getElementById('erp-tot-c');if(ce)ce.textContent=fmt2(tc);
       var eq=document.getElementById('erp-eq');
       if(eq){var _bal=(td>0&&tc>0&&td===tc),_txt=_bal?'équilibré ✓':'déséquilibré';if(eq.textContent!==_txt){eq.textContent=_txt;eq.className=_bal?'eq':'ne';}}
     };
@@ -10807,8 +10807,8 @@ function bindTools(){
     var tx=parseFloat((document.getElementById('t-taux1')||{}).value)||20;
     var tva=r2(ht*tx/100),ttc=r2(ht+tva);
     var e1=document.getElementById('t-tva-out'),e2=document.getElementById('t-ttc-out');
-    if(e1)e1.textContent=ht?fmt(tva):'—';
-    if(e2)e2.textContent=ht?fmt(ttc):'—';
+    if(e1)e1.textContent=ht?fmt2(tva):'—';
+    if(e2)e2.textContent=ht?fmt2(ttc):'—';
   };
   /* TVA : section 2 TTC→HT */
   var updT2=function(){
@@ -10816,8 +10816,8 @@ function bindTools(){
     var tx=parseFloat((document.getElementById('t-taux2')||{}).value)||20;
     var ht=r2(ttc/(1+tx/100)),tva=r2(ttc-ht);
     var e1=document.getElementById('t-ht-out'),e2=document.getElementById('t-tva2-out');
-    if(e1)e1.textContent=ttc?fmt(ht):'—';
-    if(e2)e2.textContent=ttc?fmt(tva):'—';
+    if(e1)e1.textContent=ttc?fmt2(ht):'—';
+    if(e2)e2.textContent=ttc?fmt2(tva):'—';
   };
   /* TVA : section 3 à décaisser */
   var updT3=function(){
@@ -10827,8 +10827,8 @@ function bindTools(){
     var dec=r2(co-d1-d2);
     var el=document.getElementById('t-decaisse');if(!el)return;
     if(!co&&!d1&&!d2){el.textContent='—';el.className='fc2';return;}
-    if(dec>=0){el.textContent=fmt(dec);el.className='fc2 hi';}
-    else{el.textContent='Crédit de TVA à reporter : '+fmt(-dec);el.className='fc2 al';}
+    if(dec>=0){el.textContent=fmt2(dec);el.className='fc2 hi';}
+    else{el.textContent='Crédit de TVA à reporter : '+fmt2(-dec);el.className='fc2 al';}
   };
   var echUpd=function(){var fd=(document.getElementById('ech-fd')||{}).value;if(!fd||!/^\d{4}-\d{2}-\d{2}$/.test(fd))return;var r=echCompute(fd,document.getElementById('ech-cond').value,document.getElementById('ech-pd').value,parseFloat(document.getElementById('ech-amt').value)||0,parseFloat(document.getElementById('ech-rate').value)||0);
     var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};set('ech-due',frDateLong(r.due));set('ech-late',r.late?r.late+' jour'+(r.late>1?'s':''):'aucun');set('ech-pen',r.pen?fmt2(r.pen):'—');set('ech-tot',r.tot?fmt2(r.tot):'—');
@@ -10850,14 +10850,14 @@ function bindTools(){
     var escAmt=r2(nc*esc/100),nf=r2(nc-escAmt);
     var tvaAmt=r2((nf+port)*tx/100),ttc=r2(nf+port+tvaAmt);
     var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
-    set('f-out-brut',fmt(brut));
-    set('f-op-rem','− '+rem+'%'); set('f-out-rem',remAmt?'−'+fmt(remAmt):fmt(0));
-    set('f-out-nc',fmt(nc));
-    set('f-op-esc','− '+esc+'%'); set('f-out-esc',escAmt?'−'+fmt(escAmt):fmt(0));
-    set('f-out-nf',fmt(nf));
-    set('f-out-port',fmt(port));
-    set('f-op-tva','+ '+tx+'%'); set('f-out-tva','+'+fmt(tvaAmt));
-    set('f-out-ttc',fmt(ttc));
+    set('f-out-brut',fmt2(brut));
+    set('f-op-rem','− '+rem+'%'); set('f-out-rem',remAmt?'−'+fmt2(remAmt):fmt2(0));
+    set('f-out-nc',fmt2(nc));
+    set('f-op-esc','− '+esc+'%'); set('f-out-esc',escAmt?'−'+fmt2(escAmt):fmt2(0));
+    set('f-out-nf',fmt2(nf));
+    set('f-out-port',fmt2(port));
+    set('f-op-tva','+ '+tx+'%'); set('f-out-tva','+'+fmt2(tvaAmt));
+    set('f-out-ttc',fmt2(ttc));
   };
   ['f-brut','f-remise','f-escompte','f-port','f-taux'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',updF);el.addEventListener('change',updF);}});
   /* Amortissement */
@@ -10874,15 +10874,15 @@ function bindTools(){
     var ann=vo/dur,rows=[],cumul=0;
     /* Année 1 */
     var d1=r2(ann*jAn1/360);cumul=r2(cumul+d1);
-    rows.push('<tr><td>Année 1 <small class="mono" style="font-size:11px;color:var(--ink2)">('+jAn1+' j.)</small></td><td>'+fmt(vo)+'</td><td>'+fmt(d1)+'</td><td>'+fmt(cumul)+'</td><td>'+fmt(r2(vo-cumul))+'</td></tr>');
+    rows.push('<tr><td>Année 1 <small class="mono" style="font-size:11px;color:var(--ink2)">('+jAn1+' j.)</small></td><td>'+fmt2(vo)+'</td><td>'+fmt2(d1)+'</td><td>'+fmt2(cumul)+'</td><td>'+fmt2(r2(vo-cumul))+'</td></tr>');
     /* Années 2..dur */
-    for(var y=2;y<=dur;y++){var d=r2(ann);cumul=r2(cumul+d);rows.push('<tr><td>Année '+y+'</td><td>'+fmt(vo)+'</td><td>'+fmt(d)+'</td><td>'+fmt(cumul)+'</td><td>'+fmt(r2(vo-cumul))+'</td></tr>');}
+    for(var y=2;y<=dur;y++){var d=r2(ann);cumul=r2(cumul+d);rows.push('<tr><td>Année '+y+'</td><td>'+fmt2(vo)+'</td><td>'+fmt2(d)+'</td><td>'+fmt2(cumul)+'</td><td>'+fmt2(r2(vo-cumul))+'</td></tr>');}
     /* Dernière année si prorata */
     var cls='';
-    if(jEco>0){var dLast=r2(vo-cumul);cumul=vo;rows.push('<tr class="last-row"><td>Année '+(dur+1)+' <small class="mono" style="font-size:11px">('+jEco+' j.)</small></td><td>'+fmt(vo)+'</td><td>'+fmt(dLast)+'</td><td>'+fmt(cumul)+'</td><td>'+fmt(0)+'</td></tr>');}
+    if(jEco>0){var dLast=r2(vo-cumul);cumul=vo;rows.push('<tr class="last-row"><td>Année '+(dur+1)+' <small class="mono" style="font-size:11px">('+jEco+' j.)</small></td><td>'+fmt2(vo)+'</td><td>'+fmt2(dLast)+'</td><td>'+fmt2(cumul)+'</td><td>'+fmt2(0)+'</td></tr>');}
     else{rows[rows.length-1]=rows[rows.length-1].replace('<tr>','<tr class="last-row">');}
     var taux=r2(100/dur);
-    res.innerHTML='<p style="font-size:13px;color:var(--ink2);margin:12px 0 4px">Taux linéaire : <b class="mono">'+taux+' %</b> · Annuité pleine : <b class="mono">'+fmt(r2(ann))+'</b></p>'+
+    res.innerHTML='<p style="font-size:13px;color:var(--ink2);margin:12px 0 4px">Taux linéaire : <b class="mono">'+taux+' %</b> · Annuité pleine : <b class="mono">'+fmt2(r2(ann))+'</b></p>'+
       '<div style="overflow-x:auto"><table class="amo-tbl"><thead><tr><th style="text-align:left">Exercice</th><th>Valeur d\'origine</th><th>Dotation</th><th>Cumul amort.</th><th>VNC</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></div>';
   };
   ['a-vo','a-date','a-duree'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',updA);el.addEventListener('change',updA);}});
@@ -10894,14 +10894,14 @@ function bindTools(){
     var solrel=g('r-solrel'),cheq=g('r-cheq'),remis=g('r-remis');
     var correl=r2(solrel-cheq+remis);
     var e1=document.getElementById('r-512-cor'),e2=document.getElementById('r-rel-cor');
-    if(e1)e1.textContent=fmt(cor512);
-    if(e2)e2.textContent=fmt(correl);
+    if(e1)e1.textContent=fmt2(cor512);
+    if(e2)e2.textContent=fmt2(correl);
     var ctrl=document.getElementById('r-ctrl');if(!ctrl)return;
     var anyVal=sol512||vir||frais||prel||solrel||cheq||remis;
     if(!anyVal){ctrl.innerHTML='';return;}
     var diff=r2(Math.abs(cor512-correl));
-    if(diff===0){ctrl.innerHTML='<div class="eq-ok">'+SVG.check+' Rapprochement équilibré — soldes corrigés identiques ('+fmt(cor512)+').</div>';}
-    else{ctrl.innerHTML='<div class="eq-no">'+SVG.x+' Écart de '+fmt(diff)+' — vérifiez les montants ou les signes.</div>';}
+    if(diff===0){ctrl.innerHTML='<div class="eq-ok">'+SVG.check+' Rapprochement équilibré — soldes corrigés identiques ('+fmt2(cor512)+').</div>';}
+    else{ctrl.innerHTML='<div class="eq-no">'+SVG.x+' Écart de '+fmt2(diff)+' — vérifiez les montants ou les signes.</div>';}
   };
   ['r-sol512','r-vir','r-frais','r-prel','r-solrel','r-cheq','r-remis'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',updR);});
 }
