@@ -1482,6 +1482,7 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .dp-jr{display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:13px;border:1px solid var(--edge);border-radius:9px;padding:7px 10px;background:var(--paper)}
 .dp-jr .btn-sm{flex-shrink:0}
 .tpat-ecr td.mono{white-space:nowrap}
+@media (max-width:640px){.tpat-ecr{display:block;overflow-x:auto;max-width:100%}.tpat-ecr th,.tpat-ecr td{padding:5px 6px}}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -6479,7 +6480,7 @@ function tpTdbChart(s){
 }
 function tpAteliers(){
   var cur=ui.tpAt||'ca3';
-  var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px;opacity:.75">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
+  var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
     '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, rapprochement bancaire, budget de trésorerie (CCP1) ; déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, travaux d\'inventaire, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
     '<div style="margin-top:14px">'+chipsH+'</div>'+tpAtBody(cur);
@@ -10023,9 +10024,11 @@ function render(){
     var _foc=focusModeOn()&&(!!ui.dayplan||(ui.tab==='cards'&&ui.session&&ui.session.queue&&ui.session.queue.length>0)||(ui.tab==='exam'&&ui.exam&&!ui.exam.done)||(ui.tab==='outils'&&ui.tool==='annales'&&ui.annale&&!ui.annale.done));
     document.documentElement.classList.toggle('legl-focus',_foc);
     document.getElementById('app').innerHTML=topbar()+'<div class="wrap">'+(_foc?'<div class="focus-bar no-print"><span>'+SVG.star+' Mode focus</span><span class="focus-bar-hint">La navigation revient quand tu quittes la session.</span></div>':'')+html+'</div>'+botnav()+focusWidget();
-    bindDynamic();window.scrollTo(0,0);
+    bindDynamic();markScrollables();window.scrollTo(0,0);
   }catch(err){renderError(err);}
 }
+/* Tableaux qui défilent horizontalement sur petit écran : atteignables au clavier. */
+function markScrollables(){try{document.querySelectorAll('#app .tpat-ecr').forEach(function(t){if(t.scrollWidth>t.clientWidth+1){t.tabIndex=0;t.setAttribute('aria-label','Tableau défilant');}});}catch(e){}}
 /* Garde-fou d'affichage : si une vue lève une exception, on évite l'écran blanc et le verrouillage total (chaque re-render échouerait). La progression reste en localStorage : on propose de l'exporter et de revenir à un état sûr. */
 /* Mode focus (réglage, activé par défaut) : masque barre latérale et barres de navigation pendant les sessions. */
 function focusModeOn(){try{return localStorage.getItem('legl.focusMode')!=='off';}catch(e){return true;}}
