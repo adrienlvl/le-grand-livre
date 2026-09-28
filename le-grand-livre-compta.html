@@ -5668,7 +5668,7 @@ function tpPratique(code){
 /* Bilan imprimable, à montrer au formateur ou au tuteur de stage. */
 function tpBilanView(){
   var now=new Date(),cr=tpCritTotals(),dp=tpDpStatus(),or=tpOralStats();
-  var ccps=curReady().map(function(e){var r=readinessOf(e),c=TP_CCP[e.tpIndex];
+  var ccps=TP_CCP.map(function(c0,ci){return {code:c0.code,titre:c0.titre,mods:c0.mods,themes:c0.themes,tpIndex:ci};}).map(function(e){var r=readinessOf(e),c=TP_CCP[e.tpIndex];
     var crits=[];c.comps.forEach(function(comp,cj){var n=0,a=0;comp.crit.forEach(function(x,ck){n++;if(tpCritLevel(tpCritKey(e.tpIndex,cj,ck))===2)a++;});crits.push('<tr><td>'+escHtml(comp.t)+'</td><td class="n">'+a+' / '+n+'</td></tr>');});
     var ats=TP_AT.filter(function(a){return a[2]===e.code;}).map(function(a){var s=state.tp.at&&state.tp.at[a[0]];return '<tr><td>Atelier : '+escHtml(a[1])+'</td><td class="n">'+(s?s.n+' cas · meilleur '+s.best+' %':'pas encore')+'</td></tr>';}).join('');
     var cabs=CAB_DOSSIERS.filter(function(d){return d.ccp===e.code;}).map(function(d){var c=state.tp.cab&&state.tp.cab[d.id];return '<tr><td>Dossier cabinet : '+escHtml(d.client)+'</td><td class="n">'+(c&&c.done?'meilleur '+c.best+' %':'pas encore')+'</td></tr>';}).join('');
