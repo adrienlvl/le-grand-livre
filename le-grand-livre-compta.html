@@ -4120,10 +4120,16 @@ function revisionPlanPanel(){
   var rem=Math.max(0,CARDS.length-masteredCount());
   var perDay=rem>0?Math.max(5,Math.ceil(rem/Math.max(1,jExam))):0;
   var studyList=MODULES.filter(function(m){return !state.passed[m.id];}).concat(MODULES.filter(function(m){return state.passed[m.id];}));
+  /* Titre Pro : on suit l'étape en cours du plan de formation (ses modules, ateliers, dossiers et questions d'entretien d'abord). */
+  var _ph=null,_prev=[];if(isTP()){try{var _tl=formTimeline();if(_tl.cur>=0){_ph=_tl.phases[_tl.cur].p;_prev=_tl.phases.slice(0,_tl.cur).map(function(x){return x.p;});}}catch(e){}}
+  if(_ph&&_ph.mods&&_ph.mods.length){var _rank=function(m){if(_ph.mods.indexOf(m.id)>=0)return 0;if(_prev.some(function(p){return p.mods.indexOf(m.id)>=0;}))return 1;return 2;};
+    var _todo=MODULES.filter(function(m){return !state.passed[m.id];}).sort(function(a,b){return _rank(a)-_rank(b);});
+    var _cur=_todo.filter(function(m){return _rank(m)<2;});studyList=(_cur.length?_cur:_todo).concat(MODULES.filter(function(m){return state.passed[m.id]&&_ph.mods.indexOf(m.id)>=0;}));if(!studyList.length)studyList=MODULES.slice();}
   var trows=Object.keys(THEMES).filter(function(k){return k!=='all';}).map(function(t){
     var tm=themeMastery(t);if(!tm.total)return null;
-    return {label:THEMES[t],pct:tm.pct};
+    return {t:t,label:THEMES[t],pct:tm.pct};
   }).filter(Boolean).sort(function(a,b){return a.pct-b.pct;});
+  if(_ph&&_ph.ccp){var _th=(TP_CCP.filter(function(c){return c.code===_ph.ccp;})[0]||{}).themes||[];var _tr=trows.filter(function(r){return _th.indexOf(r.t)>=0;});if(_tr.length)trows=_tr;}
   var nDays=Math.min(7,jExam+1);if(nDays<1)nDays=1;
   var t0=new Date();t0.setHours(0,0,0,0);
   var days='';
@@ -4132,17 +4138,17 @@ function revisionPlanPanel(){
     var dd=AG_DAYS_LONG[dObj.getDay()]+' '+dObj.getDate()+' '+AG_MONTHS_LOWER[dObj.getMonth()];
     var tasks=[];
     if(jLeft===0){
-      tasks.push([SVG.star,'<b>Jour J.</b> Relis l\'antisèche et les fiches méthodo, gère ton temps, garde ton calme.']);
+      tasks.push([SVG.star,isTP()?'<b>Jour J.</b> Relis tes trois fiches CCP, gère ton temps, garde ton calme : le travail est fait.':'<b>Jour J.</b> Relis l\'antisèche et les fiches méthodo, gère ton temps, garde ton calme.']);
     }else if(jLeft===1){
-      tasks.push([SVG.book,'Veille : révisions générales légères (antisèche, mémos, méthodologie des épreuves).']);
+      tasks.push([SVG.book,isTP()?'Veille : révisions légères (fiches CCP, ton dossier professionnel, deux ou trois questions d\'entretien à voix haute).':'Veille : révisions générales légères (antisèche, mémos, méthodologie des épreuves).']);
       tasks.push([SVG.cards,'Une dernière passe de cartes dues, sans forcer. Repos.']);
     }else{
       tasks.push([SVG.cards,rem>0?('Répétition espacée : environ '+perDay+' cartes (tes cartes dues d\'abord).'):'Entretien : rejoue tes cartes dues.']);
       if(studyList.length){var m=studyList[i%studyList.length];tasks.push([SVG.book,(state.passed[m.id]?'Réviser':'Étudier')+' le module <b>'+escHtml(m.title)+'</b>'+(state.passed[m.id]?' (déjà validé)':' : Cours, Mémo, Quiz')+'.']);}
       var f=i%3;
-      if(isTP()&&i%5===1){var _pend=TP_AT.filter(function(a){var st=state.tp.at&&state.tp.at[a[0]];return !(st&&st.ok>0);});var _at=_pend.length?_pend[Math.floor(i/5)%_pend.length]:null;if(_at){tasks.push([SVG.check,'Atelier pratique : <b>'+escHtml(_at[1])+'</b> ('+_at[2]+'), jusqu\'au sans-faute.']);f=-1;}}
-      else if(isTP()&&i%5===3){var _cd=CAB_DOSSIERS.filter(function(d){var c=state.tp.cab&&state.tp.cab[d.id];return !(c&&c.done);})[0];if(_cd){tasks.push([SVG.book,'Dossier cabinet : <b>'+escHtml(_cd.client)+'</b> ('+_cd.ccp+', environ '+_cd.duree+' min).']);f=-1;}}
-      else if(isTP()&&i%5===4){var _oq=ENTRETIEN_TP.filter(function(q){return state.tp.oral[q.id]!==1;})[i%7];if(_oq){tasks.push([SVG.star,'Entretien : réponds à voix haute à « '+escHtml(_oq.q)+' »']);f=-1;}}
+      if(isTP()&&i%5===1){var _pend=TP_AT.filter(function(a){var st=state.tp.at&&state.tp.at[a[0]];return !(st&&st.ok>0);});if(_ph&&_ph.at&&_ph.at.length){var _pc=_pend.filter(function(a){return _ph.at.indexOf(a[0])>=0;});if(_pc.length)_pend=_pc;}var _at=_pend.length?_pend[Math.floor(i/5)%_pend.length]:null;if(_at){tasks.push([SVG.check,'Atelier pratique : <b>'+escHtml(_at[1])+'</b> ('+_at[2]+'), jusqu\'au sans-faute.']);f=-1;}}
+      else if(isTP()&&i%5===3){var _cds=CAB_DOSSIERS.filter(function(d){var c=state.tp.cab&&state.tp.cab[d.id];return !(c&&c.done);});var _cd=(_ph&&_ph.ccp&&_cds.filter(function(d){return d.ccp===_ph.ccp;})[0])||_cds[0];if(_cd){tasks.push([SVG.book,'Dossier cabinet : <b>'+escHtml(_cd.client)+'</b> ('+_cd.ccp+', environ '+_cd.duree+' min).']);f=-1;}}
+      else if(isTP()&&i%5===4){var _oqs=ENTRETIEN_TP.filter(function(q){return state.tp.oral[q.id]!==1;});if(_ph&&_ph.ccp){var _oc=_oqs.filter(function(q){return q.k===_ph.ccp;});if(_oc.length)_oqs=_oc;}var _oq=_oqs.length?_oqs[i%_oqs.length]:null;if(_oq){tasks.push([SVG.star,'Entretien : réponds à voix haute à « '+escHtml(_oq.q)+' »']);f=-1;}}
       if(f===-1){}
       else if(f===0&&trows.length){var w=trows[i%trows.length];tasks.push([SVG.refresh,'Renforcer ton thème le moins maîtrisé : <b>'+escHtml(w.label)+'</b> ('+w.pct+' %).']);}
       else if(f===1&&typeof SUJETS!=='undefined'&&SUJETS.length){var s=SUJETS[i%SUJETS.length];tasks.push([SVG.list,'Sujet type au brouillon : <b>'+escHtml(s.titre)+'</b>, puis comparer au corrigé.']);}
