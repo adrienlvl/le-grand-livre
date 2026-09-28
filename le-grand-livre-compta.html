@@ -5084,7 +5084,7 @@ var NAV_ITEMS=[
   {label:'Examen blanc',sub:'Évaluation en conditions, chronométrable',go:function(){clearExamTimer();ui.tab='exam';ui.exam=null;}},
   {label:'Examen adaptatif',sub:'Tirage pondéré sur tes catégories les moins réussies',go:function(){clearExamTimer();ui.tab='exam';ui.exam=null;ui.examCat='adaptive';}},
   {label:'Simulateur ERP',sub:'Saisie, journaux, grand livre, balance, bilan, lettrage, contrôle',go:function(){navTerrain('erp');}},
-  {label:'Missions comptables',sub:'Cas d\'entreprise notés, façon épreuve E4',go:function(){navTerrain('missions');}},
+  {label:'Missions comptables',sub:'Cas d\'entreprise notés, écriture par écriture',go:function(){navTerrain('missions');}},
   {label:'Exercices d\'écriture',sub:'Générateur d\'écritures notées (18 types)',go:function(){navTerrain('exercices');}},
   {label:'Communication professionnelle',sub:'Terrain — mises en situation',go:function(){navTerrain('comm');}},
   {label:'Excel comptable',sub:'Terrain — formules et fonctions',go:function(){navTerrain('excel');}},
@@ -9544,7 +9544,7 @@ function viewExercices(){
     '<button class="train-mode-card" data-action="train-mode" data-m="mission">'+
       '<div class="train-mode-icon">&#x1F4BC;</div>'+
       '<h3>Missions comptables</h3>'+
-      '<p>Un cas d\'entreprise complet : passe une s&eacute;rie d\'&eacute;critures cohérentes (opérations, inventaire, paie), comme &agrave; l\'&eacute;preuve E4. Corrig&eacute; au centime, score final.</p>'+
+      '<p>Un cas d\'entreprise complet : passe une s&eacute;rie d\'&eacute;critures cohérentes (opérations, inventaire, paie), comme '+(isTP()?'en mise en situation professionnelle':'&agrave; l\'&eacute;preuve E4')+'. Corrig&eacute; au centime, score final.</p>'+
     '</button>'+
   '</div>'+stats;
 }
@@ -9716,7 +9716,7 @@ function viewTrainMission(){
         '<div style="color:var(--ink2);font-size:13px;margin-bottom:14px">'+m.ops.length+' écritures à passer</div>'+
         '<button class="btn btn-pri" data-action="train-mission-start" data-id="'+m.id+'">Commencer</button></div>';
     }).join('');
-    return back+'<div class="train-exo-panel" style="margin-bottom:16px"><div style="font-weight:600;font-size:18px;margin-bottom:6px">Missions comptables</div><div style="color:var(--ink2);font-size:14px">Passe une série d\'écritures pour un cas d\'entreprise, comme à l\'épreuve E4. Chaque écriture est corrigée au centime, et tu obtiens un score.</div></div><div class="sim-grid">'+cards+'</div>';
+    return back+'<div class="train-exo-panel" style="margin-bottom:16px"><div style="font-weight:600;font-size:18px;margin-bottom:6px">Missions comptables</div><div style="color:var(--ink2);font-size:14px">Passe une série d\'écritures pour un cas d\'entreprise, comme '+(isTP()?'en mise en situation professionnelle':'à l\'épreuve E4')+'. Chaque écriture est corrigée au centime, et tu obtiens un score.</div></div><div class="sim-grid">'+cards+'</div>';
   }
   if(ms.phase==='done'){
     var okN=ms.ops.filter(function(o){return o.result&&o.result.ok;}).length,n=ms.ops.length;
