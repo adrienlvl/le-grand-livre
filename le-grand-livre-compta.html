@@ -1398,7 +1398,7 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 }
 @media (prefers-reduced-motion:reduce){.fx-burst{display:none}}
 /* Apparence : recettes et vignettes enrichies */
-.rcp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.rcp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:8px}
 .rcp{display:flex;flex-direction:column;gap:6px;text-align:left;border:2px solid var(--edge);border-radius:12px;padding:11px 12px;background:var(--card);color:var(--ink)}
 .rcp:hover{border-color:var(--ink2)}
 .rcp.on{border-color:var(--accent)}
@@ -3763,6 +3763,7 @@ function topbar(){
     (lvlBadge?'<span style="margin-left:auto">'+lvlBadge+'</span>':'')+
     '<button class="navbtn no-print" data-action="search-open" aria-label="Recherche" title="Rechercher (Ctrl+K)" style="padding:9px 10px">'+SVG.loupe+'</button>'+
     '<button class="navbtn no-print" data-action="toggle-theme" aria-label="Basculer thème" title="Mode sombre/clair" style="padding:9px 10px">'+(document.documentElement.getAttribute('data-theme')==='dark'?SVG.sun:SVG.moon)+'</button>'+
+    '<button class="navbtn no-print" data-action="open-apparence" aria-label="Apparence" title="Apparence" style="padding:9px 10px">'+SVG.palette+'</button>'+
     '<button class="navbtn no-print" data-action="print-page" aria-label="Imprimer / PDF" title="Exporter en PDF" style="padding:9px 10px">'+SVG.print+'</button>'+
   '</div></div>';
 }
