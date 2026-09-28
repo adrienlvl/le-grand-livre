@@ -799,7 +799,8 @@ svg{display:block}
 .train-tbl th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);padding:0 8px 8px;font-weight:500;text-align:left;border-bottom:1.5px solid var(--edge)}
 .train-tbl td{padding:5px 6px;border-bottom:1px solid var(--edge)}
 .train-tbl tr:last-child td{border-bottom:none}
-.tr-acc{width:80px;padding:7px 8px;border:1.5px solid var(--edge);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);background:var(--card);text-align:center}
+.tr-acc{width:100%;min-width:170px;padding:7px 9px;border:1.5px solid var(--edge);border-radius:7px;font-family:inherit;font-size:13.5px;color:var(--ink);background:var(--card);text-align:left}
+.train-tbl .cab-lib{font-size:11.5px}
 .tr-acc:focus{outline:2px solid var(--debit);outline-offset:1px;border-radius:7px}
 .tr-side{width:100px;padding:7px 8px;border:1.5px solid var(--edge);border-radius:7px;font-family:inherit;font-size:13px;color:var(--ink);background:var(--card)}
 .tr-side:focus{outline:2px solid var(--debit);outline-offset:1px;border-radius:7px}
@@ -1223,7 +1224,8 @@ html[data-titles="mono"] [style*="Fraunces"]{font-family:'JetBrains Mono',ui-mon
 .ff-now{position:absolute;top:0;bottom:18px;transform:translateX(-1px);pointer-events:none}
 .ff-now i{position:absolute;top:14px;bottom:0;width:2px;background:var(--credit);border-radius:2px}
 .ff-now b{position:absolute;top:0;left:-30px;width:60px;text-align:center;font-size:10px;font-weight:700;color:var(--credit);text-transform:uppercase;letter-spacing:.04em}
-.ff-mid{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.ff-mid{position:absolute;top:0;white-space:nowrap}
+.ff-d2{height:16px;margin-top:0}
 .ff-dates{position:relative;display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);margin-top:4px;font-family:'JetBrains Mono',monospace}
 .ff-pace{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;font-family:'Inter',sans-serif;letter-spacing:.02em}
 .ff-pace.ok{background:var(--valid-s);color:var(--valid)}.ff-pace.mid{background:var(--debit-s);color:var(--debit)}.ff-pace.late{background:var(--credit-s);color:var(--credit)}
@@ -1358,6 +1360,18 @@ html[data-titles="mono"] [style*="Fraunces"]{font-family:'JetBrains Mono',ui-mon
 .bul .cf-tbl tr.tot td{font-weight:600;background:rgba(128,128,128,.06)}
 .bul .cf-tbl tr.nap td{font-weight:700;font-size:14.5px;border-top:1.5px solid #1B1B1B}
 .bul{overflow-x:auto}
+.ff-stage{position:absolute;top:51px;height:8px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--amber) 38%,transparent) 0 5px,transparent 5px 10px);border:1.5px solid var(--amber);border-radius:7px;pointer-events:auto;display:flex;align-items:flex-end;justify-content:center}
+.ff-stage b{position:absolute;top:9px;left:0;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);white-space:nowrap}
+.ff-dates{margin-top:10px!important}
+.ff-prov{display:flex;gap:7px;align-items:flex-start;font-size:12.5px;color:var(--ink2);margin:0 0 6px}
+.ff-prov svg{flex-shrink:0;color:var(--amber);margin-top:1px}
+.ff-provbox{display:flex;flex-direction:column;gap:3px;border-left:3px solid var(--amber);background:color-mix(in srgb,var(--amber) 9%,transparent);border-radius:8px;padding:10px 13px;margin:4px 0 12px;font-size:13.5px}
+.ff-provbox span{color:var(--ink2)}
+.ff-ok{display:flex;gap:6px;align-items:center;color:var(--valid);font-size:13.5px;margin:0 0 10px}
+.ff-ok a{color:var(--ink2);margin-left:6px}
+.ff-sep{width:14px}
+.ff-dates-form select{max-width:100%}
+.pc-use{font-size:12px;color:var(--ink2);margin-top:2px;line-height:1.4}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -1798,7 +1812,7 @@ var MODULES=[
       {q:"Le rapprochement bancaire compare\u2026",o:["deux factures","le 512 et le relevé bancaire","l'actif et le passif","deux clients"],c:1,e:"On rapproche notre compte 512 du relevé de la banque."},
       {q:"Des frais bancaires sont sur le relevé mais pas dans nos comptes. Il faut\u2026",o:["les ignorer","les enregistrer (627)","appeler le client","attendre l'an prochain"],c:1,e:"On enregistre les frais oubliés au compte 627 Services bancaires."},
       {q:"Une lettre de change est…",o:["un moyen de paiement immédiat","un effet de commerce, payable à une échéance","une facture","un relevé bancaire"],c:1,e:"L'effet de commerce est une promesse de payer à une date fixée."},
-      {q:"Côté client, une dette matérialisée par un effet va en…",o:["401","403 Fournisseurs effets à payer","411","413"],c:1,e:"La dette sur effet se loge en 403 Fournisseurs, effets à payer."},
+      {q:"Tu es le client : tu acceptes une lettre de change de ton fournisseur. Ta dette passe en…",o:["Fournisseurs (401)","Fournisseurs, effets à payer (403)","Clients (411)","Clients, effets à recevoir (413)"],c:1,e:"Une dette fournisseur matérialisée par un effet passe de Fournisseurs (401) à Fournisseurs, effets à payer (403), jusqu'à l'échéance."},
       {q:"Rapprocher chaque facture de son règlement dans un compte client, c'est…",o:["le lettrage","le rapprochement bancaire","la balance","l'inventaire"],c:0,e:"Le lettrage pointe ce qui est soldé compte par compte."},
       {q:"Un chèque que tu as émis n'apparaît pas encore sur le relevé. C'est…",o:["une erreur","un décalage normal","une fraude","un agio"],c:1,e:"Décalage classique : le bénéficiaire ne l'a pas encore déposé."},
       {q:"Sur le relevé, la banque inscrit un encaissement…",o:["au débit comme nous","au crédit, car elle nous doit cet argent","nulle part","en charges"],c:1,e:"Le relevé est un miroir inversé : ce qui est débit chez nous est crédit chez elle."},
@@ -1873,7 +1887,7 @@ var MODULES=[
       {q:"L'écriture de dotation pour dépréciation d'une créance débite…",o:["Dépréciations des comptes clients (491)","Dotations aux dépréciations des créances (68174)","Clients (411)","Clients douteux (416)"],c:1,e:"On débite 68174 Dotations aux dépréciations des créances, et on crédite 491."},
       {q:"Créance 2 400 € TTC (2 000 € HT), perte probable 25 %. Dépréciation =…",o:["600 €","500 €","480 €","400 €"],c:1,e:"2 000 € HT × 25 % = 500 €."},
       {q:"Reprendre une dépréciation devenue trop élevée, c'est…",o:["débiter 68174","débiter 491 et créditer 78174","débiter 411","passer une nouvelle dotation"],c:1,e:"Une reprise débite la dépréciation 491 et crédite 78174 Reprises."},
-      {q:"Le compte 654 enregistre…",o:["des achats de marchandises","les pertes sur créances irrécouvrables","des ventes de marchandises","les mouvements de la banque"],c:1,e:"654 Pertes sur créances irrécouvrables reçoit la perte HT ; la TVA collectée est récupérée."},
+      {q:"Un client en liquidation judiciaire ne paiera jamais sa facture. Quel compte enregistre la perte HT ?",o:["Pertes sur créances irrécouvrables (654)", "Dotations aux dépréciations des créances (68174)", "Clients douteux (416)", "Achats de marchandises (607)"],c:0,e:"La créance définitivement perdue sort par Pertes sur créances irrécouvrables (654), pour le HT. La TVA collectée sur la vente est récupérée."},
       {q:"Le compte de dépréciation à l'actif est…",o:["une charge","un produit","soustractif : il diminue la valeur du bien","une dette"],c:2,e:"À l'actif, 29/39/49 viennent en diminution de la valeur brute du bien."}
     ]},
   {id:'provisions',num:'12',cat:'inv',icon:'amo',title:'Les provisions',sub:'Anticiper un risque ou une charge probable',
@@ -1892,7 +1906,7 @@ var MODULES=[
       {q:"Une provision pour risques et charges figure…",o:["à l'actif","au passif","en charge uniquement","hors bilan"],c:1,e:"C'est une dette probable : elle figure au passif du bilan."},
       {q:"La différence entre dépréciation et provision ?",o:["aucune","la dépréciation touche un actif, la provision est une dette au passif","la provision touche un actif","la dépréciation est au passif"],c:1,e:"Dépréciation = perte de valeur d'un actif ; provision = obligation probable au passif."},
       {q:"On comptabilise une provision si…",o:["le risque est certain et chiffré au centime","il existe une obligation probable et estimable à la clôture","le risque est déjà payé","jamais"],c:1,e:"Obligation envers un tiers, sortie de ressources probable, montant estimable de façon fiable."},
-      {q:"Le compte 151 enregistre…",o:["les dépréciations des comptes clients","les provisions pour risques","une immobilisation corporelle","des achats de marchandises"],c:1,e:"151 Provisions pour risques, au passif."},
+      {q:"Un salarié licencié conteste en justice ; l'entreprise risque de devoir payer 5 000 €. Où constates-tu ce risque au passif ?",o:["Provisions pour risques (151)", "Dépréciations des comptes clients (491)", "Emprunts (164)", "Capital (101)"],c:0,e:"Un risque probable au montant estimable se provisionne : Dotations aux provisions au débit, Provisions pour risques (151) au crédit, au passif."},
       {q:"L'écriture de dotation à une provision débite…",o:["Provisions pour risques (151)","Dotations aux provisions (6815)","Banque (512)","Reprises sur provisions (78)"],c:1,e:"On débite 6815 Dotations aux provisions (charge) et on crédite 151."},
       {q:"Reprendre une provision, c'est…",o:["débiter 151 et créditer 7815","débiter 6815","créditer 151","débiter 512"],c:0,e:"La reprise débite la provision 151 et crédite 7815 Reprises."},
       {q:"Quand le risque provisionné se réalise…",o:["on paie avec la provision directement","on enregistre la charge réelle et on reprend la provision","on ne fait rien","on double la provision"],c:1,e:"On comptabilise la charge réelle et son paiement, puis on reprend la provision devenue sans objet."},
@@ -1914,9 +1928,9 @@ var MODULES=[
       {q:"Quel principe impose de rattacher charges et produits au bon exercice ?",o:["La prudence","L'indépendance des exercices","Le coût historique","La non-compensation"],c:1,e:"C'est le principe d'indépendance, ou séparation, des exercices."},
       {q:"Comment appelle-t-on une charge payée cette année mais qui concerne l'an prochain ?",o:["Une charge à payer","Une charge constatée d'avance","Une provision","Une dépréciation"],c:1,e:"C'est une charge constatée d'avance, enregistrée au compte 486."},
       {q:"Quelle est l'écriture d'une charge constatée d'avance ?",o:["486 au débit, le compte de charge au crédit","Le compte de charge au débit, 486 au crédit","486 au débit, 487 au crédit","408 au débit, 486 au crédit"],c:0,e:"486 Charges constatées d'avance au débit, le compte de charge au crédit."},
-      {q:"Le compte 487 enregistre…",o:["les charges constatées d'avance","les produits constatés d'avance","les factures clients à établir","les factures fournisseurs non parvenues"],c:1,e:"487 Produits constatés d'avance, au passif."},
+      {q:"En décembre, tu encaisses le loyer de janvier d'un local que tu sous-loues. Quel compte utilises-tu à la clôture ?",o:["Charges constatées d'avance (486)", "Produits constatés d'avance (487)", "Clients, factures à établir (418)", "Fournisseurs, factures non parvenues (408)"],c:1,e:"Le produit concerne l'exercice suivant : on le retire du résultat grâce à Produits constatés d'avance (487), au passif."},
       {q:"Des marchandises sont reçues en décembre, la facture n'est pas encore arrivée. De quoi s'agit-il ?",o:["D'une facture à établir","D'une facture non parvenue, donc une charge à payer","D'une charge constatée d'avance","D'une provision"],c:1,e:"Une facture non parvenue : une charge à payer, enregistrée au compte 408."},
-      {q:"Le compte 418 sert à enregistrer…",o:["une facture fournisseur non parvenue","une vente livrée mais pas encore facturée","une charge payée d'avance","un produit encaissé d'avance"],c:1,e:"418 Clients factures à établir : c'est un produit à recevoir."},
+      {q:"Marchandises livrées le 28 décembre, facture émise le 5 janvier. Quel compte permet de rattacher la vente à l'exercice ?",o:["Fournisseurs, factures non parvenues (408)", "Clients, factures à établir (418)", "Charges constatées d'avance (486)", "Produits constatés d'avance (487)"],c:1,e:"La vente est acquise en décembre : on constate un produit à recevoir avec Clients, factures à établir (418) au débit."},
       {q:"Assurance de 1 200 euros payée le 1er octobre pour un an. Quelle est la charge constatée d'avance au 31 décembre ?",o:["300 euros","600 euros","900 euros","1 200 euros"],c:2,e:"9 mois concernent l'année suivante : 1 200 multiplié par 9, divisé par 12, égale 900 euros."},
       {q:"Que deviennent les écritures de régularisation à l'ouverture de l'exercice suivant ?",o:["Elles sont définitives","Elles sont contrepassées par l'écriture inverse","Elles sont supprimées","Elles passent au bilan"],c:1,e:"On les extourne à l'ouverture pour que les comptes reviennent à la normale."}
     ]},
@@ -1957,10 +1971,10 @@ var MODULES=[
     ],
     quiz:[
       {q:"Comment se calcule la TVA à décaisser ?",o:["Collectée plus déductible","Collectée moins déductible","Déductible moins collectée","HT multiplié par le taux"],c:1,e:"TVA à décaisser égale TVA collectée moins TVA déductible."},
-      {q:"Le compte 44551 enregistre…",o:["la TVA collectée sur les ventes","la TVA déductible sur biens et services","la TVA à décaisser","la TVA déductible sur immobilisations"],c:2,e:"44551 TVA à décaisser, la dette envers l'État."},
+      {q:"La TVA collectée du mois dépasse la TVA déductible. Quel compte reçoit la différence à payer à l'État ?",o:["TVA collectée (44571)", "TVA déductible sur autres biens et services (44566)", "TVA à décaisser (44551)", "TVA déductible sur immobilisations (44562)"],c:2,e:"La liquidation fait apparaître la dette nette : TVA à décaisser (44551), au crédit, soldée au paiement."},
       {q:"Comment s'appelle la déclaration mensuelle au réel normal ?",o:["La CA12","La CA3","La liasse fiscale","Le bilan"],c:1,e:"La CA3, déposée chaque mois au régime réel normal."},
       {q:"Que se passe-t-il si la TVA déductible dépasse la collectée ?",o:["Une TVA à payer","Un crédit de TVA","Une amende","Rien du tout"],c:1,e:"L'entreprise dispose d'un crédit de TVA, reporté ou remboursé."},
-      {q:"Le compte 44562 enregistre…",o:["la TVA déductible sur biens et services","la TVA collectée","la TVA déductible sur immobilisations","la TVA à décaisser"],c:2,e:"44562 TVA déductible sur immobilisations."},
+      {q:"Tu achètes une machine de production 12 000 € HT. Dans quel compte va sa TVA ?",o:["TVA déductible sur autres biens et services (44566)", "TVA collectée (44571)", "TVA déductible sur immobilisations (44562)", "TVA à décaisser (44551)"],c:2,e:"La TVA sur un bien durable va en TVA déductible sur immobilisations (44562) : la déclaration CA3 la présente sur une ligne séparée."},
       {q:"Quelle écriture solde la dette de TVA lors du paiement ?",o:["512 au débit, 44551 au crédit","44551 au débit, 512 au crédit","44571 au débit, 512 au crédit","44551 au débit, 44566 au crédit"],c:1,e:"On solde la dette : 44551 au débit, 512 Banque au crédit."},
       {q:"Qu'implique la franchise en base de TVA ?",o:["Une TVA à 10 %","Pas de TVA facturée ni déduite","Une déclaration mensuelle","Un remboursement automatique"],c:1,e:"Sous le seuil, l'entreprise ne facture pas et ne déduit pas la TVA."},
       {q:"Pour une prestation de services, quand la TVA est-elle exigible ?",o:["À la commande","À la livraison","À l'encaissement","À la clôture"],c:2,e:"Pour les services, la TVA est exigible à l'encaissement, sauf option pour les débits."}
@@ -1981,9 +1995,9 @@ var MODULES=[
     quiz:[
       {q:"Comment obtient-on le salaire net à payer ?",o:["Brut plus cotisations salariales","Brut moins cotisations salariales","Brut moins cotisations patronales","Brut plus cotisations patronales"],c:1,e:"Net à payer égale salaire brut moins cotisations salariales."},
       {q:"Qui supporte les cotisations patronales ?",o:["Le salarié","L'employeur, en plus du brut","L'État","Les clients"],c:1,e:"Les cotisations patronales s'ajoutent au brut et sont payées par l'employeur."},
-      {q:"Le compte 641 enregistre…",o:["le net à payer aux salariés","les salaires bruts (rémunérations du personnel)","les charges patronales de sécurité sociale","la dette envers l'URSSAF"],c:1,e:"641 Rémunérations du personnel, débité du salaire brut."},
-      {q:"Le compte 421 représente…",o:["les salaires bruts","les charges patronales","le net à payer aux salariés (personnel, rémunérations dues)","la dette envers l'URSSAF"],c:2,e:"421 Personnel, rémunérations dues : la dette envers le salarié."},
-      {q:"Le compte 645 enregistre…",o:["les salaires bruts","les charges patronales de sécurité sociale","le net à payer aux salariés","les paiements par banque"],c:1,e:"645 Charges de sécurité sociale et de prévoyance."},
+      {q:"Dans l'écriture de paie, quel compte reçoit le salaire brut ?",o:["Personnel, rémunérations dues (421)", "Rémunérations du personnel (641)", "Charges de sécurité sociale (645)", "Sécurité sociale (431)"],c:1,e:"Le salaire brut est la charge : Rémunérations du personnel (641), au débit."},
+      {q:"Dans l'écriture de paie, quel compte représente ce que l'entreprise doit verser au salarié ?",o:["Rémunérations du personnel (641)", "Charges de sécurité sociale (645)", "Personnel, rémunérations dues (421)", "Sécurité sociale (431)"],c:2,e:"Le net à payer est une dette envers le salarié : Personnel, rémunérations dues (421), au crédit, soldé par le virement du salaire."},
+      {q:"Quel compte de charge reçoit les cotisations payées par l'employeur en plus du brut ?",o:["Rémunérations du personnel (641)", "Charges de sécurité sociale et de prévoyance (645)", "Personnel, rémunérations dues (421)", "Services bancaires (627)"],c:1,e:"Les cotisations patronales sont une charge distincte du salaire : Charges de sécurité sociale et de prévoyance (645), au débit."},
       {q:"Comment se calcule le coût total d'un salarié pour l'employeur ?",o:["Le salaire net","Le salaire brut","Brut plus cotisations patronales","Brut moins cotisations salariales"],c:2,e:"Coût employeur égale salaire brut plus cotisations patronales."},
       {q:"Quelle écriture correspond au paiement du salaire net ?",o:["512 au débit, 421 au crédit","421 au débit, 512 au crédit","641 au débit, 512 au crédit","421 au débit, 431 au crédit"],c:1,e:"On solde la dette envers le salarié : 421 au débit, 512 Banque au crédit."},
       {q:"Quel document l'employeur remet-il au salarié chaque mois ?",o:["Une facture","Un bulletin de paie","Un relevé bancaire","Une déclaration CA3"],c:1,e:"Le bulletin de paie détaille le brut, les cotisations et le net à payer."}
@@ -2074,8 +2088,8 @@ var MODULES=[
       {q:"Écriture d'une augmentation de capital en numéraire ?",o:["101 au débit, 512 au crédit","512 au débit, 101 au crédit","512 au débit, 164 au crédit","106 au débit, 512 au crédit"],c:1,e:"512 Banque au débit, 101 Capital au crédit."},
       {q:"Qu'est-ce que l'autofinancement ?",o:["Un emprunt bancaire","Se financer par ses propres ressources (la CAF)","Une subvention","Un crédit-bail"],c:1,e:"L'autofinancement, c'est se financer grâce aux ressources dégagées par l'activité."},
       {q:"Dans un crédit-bail, le bien loué figure-t-il à l'actif ?",o:["Oui, dès le départ","Non, tant que l'option d'achat n'est pas levée","Oui, à la moitié","Seulement au passif"],c:1,e:"Le bien reste hors de l'actif ; les loyers sont des charges (compte 612)."},
-      {q:"Le compte 164 enregistre…",o:["le capital social","les réserves","les emprunts auprès des établissements de crédit","le solde du compte bancaire"],c:2,e:"164 Emprunts auprès des établissements de crédit."},
-      {q:"Le compte 13 regroupe…",o:["les subventions d'investissement","les subventions d'exploitation","le capital social","les emprunts bancaires"],c:0,e:"Compte 13 Subventions d'investissement, reprise au rythme de l'amortissement."},
+      {q:"La banque verse à l'entreprise un prêt de 30 000 €. Quel compte enregistre la dette ?",o:["Capital (101)", "Réserves (106)", "Emprunts auprès des établissements de crédit (164)", "Banque (512)"],c:2,e:"L'argent arrive en Banque (512) au débit, la dette de long terme en Emprunts auprès des établissements de crédit (164) au crédit."},
+      {q:"L'État verse une aide pour financer l'achat d'une machine. Où l'enregistres-tu au passif ?",o:["Subventions d'investissement (13)", "Subventions d'exploitation (74)", "Capital (101)", "Emprunts (164)"],c:0,e:"Une aide qui finance un bien durable est une Subvention d'investissement (13) : elle est reprise en produit au rythme de l'amortissement du bien."},
       {q:"Les capitaux propres sont une ressource…",o:["externe et remboursable","interne et stable","à court terme","de trésorerie"],c:1,e:"Les capitaux propres sont une ressource interne, stable, non remboursable."}
     ]},
   {id:'is',num:'22',cat:'fisc',icon:'res',title:"L'impôt sur les sociétés",sub:'Du résultat comptable au résultat fiscal et à l\'IS',
@@ -2170,20 +2184,20 @@ var CARDS=[
   {id:'c11',t:'pcg',q:"Classe 5 du PCG ?",a:"Comptes financiers (512 Banque, 530 Caisse)."},
   {id:'c12',t:'pcg',q:"Classe 6 du PCG ?",a:"Comptes de charges."},
   {id:'c13',t:'pcg',q:"Classe 7 du PCG ?",a:"Comptes de produits."},
-  {id:'c14',t:'pcg',q:"Compte 411 ?",a:"Clients."},
-  {id:'c15',t:'pcg',q:"Compte 401 ?",a:"Fournisseurs."},
-  {id:'c16',t:'pcg',q:"Compte 607 ?",a:"Achats de marchandises."},
-  {id:'c17',t:'pcg',q:"Compte 707 ?",a:"Ventes de marchandises."},
-  {id:'c18',t:'pcg',q:"Compte 512 ?",a:"Banque."},
-  {id:'c55',t:'pcg',q:"Compte 101 ?",a:"Capital."},
-  {id:'c56',t:'pcg',q:"Compte 641 ?",a:"Rémunérations du personnel (salaires)."},
+  {id:'c14',t:'pcg',q:"Une vente à crédit : quel compte suit ce que le client te doit ?",a:"Clients (411), au débit du TTC. Il est soldé au crédit quand le client paie."},
+  {id:'c15',t:'pcg',q:"Un achat à crédit : quel compte suit ce que tu dois au fournisseur ?",a:"Fournisseurs (401), au crédit du TTC. Il est soldé au débit lors du règlement."},
+  {id:'c16',t:'pcg',q:"Tu achètes des marchandises pour les revendre en l'état : quel compte de charge ?",a:"Achats de marchandises (607), au débit du montant HT."},
+  {id:'c17',t:'pcg',q:"Tu vends des marchandises achetées pour la revente : quel compte de produit ?",a:"Ventes de marchandises (707), au crédit du montant HT."},
+  {id:'c18',t:'pcg',q:"Un virement arrive sur le compte de l'entreprise : quel compte augmente, et de quel côté ?",a:"Banque (512), au débit : c'est de l'argent qui entre."},
+  {id:'c55',t:'pcg',q:"À quoi sert le compte Capital (101) ?",a:"Il enregistre les apports des associés à la création ou lors d'une augmentation de capital. Il est au passif, au crédit."},
+  {id:'c56',t:'pcg',q:"Quel compte reçoit le salaire brut dans l'écriture de paie ?",a:"Rémunérations du personnel (641), au débit : c'est une charge."},
   {id:'pcgr1',t:'pcg',q:"Qui édite le PCG ?",a:"L'Autorité des Normes Comptables (ANC)."},
   {id:'pcgr2',t:'pcg',q:"Combien de classes dans le PCG ?",a:"Huit. On utilise surtout les classes 1 à 7."},
   {id:'pcgr3',t:'pcg',q:"Quelles classes forment le bilan ?",a:"Les classes 1 à 5."},
   {id:'pcgr4',t:'pcg',q:"Quelles classes forment la gestion (le résultat) ?",a:"Les classes 6 (charges) et 7 (produits)."},
   {id:'pcgr5',t:'pcg',q:"Que donne 6 puis 60 puis 607 ?",a:"Charge, puis achats, puis achats de marchandises. Du général au précis."},
-  {id:'pcgr6',t:'pcg',q:"Compte 44571 ?",a:"TVA collectée, sur les ventes."},
-  {id:'pcgr7',t:'pcg',q:"Compte 44566 ?",a:"TVA déductible, sur les achats."},
+  {id:'pcgr6',t:'pcg',q:"Sur une vente, où va la TVA que tu factures au client ?",a:"TVA collectée (44571), au crédit : c'est une dette envers l'État."},
+  {id:'pcgr7',t:'pcg',q:"Sur un achat de fournitures ou de marchandises, où va la TVA payée ?",a:"TVA déductible sur autres biens et services (44566), au débit : c'est une créance sur l'État."},
   {id:'pcgr8',t:'pcg',q:"Pourquoi la classe 4 est-elle particulière ?",a:"Elle mêle créances (411 clients) et dettes (401 fournisseurs) : actif et passif."},
   {id:'c33',t:'org',q:"Le journal enregistre les opérations\u2026",a:"dans l'ordre chronologique (par date)."},
   {id:'c34',t:'org',q:"Le grand livre classe les écritures\u2026",a:"compte par compte."},
@@ -2226,11 +2240,11 @@ var CARDS=[
   {id:'c27',t:'tva',q:"TVA à décaisser = ?",a:"TVA collectée \u2212 TVA déductible (compte 44551)."},
   {id:'c28',t:'tva',q:"Taux normal de TVA en France ?",a:"20 %."},
   {id:'c29',t:'tva',q:"À qui l'entreprise reverse-t-elle la TVA ?",a:"À l'État. Elle n'est qu'un collecteur."},
-  {id:'c58',t:'tva',q:"Compte 44551 ?",a:"TVA à décaisser (à reverser à l'État)."},
+  {id:'c58',t:'tva',q:"Après la déclaration de TVA, quel compte montre ce qu'il reste à reverser à l'État ?",a:"TVA à décaisser (44551), au crédit, soldé lors du paiement."},
   {id:'tvar1',t:'tva',q:"Qui supporte réellement la TVA ?",a:"Le consommateur final. L'entreprise n'est qu'un collecteur pour l'État."},
   {id:'tvar2',t:'tva',q:"Les quatre taux de TVA en France ?",a:"20 % normal, 10 % intermédiaire, 5,5 % réduit, 2,1 % particulier."},
   {id:'tvar3',t:'tva',q:"Retrouver le HT à partir du TTC (taux 20 %) ?",a:"HT = TTC divisé par 1,20. Ex : 240 divisé par 1,20 = 200."},
-  {id:'tvar4',t:'tva',q:"Compte 44562 ?",a:"TVA déductible sur immobilisations."},
+  {id:'tvar4',t:'tva',q:"Tu achètes un ordinateur pour l'entreprise : où va sa TVA ?",a:"TVA déductible sur immobilisations (44562), et non 44566 : on la sépare pour la déclaration."},
   {id:'tvar5',t:'tva',q:"Calcul de la TVA puis du TTC (200 HT, 20 %) ?",a:"TVA = 200 multiplié par 20 % = 40. TTC = 200 plus 40 = 240."},
   {id:'tvar6',t:'tva',q:"Formule complète de la TVA à décaisser ?",a:"Collectée moins déductible biens et services (44566) moins déductible immobilisations (44562)."},
   {id:'tvar7',t:'tva',q:"Déductible supérieure à collectée ?",a:"Crédit de TVA : reporté sur la déclaration suivante ou remboursé."},
@@ -2264,11 +2278,11 @@ var CARDS=[
   {id:'c44',t:'reg',q:"Encaisser un règlement client ?",a:"Banque (512) débité / Clients (411) crédité."},
   {id:'c45',t:'reg',q:"Payer un fournisseur ?",a:"Fournisseurs (401) débité / Banque (512) crédité."},
   {id:'c46',t:'reg',q:"Le rapprochement bancaire compare\u2026",a:"le compte 512 (chez nous) et le relevé de la banque."},
-  {id:'c47',t:'reg',q:"Compte 627 ?",a:"Services bancaires (frais bancaires)."},
-  {id:'c48',t:'reg',q:"Compte 530 ?",a:"Caisse (règlements en espèces)."},
+  {id:'c47',t:'reg',q:"La banque prélève des frais de tenue de compte : quel compte de charge ?",a:"Services bancaires et assimilés (627), au débit."},
+  {id:'c48',t:'reg',q:"Un client paie en espèces au comptoir : quel compte de trésorerie ?",a:"Caisse (530), au débit. Son solde ne peut jamais être créditeur."},
   {id:'regr1',t:'reg',q:"Qu'est-ce qu'un effet de commerce ?",a:"Une promesse de payer à une échéance fixée : lettre de change ou billet à ordre."},
-  {id:'regr2',t:'reg',q:"Compte 413 ?",a:"Clients, effets à recevoir (créance sur effet)."},
-  {id:'regr3',t:'reg',q:"Compte 403 ?",a:"Fournisseurs, effets à payer (dette sur effet)."},
+  {id:'regr2',t:'reg',q:"Un client t'accepte une lettre de change : que devient sa dette dans tes comptes ?",a:"Elle passe de Clients (411) à Clients, effets à recevoir (413), jusqu'à l'échéance ou la remise à l'escompte."},
+  {id:'regr3',t:'reg',q:"Tu acceptes une lettre de change de ton fournisseur : que devient ta dette ?",a:"Elle passe de Fournisseurs (401) à Fournisseurs, effets à payer (403), jusqu'au paiement à l'échéance."},
   {id:'regr4',t:'reg',q:"Le lettrage, c'est quoi ?",a:"Rapprocher une facture et son règlement dans un compte de tiers pour pointer ce qui est soldé."},
   {id:'regr5',t:'reg',q:"La méthode du rapprochement bancaire ?",a:"Partir des deux soldes, pointer le commun, ajouter ce qui manque de chaque côté, faire coïncider."},
   {id:'regr6',t:'reg',q:"Pourquoi le relevé est-il un miroir inversé ?",a:"Un encaissement est au débit chez nous, au crédit chez la banque, qui nous doit l'argent."},
@@ -2331,18 +2345,18 @@ var CARDS=[
   {id:'k1',t:'pd',q:"Un compte d'actif diminue de quel côté ?",a:"Au crédit."},
   {id:'k2',t:'pd',q:"Une opération touche au minimum combien de comptes ?",a:"Deux : un emploi (au débit) et une ressource (au crédit)."},
   {id:'k3',t:'pcg',q:"Combien de classes compte le PCG ?",a:"Huit ; on utilise surtout les classes 1 à 7."},
-  {id:'k4',t:'pcg',q:"Compte 512 ?",a:"Banque (classe 5, comptes financiers)."},
+  {id:'k4',t:'pcg',q:"Le compte Banque (512) est un compte de quelle nature ?",a:"Un compte de trésorerie (classe 5), à l'actif quand il est débiteur. Créditeur, il signale un découvert."},
   {id:'k5',t:'org',q:"Le journal enregistre les opérations…",a:"dans l'ordre chronologique (par date)."},
   {id:'k6',t:'org',q:"Comment contrôle-t-on une balance ?",a:"Total débits = total crédits, et total des soldes débiteurs = total des soldes créditeurs."},
   {id:'k7',t:'bil',q:"L'équation du bilan ?",a:"Actif = Passif."},
   {id:'k8',t:'bil',q:"Où se retrouve le résultat de l'exercice au bilan ?",a:"Au passif, dans les capitaux propres."},
   {id:'k9',t:'tva',q:"Retrouver le HT à partir du TTC (taux 20 %) ?",a:"HT = TTC divisé par 1,20."},
-  {id:'k10',t:'tva',q:"Compte 44551 ?",a:"TVA à décaisser (somme due à l'État)."},
+  {id:'k10',t:'tva',q:"À quoi sert TVA à décaisser (44551) ?",a:"À constater la dette de TVA envers l'État après la liquidation mensuelle, jusqu'à son paiement."},
   {id:'k11',t:'ecr',q:"Vente au comptant : quel type de compte est débité du TTC, et pourquoi pas le compte client ?",a:"Un compte de trésorerie, Banque (512) ou Caisse (530) : l'encaissement est immédiat, on ne passe pas par Clients (411)."},
   {id:'k12',t:'ecr',q:"Le règlement d'un client porte-t-il de la TVA ?",a:"Non : la TVA a déjà été enregistrée à la facture."},
   {id:'k13',t:'fac',q:"Sur quel montant se calcule la TVA d'une facture ?",a:"Le net financier (après réductions commerciales et escompte)."},
   {id:'k14',t:'fac',q:"À quoi correspond le compte 665 ?",a:"Escomptes accordés : une charge financière chez le vendeur qui consent une réduction pour paiement anticipé."},
-  {id:'k15',t:'reg',q:"Compte 413 ?",a:"Clients, effets à recevoir."},
+  {id:'k15',t:'reg',q:"À quoi sert Clients, effets à recevoir (413) ?",a:"À suivre les créances clients matérialisées par un effet de commerce (lettre de change, billet à ordre)."},
   {id:'k16',t:'reg',q:"Encaisser un client par banque : quelle écriture ?",a:"Banque (512) débité / Clients (411) crédité."},
   {id:'k17',t:'amo',q:"Comment calcule-t-on l'annuité linéaire ?",a:"Valeur d'origine divisée par la durée d'utilisation."},
   {id:'k18',t:'amo',q:"À quoi correspond le compte 6811 ?",a:"Dotations aux amortissements des immobilisations : la charge d'exploitation constatée chaque année pour étaler le coût d'un bien."},
@@ -2375,7 +2389,7 @@ var CARDS=[
   {id:'fb19',t:'pcg',q:"À quoi servent les comptes de la classe 4 ?",a:"À enregistrer les dettes et créances envers les tiers (clients, fournisseurs, État...)."},
   {id:'fb20',t:'pcg',q:"Clients et fournisseurs : lequel est à l'actif, lequel au passif ?",a:"Clients (411) : une créance, à l'actif. Fournisseurs (401) : une dette, au passif."},
   {id:'fb21',t:'pcg',q:"Classes de bilan et classes de gestion ?",a:"Classes 1 à 5 = bilan ; classes 6 et 7 = gestion (résultat)."},
-  {id:'fb22',t:'pcg',q:"Le compte 606 correspond à quoi ?",a:"Achats non stockés de matières et fournitures (eau, énergie, fournitures)."},
+  {id:'fb22',t:'pcg',q:"Facture d'électricité ou d'eau : quel compte de charge ?",a:"Achats non stockés de matières et fournitures (606) : eau, énergie, petites fournitures consommées tout de suite."},
   {id:'fb23',t:'org',q:"À quoi sert le journal ?",a:"À enregistrer les opérations au jour le jour, dans l'ordre chronologique."},
   {id:'fb24',t:'org',q:"À quoi sert le grand livre ?",a:"À reprendre les écritures classées compte par compte."},
   {id:'fb25',t:'org',q:"À quoi sert la balance ?",a:"À lister tous les comptes avec leurs totaux et soldes, pour contrôler l'équilibre."},
@@ -2511,8 +2525,8 @@ var CARDS=[
   {id:'fb155',t:'pd',q:"Peut-on avoir une écriture à plus de deux lignes ?",a:"Oui, une écriture composée, tant que le total des débits égale le total des crédits."},
   {id:'fb156',t:'pd',q:"Que représente le solde d'un compte ?",a:"La différence entre le total des débits et le total des crédits à un instant donné."},
   {id:'fb157',t:'pd',q:"Qu'est-ce qu'un compte soldé ?",a:"Un compte dont le solde est nul (débit égal crédit)."},
-  {id:'fb158',t:'pd',q:"Le compte 411 est-il débiteur ou créditeur en principe ?",a:"Débiteur : le client doit de l'argent à l'entreprise."},
-  {id:'fb159',t:'pd',q:"Le compte 401 est-il débiteur ou créditeur en principe ?",a:"Créditeur : l'entreprise doit de l'argent au fournisseur."},
+  {id:'fb158',t:'pd',q:"Clients (411) : quel est son sens habituel, et pourquoi ?",a:"Débiteur : le client doit de l'argent à l'entreprise, c'est une créance à l'actif."},
+  {id:'fb159',t:'pd',q:"Fournisseurs (401) : quel est son sens habituel, et pourquoi ?",a:"Créditeur : l'entreprise doit de l'argent au fournisseur, c'est une dette au passif."},
   {id:'fb160',t:'pd',q:"Que signifie la réciprocité des comptes de tiers ?",a:"Le compte client chez le vendeur correspond au compte fournisseur chez l'acheteur."},
   {id:'fb161',t:'pd',q:"Quand le compte 512 est-il créditeur ?",a:"En cas de découvert bancaire."},
   {id:'fb162',t:'pd',q:"Que finance une ressource ?",a:"Un emploi : le crédit (ressource) finance le débit (emploi)."},
@@ -2526,9 +2540,9 @@ var CARDS=[
   {id:'fb170',t:'pcg',q:"Comptes 4456 et 4457 ?",a:"4456 TVA déductible, 4457 TVA collectée."},
   {id:'fb171',t:'pcg',q:"Compte 606 ou 607 ?",a:"606 Achats non stockés (eau, énergie, fournitures), 607 Achats de marchandises."},
   {id:'fb172',t:'pcg',q:"Que représente le compte 462 ?",a:"Créances sur cessions d'immobilisations."},
-  {id:'fb173',t:'pcg',q:"Le compte 164 est-il un actif ou un passif ?",a:"Un passif : c'est une dette financière."},
+  {id:'fb173',t:'pcg',q:"Emprunts auprès des établissements de crédit (164) : actif ou passif ?",a:"Un passif : c'est une dette financière, remboursée au fil des échéances."},
   {id:'fb174',t:'pcg',q:"Faut-il connaître tous les numéros de compte par cœur ?",a:"Non : le plan comptable est toujours disponible (logiciel, mémo papier, et autorisé en mise en situation). Il faut savoir retrouver le bon compte et comprendre ce qu'il enregistre ; les plus fréquents (clients, fournisseurs, banque, TVA, achats, ventes) se retiennent d'eux-mêmes avec la pratique."},
-  {id:'fb175',t:'pcg',q:"Compte 6064 ?",a:"Fournitures administratives (papeterie, fournitures de bureau)."},
+  {id:'fb175',t:'pcg',q:"Tu achètes des ramettes de papier et des stylos pour le bureau : quel compte ?",a:"Fournitures administratives (6064), un achat non stocké, au débit."},
   {id:'fb176',t:'org',q:"Qu'est-ce qu'une balance de vérification ?",a:"Un contrôle, avant les documents de synthèse, qui détecte les déséquilibres."},
   {id:'fb177',t:'org',q:"Balance par soldes ou par mouvements ?",a:"Par mouvements = totaux débit/crédit ; par soldes = solde débiteur ou créditeur de chaque compte."},
   {id:'fb178',t:'org',q:"Qu'est-ce qu'un grand livre auxiliaire ?",a:"Le détail d'un compte collectif (clients, fournisseurs), tiers par tiers."},
@@ -2662,7 +2676,7 @@ var CARDS=[
   {id:'fb306',t:'pd',q:"Qu'est-ce qu'une écriture d'ordre ?",a:"Une écriture sans mouvement de trésorerie (dotations, régularisations, variations de stock)."},
   {id:'fb307',t:'pd',q:"Une même ligne peut-elle être au débit et au crédit ?",a:"Non : une ligne est soit au débit, soit au crédit."},
   {id:'fb308',t:'pd',q:"Que garantit la partie double sur le bilan ?",a:"L'égalité permanente entre l'actif et le passif."},
-  {id:'fb309',t:'pd',q:"Le compte 471 doit-il rester ouvert ?",a:"Non : il est provisoire et doit être soldé après identification."},
+  {id:'fb309',t:'pd',q:"Un virement reçu sans libellé clair : où le ranges-tu en attendant, et jusqu'à quand ?",a:"En Compte d'attente (471), provisoire : il doit être soldé dès que l'opération est identifiée, et jamais rester ouvert à la clôture."},
   {id:'fb310',t:'pd',q:"Qu'est-ce que la contrepassation ?",a:"Passer l'écriture inverse pour annuler une écriture."},
   {id:'fb311',t:'pd',q:"Différence entre annuler et contrepasser une écriture ?",a:"On ne modifie pas l'original : on passe une écriture inverse qui le neutralise."},
   {id:'fb312',t:'pcg',q:"Que représente le compte 275 ?",a:"Dépôts et cautionnements versés."},
@@ -2884,7 +2898,7 @@ var CARDS=[
   {id:'fb528',t:'regul',q:"Que fait-on des régularisations à l'ouverture de l'exercice ?",a:"On les contrepasse (extourne) par l'écriture inverse."},
   {id:'fb529',t:'stk',q:"Le stock figure-t-il à l'actif ou au passif ?",a:"À l'actif, dans l'actif circulant."},
   {id:'fb530',t:'stk',q:"À quelle valeur inscrit-on le stock final à l'inventaire ?",a:"Au plus faible entre le coût d'entrée et la valeur actuelle."},
-  {id:'fb531',t:'stk',q:"Le compte 6037 est un compte de quoi ?",a:"De charge (variation des stocks de marchandises)."},
+  {id:'fb531',t:'stk',q:"Variation des stocks de marchandises (6037) : quel type de compte, et à quoi sert-il ?",a:"Un compte de charge qui ajuste les achats de l'exercice : stock initial au débit, stock final au crédit."},
   {id:'fb532',t:'rappro',q:"Quels comptes le lettrage concerne-t-il ?",a:"Les comptes de tiers (clients 411, fournisseurs 401)."},
   {id:'fb533',t:'rappro',q:"Pourquoi un chèque émis n'apparaît-il pas encore sur le relevé ?",a:"Parce qu'il n'a pas encore été présenté à la banque par le bénéficiaire."},
   {id:'fb534',t:'rappro',q:"Après un rapprochement, que comptabilise-t-on ?",a:"Les opérations oubliées : frais bancaires, virements non enregistrés."},
@@ -3361,7 +3375,7 @@ function exportState(){
       var fm=localStorage.getItem('legl.focusMode');if(fm)settings.focusMode=fm;
       var npd=localStorage.getItem('legl.newPerDay');if(npd)settings.newPerDay=npd;
       var cu=localStorage.getItem('legl.cursus');if(cu)settings.cursus=cu;
-      ['ambiance','corners','density','titles','ruled','formStart','formEnd'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v)settings[k]=v;});
+      ['ambiance','corners','density','titles','ruled','formStart','formEnd','ccpOrder','stages','formConfirmed','seenVersion'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v)settings[k]=v;});
     }catch(e){}
     var payload={app:'legrandlivre',version:1,exportedAt:todayStr(),state:state,settings:settings};
     var data=JSON.stringify(payload,null,2);
@@ -3409,6 +3423,9 @@ function importState(file){
         if(/^(0|10|20|30|50)$/.test(String(o.settings.newPerDay)))localStorage.setItem('legl.newPerDay',String(o.settings.newPerDay));
         ['ambiance','corners','density','titles','ruled'].forEach(function(k){var v=o.settings[k];if(typeof v==='string'&&/^[a-z]+$/.test(v))appSet(k,v);});
         ['formStart','formEnd'].forEach(function(k){var v=o.settings[k];if(typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.'+k,v);});
+        if(typeof o.settings.ccpOrder==='string'&&/^[123]{3}$/.test(o.settings.ccpOrder))localStorage.setItem('legl.ccpOrder',o.settings.ccpOrder);
+        if(typeof o.settings.stages==='string'&&o.settings.stages.length<400)localStorage.setItem('legl.stages',o.settings.stages);
+        if(o.settings.formConfirmed==='1')localStorage.setItem('legl.formConfirmed','1');
       }catch(e){}}
       normalizeState();
       save();render();
@@ -4256,8 +4273,8 @@ var EXAM_EXTRA=[
 {q:"À l'actif du bilan, les postes se classent…",o:["par liquidité croissante (immobilisations en haut)","par ordre alphabétique","au hasard","par montant"],c:0,e:"Immobilisations en haut, disponibilités en bas : liquidité croissante.",cat:"synth",mod:"Documents de synthèse"},
 {q:"La TVA à décaisser se calcule par…",o:["collectée plus déductible","collectée moins déductible","déductible moins collectée","HT multiplié par 2"],c:1,e:"TVA à décaisser = TVA collectée moins TVA déductible.",cat:"tva",mod:"La TVA"},
 {q:"Le taux normal de TVA en France est de…",o:["5,5 %","10 %","20 %","2,1 %"],c:2,e:"Le taux normal est de 20 %.",cat:"tva",mod:"La TVA"},
-{q:"Le compte 44571 enregistre…",o:["la TVA déductible sur biens et services","la TVA collectée sur les ventes","la TVA déductible sur immobilisations","la TVA à décaisser"],c:1,e:"44571 TVA collectée.",cat:"tva",mod:"La TVA"},
-{q:"Le compte 44562 enregistre…",o:["la TVA déductible sur biens et services","la TVA collectée sur les ventes","la TVA déductible sur immobilisations","la TVA à décaisser"],c:2,e:"44562 : TVA déductible sur immobilisations.",cat:"tva",mod:"La TVA"},
+{q:"Tu factures une vente 1 000 € HT + 200 € de TVA. Où vont les 200 € ?",o:["TVA déductible sur autres biens et services (44566)", "TVA collectée (44571)", "TVA déductible sur immobilisations (44562)", "TVA à décaisser (44551)"],c:1,e:"La TVA facturée au client est collectée pour le compte de l'État : TVA collectée (44571), au crédit.",cat:"tva",mod:"La TVA"},
+{q:"Tu achètes une machine de production 12 000 € HT. Dans quel compte va sa TVA ?",o:["TVA déductible sur autres biens et services (44566)", "TVA collectée (44571)", "TVA déductible sur immobilisations (44562)", "TVA à décaisser (44551)"],c:2,e:"La TVA sur un bien durable va en TVA déductible sur immobilisations (44562) : la déclaration CA3 la présente sur une ligne séparée.",cat:"tva",mod:"La TVA"},
 {q:"Un article coûte 240 euros TTC à 20 %. Le HT est de…",o:["192 euros","200 euros","220 euros","48 euros"],c:1,e:"HT = 240 divisé par 1,20 = 200 euros.",cat:"tva",mod:"La TVA"},
 {q:"Si la TVA déductible dépasse la collectée, l'entreprise a…",o:["une TVA à décaisser","un crédit de TVA","une dette envers le client","une charge exceptionnelle"],c:1,e:"Un crédit de TVA, reporté ou remboursé.",cat:"tva",mod:"La TVA"},
 {q:"Vente de 1 500 euros HT à 20 %. La TVA collectée est de…",o:["150 euros","300 euros","250 euros","1 800 euros"],c:1,e:"1 500 multiplié par 20 % = 300 euros.",cat:"tva",mod:"La TVA"},
@@ -4284,7 +4301,7 @@ var EXAM_EXTRA=[
 {q:"Un produit encaissé d'avance (concernant l'an prochain) va en…",o:["Charges constatées d'avance (486)","Produits constatés d'avance (487)","Clients, factures à établir (418)","TVA collectée (44571)"],c:1,e:"487 Produits constatés d'avance, au passif.",cat:"inv",mod:"Travaux d'inventaire"},
 {q:"À la clôture, la variation des stocks de marchandises s'enregistre dans un compte…",o:["de bilan : Stocks de marchandises (370)","de charge : Variation des stocks de marchandises (6037)","de charge : Achats de marchandises (607)","de produit : Ventes de marchandises (707)"],c:1,e:"6037 Variation des stocks de marchandises (un compte de charge).",cat:"inv",mod:"Travaux d'inventaire"},
 {q:"Stock initial 8 000 euros, stock final 5 000 euros. La variation au 6037 est de…",o:["3 000 euros au débit","3 000 euros au crédit","13 000 euros","nulle"],c:0,e:"Variation = SI moins SF = 8 000 moins 5 000 = 3 000 au débit (le stock a diminué).",cat:"inv",mod:"Travaux d'inventaire"},
-{q:"Le compte 44551 enregistre…",o:["la TVA collectée sur les ventes","la TVA déductible sur biens et services","la TVA à décaisser","la TVA déductible sur immobilisations"],c:2,e:"44551 TVA à décaisser, la dette envers l'État.",cat:"fisc",mod:"Fiscalité"},
+{q:"La TVA collectée du mois dépasse la TVA déductible. Quel compte reçoit la différence à payer à l'État ?",o:["TVA collectée (44571)", "TVA déductible sur autres biens et services (44566)", "TVA à décaisser (44551)", "TVA déductible sur immobilisations (44562)"],c:2,e:"La liquidation fait apparaître la dette nette : TVA à décaisser (44551), au crédit, soldée au paiement.",cat:"fisc",mod:"Fiscalité"},
 {q:"Comment s'appelle la déclaration de TVA mensuelle au réel normal ?",o:["La CA12","La CA3","La liasse fiscale","Le grand livre"],c:1,e:"La CA3, déposée chaque mois au régime réel normal.",cat:"fisc",mod:"Fiscalité"},
 {q:"Que se passe-t-il si la TVA déductible dépasse la collectée ?",o:["Une TVA à payer","Un crédit de TVA","Une amende","Rien"],c:1,e:"L'entreprise dispose d'un crédit de TVA, reporté ou remboursé.",cat:"fisc",mod:"Fiscalité"},
 {q:"Qu'implique la franchise en base de TVA ?",o:["TVA à 10 %","Pas de TVA facturée ni déduite","Déclaration mensuelle","Remboursement automatique"],c:1,e:"Sous le seuil, l'entreprise ne facture ni ne déduit la TVA.",cat:"fisc",mod:"Fiscalité"},
@@ -4293,8 +4310,8 @@ var EXAM_EXTRA=[
 {q:"Écriture du paiement de la TVA à l'État ?",o:["512 débité / 44551 crédité","44551 débité / 512 crédité","44571 débité / 512 crédité","44551 débité / 44566 crédité"],c:1,e:"On solde la dette : 44551 au débit, 512 Banque au crédit.",cat:"fisc",mod:"Fiscalité"},
 {q:"Comment obtient-on le salaire net à payer ?",o:["Brut plus cotisations salariales","Brut moins cotisations salariales","Brut moins cotisations patronales","Brut plus cotisations patronales"],c:1,e:"Net à payer = salaire brut moins cotisations salariales.",cat:"soc",mod:"Paie & social"},
 {q:"Qui paie les cotisations patronales ?",o:["Le salarié","L'employeur, en plus du brut","L'État","Le client"],c:1,e:"Les cotisations patronales s'ajoutent au brut et sont payées par l'employeur.",cat:"soc",mod:"Paie & social"},
-{q:"Le compte 641 enregistre…",o:["le net à payer aux salariés","les salaires bruts (rémunérations du personnel)","les charges patronales de sécurité sociale","la dette envers l'URSSAF"],c:1,e:"641 Rémunérations du personnel, débité du salaire brut.",cat:"soc",mod:"Paie & social"},
-{q:"Le compte 421 représente…",o:["les salaires bruts","les charges patronales","le net à payer aux salariés (personnel, rémunérations dues)","la dette envers l'URSSAF"],c:2,e:"421 Personnel, rémunérations dues.",cat:"soc",mod:"Paie & social"},
+{q:"Dans l'écriture de paie, quel compte reçoit le salaire brut ?",o:["Personnel, rémunérations dues (421)", "Rémunérations du personnel (641)", "Charges de sécurité sociale (645)", "Sécurité sociale (431)"],c:1,e:"Le salaire brut est la charge : Rémunérations du personnel (641), au débit.",cat:"soc",mod:"Paie & social"},
+{q:"Dans l'écriture de paie, quel compte représente ce que l'entreprise doit verser au salarié ?",o:["Rémunérations du personnel (641)", "Charges de sécurité sociale (645)", "Personnel, rémunérations dues (421)", "Sécurité sociale (431)"],c:2,e:"Le net à payer est une dette envers le salarié : Personnel, rémunérations dues (421), au crédit, soldé par le virement du salaire.",cat:"soc",mod:"Paie & social"},
 {q:"Comment se calcule le coût total employeur ?",o:["Le salaire net","Le salaire brut","Brut plus cotisations patronales","Brut moins cotisations salariales"],c:2,e:"Coût employeur = salaire brut plus cotisations patronales.",cat:"soc",mod:"Paie & social"},
 {q:"Écriture du paiement du salaire net ?",o:["512 débité / 421 crédité","421 débité / 512 crédité","641 débité / 512 crédité","421 débité / 431 crédité"],c:1,e:"421 Personnel au débit, 512 Banque au crédit.",cat:"soc",mod:"Paie & social"},
 {q:"Quel document l'employeur remet-il au salarié chaque mois ?",o:["Une facture","Un bulletin de paie","Un relevé bancaire","Une CA3"],c:1,e:"Le bulletin de paie détaille brut, cotisations et net.",cat:"soc",mod:"Paie & social"},
@@ -4315,9 +4332,9 @@ var EXAM_EXTRA=[
 {q:"Écriture de la réception d'un emprunt bancaire ?",o:["164 débité / 512 crédité","512 débité / 164 crédité","512 débité / 101 crédité","661 débité / 512 crédité"],c:1,e:"Les fonds entrent : 512 Banque au débit, 164 Emprunts au crédit.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Écriture du remboursement d'une échéance d'emprunt ?",o:["512 débité / 164 crédité","164 et 661 débités / 512 crédité","164 débité / 512 crédité","661 débité / 164 crédité"],c:1,e:"164 (capital) et 661 (intérêts) au débit, 512 Banque au crédit.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Écriture d'une augmentation de capital en numéraire ?",o:["101 débité / 512 crédité","512 débité / 101 crédité","512 débité / 164 crédité","106 débité / 512 crédité"],c:1,e:"512 Banque au débit, 101 Capital au crédit.",cat:"gest",mod:"Analyse & gestion"},
-{q:"Le compte 164 enregistre…",o:["le capital social","les réserves","les emprunts auprès des établissements de crédit","le solde du compte bancaire"],c:2,e:"164 Emprunts auprès des établissements de crédit.",cat:"gest",mod:"Analyse & gestion"},
+{q:"La banque verse à l'entreprise un prêt de 30 000 €. Quel compte enregistre la dette ?",o:["Capital (101)", "Réserves (106)", "Emprunts auprès des établissements de crédit (164)", "Banque (512)"],c:2,e:"L'argent arrive en Banque (512) au débit, la dette de long terme en Emprunts auprès des établissements de crédit (164) au crédit.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Dans un crédit-bail, les loyers sont…",o:["des immobilisations","des charges (compte 612)","des produits","des dettes financières"],c:1,e:"Les redevances de crédit-bail sont des charges (612) ; le bien reste hors actif.",cat:"gest",mod:"Analyse & gestion"},
-{q:"Le compte 13 regroupe…",o:["les subventions d'investissement","les subventions d'exploitation","le capital social","les emprunts bancaires"],c:0,e:"Compte 13 Subventions d'investissement.",cat:"gest",mod:"Analyse & gestion"},
+{q:"L'État verse une aide pour financer l'achat d'une machine. Où l'enregistres-tu au passif ?",o:["Subventions d'investissement (13)", "Subventions d'exploitation (74)", "Capital (101)", "Emprunts (164)"],c:0,e:"Une aide qui finance un bien durable est une Subvention d'investissement (13) : elle est reprise en produit au rythme de l'amortissement du bien.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Qu'est-ce que l'autofinancement ?",o:["Un emprunt","Se financer par sa propre CAF","Une subvention","Un crédit-bail"],c:1,e:"L'autofinancement, c'est se financer grâce aux ressources dégagées par l'activité.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Les capitaux propres sont une ressource…",o:["externe et remboursable","interne et stable","à court terme","de trésorerie"],c:1,e:"Ressource interne, stable et non remboursable.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Sur quoi l'impôt sur les sociétés est-il assis ?",o:["Le chiffre d'affaires","Le résultat fiscal","La TVA collectée","Les capitaux propres"],c:1,e:"L'IS est calculé sur le résultat fiscal.",cat:"fisc",mod:"Fiscalité"},
@@ -4393,9 +4410,65 @@ function genNetFin(){var nc=grnd(500,6000,100),e=gpick([1,2,3]),nf=nc*(1-e/100);
 function genAnnuite(){var d=gpick([4,5,8,10]),an=grnd(300,4000,100),val=an*d;return gnumQ('Immobilisation de '+gfmt(val)+' amortie en linéaire sur '+d+' ans. L\'annuité est de…',an,[val,val/(d+1),an*2,val/2],'Annuité linéaire = valeur / durée = '+gfmt(val)+' / '+d+' = '+gfmt(an)+'.','inv','Travaux d\'inventaire');}
 function genVnc(){var d=gpick([5,8,10]),an=grnd(300,3000,100),val=an*d,y=grnd(1,d-1,1),vnc=val-y*an;return gnumQ(gfmt(val)+' amortie en linéaire sur '+d+' ans. Après '+y+' annuité(s), la valeur nette comptable est de…',vnc,[val,y*an,val+y*an,an],'VNC = valeur - amortissements cumulés = '+gfmt(val)+' - ('+y+' × '+gfmt(an)+') = '+gfmt(vnc)+'.','inv','Travaux d\'inventaire');}
 function genVariation(){var si=grnd(2000,12000,500),sf;do{sf=grnd(1000,10000,500);}while(sf===si);var v=Math.abs(si-sf);return gnumQ('Stock initial '+gfmt(si)+', stock final '+gfmt(sf)+'. La variation de stock (en valeur absolue) est de…',v,[si+sf,si,sf,Math.round(v/2)],'Variation = stock initial - stock final, en valeur = '+gfmt(v)+'.','inv','Travaux d\'inventaire');}
-function genCompteClasse(){var p=gpick(PLAN_COMPTABLE),cls=String(p.cl),others=gshuffle(['1','2','3','4','5','6','7'].filter(function(x){return x!==cls;}));return gstrQ('Le compte '+p.num+' « '+p.lib+' » appartient à la classe…',cls,[others[0],others[1],others[2]],'Le premier chiffre du compte donne sa classe : '+p.num+' est en classe '+cls+'.','fond','Fondamentaux');}
-function genCompteSens(){var p=gpick(PLAN_COMPTABLE),cs=p.sens==='D'?'un solde débiteur':'un solde créditeur';return gstrQ('En règle générale, le compte '+p.num+' « '+p.lib+' » présente…',cs,[p.sens==='D'?'un solde créditeur':'un solde débiteur','un solde toujours nul','un solde variable, sans règle'],'Le compte '+p.num+' est normalement '+(p.sens==='D'?'débiteur (emploi)':'créditeur (ressource)')+'.','fond','Fondamentaux');}
-function genCompteLibelle(){var p=gpick(PLAN_COMPTABLE),others=[],g=0;while(others.length<3&&g<60){var q=gpick(PLAN_COMPTABLE);g++;if(q.num!==p.num&&others.indexOf(q.num)===-1)others.push(q.num);}return gstrQ('Quel numéro de compte correspond à « '+p.lib+' » ?',p.num,others,'« '+p.lib+' » = compte '+p.num+'.','fond','Fondamentaux');}
+/* Comptes : on travaille leur utilité, jamais leur numéro par cœur (le plan comptable est fourni à l'examen). */
+var ACC_USE=[
+  ['101','les apports des associés à la création de l\'entreprise'],
+  ['1061','la part du bénéfice mise en réserve obligatoirement (5 % jusqu\'à 10 % du capital)'],
+  ['164','un prêt accordé par la banque, remboursable sur plusieurs années'],
+  ['151','un risque probable de devoir payer (litige, garantie), estimé à la clôture'],
+  ['2183','l\'achat d\'un ordinateur destiné à durer plusieurs années'],
+  ['2182','l\'achat d\'un véhicule utilitaire pour l\'entreprise'],
+  ['28183','le cumul des amortissements du matériel informatique'],
+  ['370','la valeur des marchandises en stock au jour de l\'inventaire'],
+  ['401','ce que l\'entreprise doit à un fournisseur après un achat à crédit'],
+  ['404','ce que l\'entreprise doit au vendeur d\'une immobilisation'],
+  ['408','une charge de l\'exercice dont la facture n\'est pas encore arrivée'],
+  ['411','ce qu\'un client doit à l\'entreprise après une vente à crédit'],
+  ['416','la créance d\'un client dont le paiement devient incertain'],
+  ['418','une vente livrée avant la clôture mais facturée après'],
+  ['421','le salaire net que l\'entreprise doit verser au salarié'],
+  ['431','les cotisations dues à l\'URSSAF'],
+  ['44551','la TVA restant à payer à l\'État après la déclaration'],
+  ['44562','la TVA payée sur l\'achat d\'une machine ou d\'un ordinateur'],
+  ['44566','la TVA payée sur les achats courants (marchandises, services)'],
+  ['44567','l\'excédent de TVA déductible reporté sur la déclaration suivante'],
+  ['44571','la TVA facturée aux clients sur les ventes'],
+  ['486','la partie d\'une charge déjà payée qui concerne l\'exercice suivant'],
+  ['487','la partie d\'un produit déjà encaissé qui concerne l\'exercice suivant'],
+  ['491','la perte probable estimée sur une créance client douteuse'],
+  ['512','les encaissements et paiements passant par le compte bancaire'],
+  ['530','les espèces encaissées ou payées au comptoir'],
+  ['6037','l\'écart entre le stock de marchandises du début et celui de la fin d\'exercice'],
+  ['606','l\'électricité, l\'eau et les petites fournitures consommées tout de suite'],
+  ['607','les marchandises achetées pour être revendues en l\'état'],
+  ['613','le loyer d\'un local ou d\'un matériel'],
+  ['616','les primes d\'assurance'],
+  ['626','les timbres, le téléphone et l\'abonnement internet'],
+  ['627','les frais de tenue de compte prélevés par la banque'],
+  ['641','les salaires bruts du personnel'],
+  ['645','les cotisations sociales à la charge de l\'employeur'],
+  ['654','une créance client définitivement perdue'],
+  ['661','les intérêts payés sur un emprunt'],
+  ['665','la réduction accordée à un client qui paie comptant (escompte)'],
+  ['675','la valeur nette comptable d\'une immobilisation vendue'],
+  ['6811','la perte de valeur annuelle d\'une immobilisation due à l\'usure'],
+  ['706','les prestations de services facturées aux clients'],
+  ['707','les marchandises vendues en l\'état'],
+  ['709','une remise accordée à un client après la facture'],
+  ['765','la réduction obtenue d\'un fournisseur pour paiement comptant (escompte)'],
+  ['775','le prix de vente d\'une immobilisation cédée']
+];
+function accName(num){var l=pcLib(num);return l?l+' ('+num+')':num;}
+function accUses(){return ACC_USE.filter(function(u){return !!pcLib(u[0]);});}
+function genCompteSituation(){var list=accUses(),u=gpick(list),others=[],g=0;while(others.length<3&&g<80){var o=gpick(list);g++;if(o[0]!==u[0]&&o[0].charAt(0)===u[0].charAt(0)&&others.indexOf(accName(o[0]))<0)others.push(accName(o[0]));}g=0;while(others.length<3&&g<80){var o2=gpick(list);g++;if(o2[0]!==u[0]&&others.indexOf(accName(o2[0]))<0)others.push(accName(o2[0]));}
+  return gstrQ('Quel compte enregistre '+u[1]+' ?',accName(u[0]),others,accName(u[0])+' : '+u[1]+'.','fond','Fondamentaux');}
+function genCompteUsage(){var list=accUses(),u=gpick(list),others=[],g=0;while(others.length<3&&g<80){var o=gpick(list);g++;if(o[0]!==u[0]&&others.indexOf(o[1])<0)others.push(o[1]);}
+  var cap=function(t){return t.charAt(0).toUpperCase()+t.slice(1);};
+  return gstrQ('À quoi sert le compte '+accName(u[0])+' ?',cap(u[1]),others.map(cap),'Le compte '+accName(u[0])+' enregistre '+u[1]+'.','fond','Fondamentaux');}
+function genCompteNature(){var NAT={1:'un compte de capitaux (financement durable)',2:'un compte d\'immobilisation (biens durables)',3:'un compte de stock',4:'un compte de tiers (créance ou dette)',5:'un compte de trésorerie',6:'un compte de charge',7:'un compte de produit'};
+  var p=gpick(PLAN_COMPTABLE),cs=NAT[p.cl],others=gshuffle(Object.keys(NAT).filter(function(k){return +k!==p.cl;}).map(function(k){return NAT[k];})).slice(0,3);
+  return gstrQ('Le compte '+p.lib+' ('+p.num+') est…',cs,others,'Le premier chiffre indique la famille : classe '+p.cl+', '+cs.replace(/^un /,'')+'.','fond','Fondamentaux');}
+function genCompteSens(){var p=gpick(PLAN_COMPTABLE),cs=p.sens==='D'?'un solde débiteur':'un solde créditeur';return gstrQ('En règle générale, le compte '+p.lib+' ('+p.num+') présente…',cs,[p.sens==='D'?'un solde créditeur':'un solde débiteur','un solde toujours nul','un solde variable, sans règle'],'Le compte '+p.num+' est normalement '+(p.sens==='D'?'débiteur (emploi)':'créditeur (ressource)')+'.','fond','Fondamentaux');}
 function genResultat(){var P=grnd(5000,60000,500),C=grnd(3000,50000,500),res=P-C;return gnumQ('Produits de l\'exercice '+gfmt(P)+', charges '+gfmt(C)+'. Le résultat est de…',res,[P+C,C-P,P,C],'Résultat = produits - charges = '+gfmt(P)+' - '+gfmt(C)+' = '+gfmt(res)+(res>=0?' (bénéfice).':' (perte).'),'synth','Documents de synthèse');}
 function genTotalBilan(){var CP=grnd(10000,90000,1000),D=grnd(5000,70000,1000);return gnumQ('Capitaux propres '+gfmt(CP)+', total des dettes '+gfmt(D)+'. Le total du passif du bilan est de…',CP+D,[Math.abs(CP-D),CP,D,2*CP],'Total du passif = capitaux propres + dettes = '+gfmt(CP)+' + '+gfmt(D)+' = '+gfmt(CP+D)+' (égal au total de l\'actif).','synth','Documents de synthèse');}
 function genCapPropres(){var cap=grnd(20000,120000,5000),rez=grnd(2000,40000,1000),resu=grnd(-8000,30000,1000),CP=cap+rez+resu;return gnumQ('Capital '+gfmt(cap)+', réserves '+gfmt(rez)+', résultat '+gfmt(resu)+'. Les capitaux propres sont de…',CP,[cap+rez,cap-rez+resu,cap,rez+resu],'Capitaux propres = capital + réserves + résultat = '+gfmt(CP)+'.','synth','Documents de synthèse');}
@@ -4404,7 +4477,7 @@ function genResteAPayer(){var tot=grnd(1000,9000,100),ac=grnd(100,tot-100,100),r
 function genDegressif(){var d=gpick([4,5,8]),coef=d===4?1.25:(d===5?1.75:2.25),VO=grnd(8000,40000,4000),an1=VO*coef/d,cs=(''+coef).replace('.',',');return gnumQ('Immobilisation de '+gfmt(VO)+' amortie en dégressif sur '+d+' ans (coefficient '+cs+'). La 1re annuité est de…',an1,[VO/d,VO*coef,VO/(d+1)*coef,VO*coef/d/2],'1re annuité dégressive = valeur × (coefficient / durée) = '+gfmt(VO)+' × ('+cs+' / '+d+') = '+gfmt(an1)+'.','inv','Travaux d\'inventaire');}
 function genDepreciationStock(){var A=grnd(2000,15000,500),V=grnd(500,A-500,500),dep=A-V;return gnumQ('Stock inscrit à '+gfmt(A)+', valeur actuelle estimée à '+gfmt(V)+'. La dépréciation à constater est de…',dep,[A+V,V,A,Math.round(dep/2)],'Dépréciation = valeur d\'entrée - valeur actuelle (plus faible) = '+gfmt(A)+' - '+gfmt(V)+' = '+gfmt(dep)+'.','inv','Travaux d\'inventaire');}
 function genDepreciationCreance(){var HT=grnd(500,8000,500),TTC=HT*1.2,p=gpick([20,40,50,60,80]),dep=HT*p/100;return gnumQ('Créance de '+gfmt(TTC)+' TTC (TVA 20 %), perte probable estimée à '+p+' %. La dépréciation (sur le HT) est de…',dep,[TTC*p/100,HT,TTC,HT*p/1000],'On déprécie le HT : '+gfmt(TTC)+' / 1,20 = '+gfmt(HT)+', puis × '+p+' % = '+gfmt(dep)+'.','inv','Travaux d\'inventaire');}
-function genCompteBilanGestion(){var p=gpick(PLAN_COMPTABLE),bil=p.cl<=5,cs=bil?'un compte de bilan':'un compte de gestion (charge ou produit)';return gstrQ('Le compte '+p.num+' « '+p.lib+' » est…',cs,[bil?'un compte de gestion (charge ou produit)':'un compte de bilan','un compte de trésorerie uniquement','un compte d\'ordre'],'Classes 1 à 5 = bilan ; classes 6 et 7 = gestion. '+p.num+' est en classe '+p.cl+'.','fond','Fondamentaux');}
+function genCompteBilanGestion(){var p=gpick(PLAN_COMPTABLE),bil=p.cl<=5,cs=bil?'un compte de bilan':'un compte de gestion (charge ou produit)';return gstrQ('Le compte '+p.lib+' ('+p.num+') est…',cs,[bil?'un compte de gestion (charge ou produit)':'un compte de bilan','un compte de trésorerie uniquement','un compte d\'ordre'],'Classes 1 à 5 = bilan ; classes 6 et 7 = gestion. '+p.num+' est en classe '+p.cl+'.','fond','Fondamentaux');}
 function genCAMV(){var ach=grnd(20000,120000,1000),si=grnd(3000,25000,500),sf=grnd(2000,24000,500),camv=ach+si-sf;return gnumQ('Achats de marchandises '+gfmt(ach)+', stock initial '+gfmt(si)+', stock final '+gfmt(sf)+'. Le coût d\'achat des marchandises vendues est de…',camv,[ach+si+sf,ach-si+sf,ach,ach+sf-si],'CAMV = achats + stock initial - stock final = '+gfmt(ach)+' + '+gfmt(si)+' - '+gfmt(sf)+' = '+gfmt(camv)+'.','op','Opérations courantes');}
 function genMargeCom(){var ventes=grnd(50000,200000,1000),camv=grnd(20000,ventes-5000,1000),marge=ventes-camv;return gnumQ('Ventes de marchandises '+gfmt(ventes)+', coût d\'achat des marchandises vendues '+gfmt(camv)+'. La marge commerciale est de…',marge,[ventes+camv,camv,ventes,Math.round(marge/2)],'Marge commerciale = ventes - coût d\'achat des marchandises vendues = '+gfmt(ventes)+' - '+gfmt(camv)+' = '+gfmt(marge)+'.','synth','Documents de synthèse');}
 function genSeuilRent(){var t=gpick([20,25,40,50]),SR=grnd(40000,200000,10000),CF=SR*t/100;return gnumQ('Charges fixes '+gfmt(CF)+', taux de marge sur coûts variables '+t+' %. Le seuil de rentabilité (chiffre d\'affaires) est de…',SR,[CF,CF*t/100,Math.round(SR/2),CF*2],'Seuil de rentabilité = charges fixes / taux de marge sur coûts variables = '+gfmt(CF)+' / '+t+' % = '+gfmt(SR)+'.','synth','Documents de synthèse');}
@@ -4428,7 +4501,7 @@ function genFRNG(){var rs=grnd(200000,600000,10000),es=grnd(150000,rs-20000,1000
 function genBFR(){var ac=grnd(80000,300000,5000),pc=grnd(40000,ac-10000,5000),b=ac-pc;return gnumQ('Actif circulant d\'exploitation '+gfmt(ac)+', passif circulant d\'exploitation '+gfmt(pc)+'. Le besoin en fonds de roulement (BFR) est de…',b,[ac+pc,pc,ac,Math.round(b/2)],'BFR = actif circulant d\'exploitation moins passif circulant d\'exploitation = '+gfmt(ac)+' moins '+gfmt(pc)+' = '+gfmt(b)+'.','gest','Analyse & gestion');}
 function genAutofinancement(){var caf=grnd(20000,120000,5000),div=grnd(5000,caf-5000,5000),a=caf-div;return gnumQ('CAF de l\'exercice '+gfmt(caf)+', dividendes distribués '+gfmt(div)+'. L\'autofinancement est de…',a,[caf+div,div,caf,Math.round(a/2)],'Autofinancement = CAF moins dividendes distribués = '+gfmt(caf)+' moins '+gfmt(div)+' = '+gfmt(a)+'.','gest','Analyse & gestion');}
 function genPrimeEmission(){var nb=grnd(100,2000,100),nom=gpick([10,20,50,100]),pr=gpick([5,10,15,20,30]),pe=pr*nb;return gnumQ(nb+' actions de nominal '+nom+' euros émises à '+(nom+pr)+' euros. La prime d\'émission totale est de…',pe,[nb*(nom+pr),nb*nom,pr,pe*2],'Prime d\'émission = (prix d\'émission moins nominal) x nombre d\'actions = ('+(nom+pr)+' moins '+nom+') x '+nb+' = '+gfmt(pe)+'.','synth','Documents de synthèse');}
-var GEN_MAP={tva:[genTva,genTtc,genHt,genDecaisser],op:[genNetCom,genNetFin,genRemiseCascade,genResteAPayer,genCAMV,genEscompteEffet],inv:[genAnnuite,genVnc,genVariation,genDegressif,genDepreciationStock,genDepreciationCreance],fond:[genCompteClasse,genCompteSens,genCompteLibelle,genCompteBilanGestion],synth:[genResultat,genTotalBilan,genCapPropres,genMargeCom,genSeuilRent,genResultatNet,genPrimeEmission],soc:[genSalaireNet,genCoutEmployeur,genCotisSalariales],gest:[genValeurAjoutee,genCoutRevient,genResultatAnalytique,genEBE,genCoutProduction,genSoldeTresorerie,genEcartQuantite,genEcartCout,genEcartTotal,genFRNG,genBFR,genAutofinancement],fisc:[genFiscDecaisser,genIS]};
+var GEN_MAP={tva:[genTva,genTtc,genHt,genDecaisser],op:[genNetCom,genNetFin,genRemiseCascade,genResteAPayer,genCAMV,genEscompteEffet],inv:[genAnnuite,genVnc,genVariation,genDegressif,genDepreciationStock,genDepreciationCreance],fond:[genCompteSituation,genCompteSituation,genCompteUsage,genCompteNature,genCompteSens,genCompteBilanGestion],synth:[genResultat,genTotalBilan,genCapPropres,genMargeCom,genSeuilRent,genResultatNet,genPrimeEmission],soc:[genSalaireNet,genCoutEmployeur,genCotisSalariales],gest:[genValeurAjoutee,genCoutRevient,genResultatAnalytique,genEBE,genCoutProduction,genSoldeTresorerie,genEcartQuantite,genEcartCout,genEcartTotal,genFRNG,genBFR,genAutofinancement],fisc:[genFiscDecaisser,genIS]};
 function examGenerate(cat,n){var cats=cat==='all'?['fond','tva','op','inv','synth','soc','gest','fisc']:[cat];var use=cats.filter(function(c){return (GEN_MAP[c]||[]).length;});if(!use.length)return [];var out=[],guard=0;while(out.length<n&&guard<n*4+20){guard++;var c=gpick(use);var list=GEN_MAP[c];var q=list[Math.floor(Math.random()*list.length)]();if(q&&q.o&&q.o.length===4&&q.c>=0)out.push(q);}return out;}
 
 /* ---- Session du jour : cartes dues puis questions ---- */
@@ -5839,6 +5912,11 @@ function formStart(){try{var v=localStorage.getItem('legl.formStart');if(v&&/^\d
 function setFormStart(v){try{if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.formStart',v);}catch(e){}}
 function formEnd(){try{var v=localStorage.getItem('legl.formEnd');if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))return v;}catch(e){}return '2027-05-18';}
 function setFormEnd(v){try{if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.formEnd',v);}catch(e){}}
+var CCP_ORDERS=[['123','CCP1, puis CCP2, puis CCP3 (ordre du référentiel)'],['132','CCP1, puis CCP3, puis CCP2'],['213','CCP2, puis CCP1, puis CCP3'],['231','CCP2, puis CCP3, puis CCP1'],['312','CCP3, puis CCP1, puis CCP2'],['321','CCP3, puis CCP2, puis CCP1']];
+function ccpOrder(){try{var v=localStorage.getItem('legl.ccpOrder');if(v&&/^[123]{3}$/.test(v))return v;}catch(e){}return '123';}
+function formConfirmed(){try{return localStorage.getItem('legl.formConfirmed')==='1';}catch(e){return false;}}
+/* Périodes de stage (0 à 2), en attendant le calendrier officiel du centre. */
+function formStages(){var out=[];try{var a=JSON.parse(localStorage.getItem('legl.stages')||'[]');if(Array.isArray(a))a.forEach(function(x){if(x&&/^\d{4}-\d{2}-\d{2}$/.test(x[0])&&/^\d{4}-\d{2}-\d{2}$/.test(x[1])&&x[1]>=x[0])out.push([x[0],x[1]]);});}catch(e){}return out.slice(0,2);}
 function isoToDate(s){var p=String(s).split('-');return new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));}
 function frDateLong(d){return d.getDate()+' '+AG_MONTHS_LOWER[d.getMonth()]+' '+d.getFullYear();}
 var MOIS_ABR=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
@@ -5852,14 +5930,23 @@ function formTimeline(){
   b=new Date(b.getTime()+DAY);
   /* Les 4 premières étapes occupent la formation jusqu'à 3 semaines avant sa fin ; la dernière va jusqu'au jour de la session inclus. */
   var m=new Date(Math.max(a.getTime()+(fe-a)*0.6,fe.getTime()-21*DAY));
-  var tot=b-a,span=m-a,main=FORM_PHASES.slice(0,-1),wsum=main.reduce(function(s,p){return s+p.w;},0),acc=0;
-  var phases=main.map(function(p){var s=new Date(a.getTime()+Math.round(span*acc/wsum));acc+=p.w;var e=new Date(a.getTime()+Math.round(span*acc/wsum));return {p:p,start:s,end:e};});
+  var _ord=ccpOrder(),main=[FORM_PHASES[0]].concat(_ord.split('').map(function(c){return FORM_PHASES[+c];}));
+  var tot=b-a,span=m-a,wsum=main.reduce(function(s,p){return s+p.w;},0),acc=0;
+  /* Temps de cours = de la rentrée à m, moins les périodes de stage : les étapes ne s'étalent que sur les semaines de cours. */
+  var _st=formStages().map(function(x){return [isoToDate(x[0]).getTime(),isoToDate(x[1]).getTime()+DAY];}).sort(function(x,y){return x[0]-y[0];}),iv=[],cur0=a.getTime();
+  _st.forEach(function(x){var s0=Math.max(x[0],a.getTime()),e0=Math.min(x[1],m.getTime());if(e0<=s0)return;if(s0>cur0)iv.push([cur0,s0]);cur0=Math.max(cur0,e0);});
+  if(m.getTime()>cur0)iv.push([cur0,m.getTime()]);
+  var clsTot=iv.reduce(function(t,x){return t+x[1]-x[0];},0)||span;
+  var atFrac=function(f,isEnd){var want=clsTot*f;for(var i=0;i<iv.length;i++){var len=iv[i][1]-iv[i][0];if(want<len||(want===len&&isEnd)||i===iv.length-1)return new Date(iv[i][0]+Math.min(want,len));want-=len;}return new Date(a.getTime()+Math.round(span*f));};
+  var phases=main.map(function(p){var s=atFrac(acc/wsum,false);acc+=p.w;var e=atFrac(acc/wsum,true);return {p:p,start:s,end:e};});
   phases.push({p:FORM_PHASES[FORM_PHASES.length-1],start:m,end:b});
   var now=new Date();now.setHours(0,0,0,0);
   var cur=-1;phases.forEach(function(x,i){if(now>=x.start&&now<x.end)cur=i;});
   if(now>=b)cur=phases.length-1;
   var weeks=Math.max(1,Math.ceil(tot/(7*DAY))),week=now<a?0:Math.min(weeks,Math.floor((now-a)/(7*DAY))+1);
-  return {start:a,end:b,fend:fe,phases:phases,cur:cur,before:now<a,after:now>=b,weeks:weeks,week:week,now:now,pct:Math.max(0,Math.min(100,Math.round((now-a)/tot*100)))};
+  var stages=formStages().map(function(x){return {start:isoToDate(x[0]),end:new Date(isoToDate(x[1]).getTime()+DAY)};});
+  var inStage=null,nextStage=null;stages.forEach(function(x){if(now>=x.start&&now<x.end)inStage=x;else if(x.start>now&&(!nextStage||x.start<nextStage.start))nextStage=x;});
+  return {stages:stages,inStage:inStage,nextStage:nextStage,start:a,end:b,fend:fe,phases:phases,cur:cur,before:now<a,after:now>=b,weeks:weeks,week:week,now:now,pct:Math.max(0,Math.min(100,Math.round((now-a)/tot*100)))};
 }
 /* Éléments à cocher d'une phase : tout est évalué d'après ta progression réelle dans l'app. */
 function formItems(p){
@@ -5896,8 +5983,10 @@ function formFrise(tl){
   var tot=tl.end-tl.start;
   var segs=tl.phases.map(function(x,i){var w=(x.end-x.start)/tot*100,st=formPhaseStats(x.p);
     return '<div class="ff-seg'+(i===tl.cur?' on':'')+(x.end<=tl.now?' past':'')+'" style="width:'+w.toFixed(2)+'%" title="'+escHtml(x.p.n)+' · '+frDateShort(x.start)+' → '+frDateShort(new Date(x.end.getTime()-DAY))+'"><span class="ff-fill" style="width:'+st.pct+'%"></span><span class="ff-lbl">'+escHtml(x.p.s)+'</span></div>';}).join('');
+  var stg=tl.stages.map(function(x){var l=Math.max(0,(x.start-tl.start)/tot*100),r=Math.min(100,(x.end-tl.start)/tot*100);if(r<=l)return '';return '<span class="ff-stage" style="left:'+l.toFixed(2)+'%;width:'+(r-l).toFixed(2)+'%" title="Stage du '+frDateShort(x.start)+' au '+frDateShort(new Date(x.end.getTime()-DAY))+'"><b>Stage</b></span>';}).join('');
   var mark=(!tl.before&&!tl.after)?'<span class="ff-now" style="left:'+tl.pct+'%"><i></i><b>Aujourd\'hui</b></span>':'';
-  return '<div class="ff"><div class="ff-bar">'+segs+'</div>'+mark+'<div class="ff-dates"><span>Rentrée '+frDateShort(tl.start)+'</span><span class="ff-mid" style="left:'+((tl.fend-tl.start)/(tl.end-tl.start)*100).toFixed(1)+'%">Fin des cours '+frDateShort(tl.fend)+'</span><span>Session '+frDateShort(new Date(tl.end.getTime()-DAY))+'</span></div></div>';
+  return '<div class="ff"><div class="ff-bar">'+segs+'</div>'+stg+mark+'<div class="ff-dates"><span>Rentrée '+frDateShort(tl.start)+'</span><span>Session '+frDateShort(new Date(tl.end.getTime()-DAY))+'</span></div>'+
+    '<div class="ff-dates ff-d2"><span class="ff-mid" style="right:'+(100-(tl.fend-tl.start)/(tl.end-tl.start)*100).toFixed(1)+'%">Fin des cours '+frDateShort(tl.fend)+' ↑</span></div></div>';
 }
 function formItemBtn(x,compact){
   return '<button class="ff-item'+(x.done?' done':'')+'" '+x.a+'><span class="ff-chk">'+(x.done?SVG.check:'')+'</span><span class="ff-it"><span class="ff-t">'+escHtml(x.t)+(x.ph&&compact?' · '+escHtml(x.ph):'')+'</span><span class="ff-l">'+escHtml(x.l)+'</span></span>'+(x.done?'':'<span class="ff-go">'+SVG.arR+'</span>')+'</button>';
@@ -5908,9 +5997,13 @@ function formDashCard(){
   if(tl.before){var dj=Math.round((tl.start-tl.now)/DAY);head='La formation commence dans '+dj+' jour'+(dj>1?'s':'');sub='Rentrée le '+frDateLong(tl.start)+'. Prends de l\'avance sur les fondations : tu arriveras serein.';}
   else if(tl.after){head='Session du titre';sub='Tout se joue maintenant : mises en situation complètes, dossier pro, entretiens.';}
   else{var ph=tl.phases[tl.cur];head='Semaine '+tl.week+' sur '+tl.weeks+' · '+ph.p.n;var _pe=frDateShort(new Date(ph.end.getTime()-DAY));sub='Étape du '+frDateShort(ph.start)+' au '+_pe+(/\.$/.test(_pe)?'':'.')+' Fin des cours le '+frDateLong(tl.fend)+'.';}
-  var pace=(!tl.before&&tl.cur>=0)?formPace(tl,tl.cur):null;
+  if(tl.inStage){head='En stage jusqu\'au '+frDateLong(new Date(tl.inStage.end.getTime()-DAY));sub='Profites-en : note chaque tâche réelle dans ton carnet de bord, c\'est la matière de ton dossier professionnel. Garde 10 minutes par jour pour la session du jour.';}
+  else if(tl.nextStage&&(tl.nextStage.start-tl.now)<=21*DAY){sub+=' Stage dans '+Math.round((tl.nextStage.start-tl.now)/DAY)+' jours : prépare ton carnet de bord.';}
+  var pace=(!tl.before&&tl.cur>=0&&!tl.inStage)?formPace(tl,tl.cur):null;
   var items=formThisWeek(tl,3).map(function(x){return formItemBtn(x,true);}).join('')||'<p style="color:var(--valid);margin:6px 0 0">Tout est fait pour cette phase. Bravo, passe à la suivante !</p>';
   return '<div class="panel ff-card" style="margin-top:24px"><div class="ff-head"><span class="eyebrow">Mon plan de formation</span><button class="btn-sm" data-action="tp-go" data-k="plan">'+SVG.cal+' Voir le plan complet</button></div>'+
+    (formConfirmed()?'':'<p class="ff-prov">'+SVG.warn+' Calendrier provisoire : ordre des CCP et dates de stage à confirmer quand ton centre te donnera le planning.</p>')+
+    (tl.inStage?'<div class="row" style="margin:0 0 10px"><button class="btn-sm" data-action="form-carnet">'+SVG.book+' Ouvrir mon carnet de bord</button><button class="btn-sm" data-action="tp-go" data-k="dp">'+SVG.list+' Mon dossier professionnel</button></div>':'')+
     '<h3 class="ff-h">'+escHtml(head)+(pace?' <span class="ff-pace '+pace.k+'">'+pace.t+'</span>':'')+'</h3><p class="ff-sub">'+escHtml(sub)+'</p>'+formFrise(tl)+
     '<div class="eyebrow" style="margin:16px 0 6px">'+(tl.before?'Pour prendre de l\'avance':'Cette semaine, je te conseille')+'</div><div class="ff-items">'+items+'</div></div>';
 }
@@ -5918,11 +6011,14 @@ function tpPlan(){
   var tl=formTimeline();
   var intro='<div class="tool-section"><h2 class="tool-title">Mon plan de formation</h2>'+
     '<p class="tool-sub">Ton parcours découpé en 5 grandes étapes, de la rentrée jusqu\'à la session du titre. Chaque étape se coche <b>toute seule</b> au fil de ta progression dans l\'app (modules validés, ateliers réussis, dossiers cabinet, mises en situation). Si ton centre suit un autre ordre, pas de souci : avance où tu veux, le plan s\'adapte.</p>'+
-    '<div class="ff-dates-form"><label>Début de la formation<input class="ji" type="date" id="form-start" value="'+escHtml(formStart())+'"></label><label>Fin de la formation<input class="ji" type="date" id="form-fend" value="'+escHtml(formEnd())+'"></label><label>Session du titre<input class="ji" type="date" id="form-end" value="'+escHtml(getExamDate())+'"></label><button class="btn-sm" data-action="form-dates-save">'+SVG.check+' Enregistrer les dates</button><button class="btn-sm" data-action="form-agenda-sync">'+SVG.cal+' Reporter dans l\'agenda</button></div>'+
+    (formConfirmed()?'<p class="ff-ok">'+SVG.check+' Planning confirmé. <a data-action="form-unconfirm" style="text-decoration:underline;cursor:pointer">Repasser en provisoire</a></p>':'<div class="ff-provbox"><b>Calendrier provisoire</b><span>Tant que ton centre ne t\'a pas donné le planning, le plan suit l\'ordre du référentiel. Dès que tu connais l\'ordre des CCP et les dates de stage, règle-les ici : tout le plan se recalcule.</span></div>')+
+    '<div class="ff-dates-form"><label>Ordre des CCP<select class="ji" id="form-order">'+CCP_ORDERS.map(function(o){return '<option value="'+o[0]+'"'+(ccpOrder()===o[0]?' selected':'')+'>'+escHtml(o[1])+'</option>';}).join('')+'</select></label></div>'+
+    '<div class="ff-dates-form">'+[0,1].map(function(i){var st=formStages()[i]||['',''];return '<label>Stage '+(i+1)+' : début<input class="ji" type="date" id="stage'+i+'-s" value="'+escHtml(st[0])+'"></label><label>fin<input class="ji" type="date" id="stage'+i+'-e" value="'+escHtml(st[1])+'"></label>';}).join('<span class="ff-sep"></span>')+'</div>'+
+    '<div class="ff-dates-form"><label>Début de la formation<input class="ji" type="date" id="form-start" value="'+escHtml(formStart())+'"></label><label>Fin de la formation<input class="ji" type="date" id="form-fend" value="'+escHtml(formEnd())+'"></label><label>Session du titre<input class="ji" type="date" id="form-end" value="'+escHtml(getExamDate())+'"></label><button class="btn-sm" data-action="form-dates-save">'+SVG.check+' Enregistrer les dates</button><button class="btn-sm" data-action="form-agenda-sync">'+SVG.cal+' Reporter dans l\'agenda</button>'+(formConfirmed()?'':'<button class="btn-sm" data-action="form-confirm">'+SVG.check+' Mon planning est confirmé</button>')+'</div>'+
     formFrise(tl)+'</div>';
   var cards=tl.phases.map(function(x,i){
     var st=formPhaseStats(x.p),pace=(i===tl.cur&&!tl.before)?formPace(tl,i):null,state_=x.end<=tl.now?'Terminée':(i===tl.cur?'En cours':'À venir');
-    return '<div class="plan-phase'+(i===tl.cur?' on':'')+'"><div class="pp-head"><span class="pp-num">'+(i+1)+'</span><div class="pp-tt"><b>'+escHtml(x.p.n)+'</b><span>'+frDateShort(x.start)+' → '+frDateShort(new Date(x.end.getTime()-DAY))+' · '+Math.max(1,Math.round((x.end-x.start)/(7*DAY)))+' semaines · '+state_+'</span></div>'+
+    return '<div class="plan-phase'+(i===tl.cur?' on':'')+'"><div class="pp-head"><span class="pp-num">'+(i+1)+'</span><div class="pp-tt"><b>'+escHtml(x.p.n)+'</b><span>'+frDateShort(x.start)+' → '+frDateShort(new Date(x.end.getTime()-DAY))+' · '+Math.max(1,Math.round((x.end-x.start)/(7*DAY)))+' semaines'+(function(){var o=0;tl.stages.forEach(function(g){o+=Math.max(0,Math.min(g.end,x.end)-Math.max(g.start,x.start));});var w=Math.round(o/(7*DAY));return w?' dont '+w+' de stage':'';})()+' · '+state_+'</span></div>'+
       (pace?'<span class="ff-pace '+pace.k+'">'+pace.t+'</span>':'')+'<span class="pp-pct">'+st.done+' / '+st.total+'</span></div>'+
       '<p class="pp-d">'+escHtml(x.p.d)+'</p><div class="ptrack" style="height:6px;margin:0 0 12px"><div class="pfill" style="width:'+st.pct+'%"></div></div>'+
       '<div class="ff-items grid2">'+st.items.map(function(it){return formItemBtn(it,false);}).join('')+'</div></div>';
@@ -6127,7 +6223,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 6 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 5 ambiances, 9 couleurs, police, densité et arrondis au choix. Bulletin de paie reconstitué dans l\'atelier paie.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 6 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 5 ambiances, 9 couleurs, police, densité et arrondis au choix. Bulletin de paie reconstitué dans l\'atelier paie. <b>Comptes</b> : plus aucune question de numéro à réciter, place aux situations (« quel compte pour… ? »), saisie par le nom du compte et plan comptable avec l\'utilité de chaque compte. Plan de formation réglable : ordre des CCP, périodes de stage, calendrier provisoire.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -6139,18 +6235,19 @@ function toolPlan(){
   var rows=PLAN_COMPTABLE.map(function(p){
     var sc=p.sens==='D'?'pc-dz':'pc-cr2';
     var cc=p.cat==='Bilan'?'pc-bil':'pc-ges';
-    return '<tr class="pc-row" data-cl="'+p.cl+'" data-num="'+p.num.toLowerCase()+'" data-lib="'+p.lib.toLowerCase()+'">'+
+    var use='';ACC_USE.forEach(function(u){if(u[0]===p.num)use=u[1];});
+    return '<tr class="pc-row" data-cl="'+p.cl+'" data-num="'+p.num.toLowerCase()+'" data-lib="'+escHtml(normalizeStr(p.lib+' '+use))+'">'+
       '<td><span class="pc-num">'+p.num+'</span></td>'+
-      '<td>'+p.lib+'</td>'+
+      '<td>'+p.lib+(use?'<div class="pc-use">'+escHtml(use.charAt(0).toUpperCase()+use.slice(1))+'</div>':'')+'</td>'+
       '<td><span class="pc-bdg '+cc+'">'+p.cat+'</span></td>'+
       '<td class="mono" style="font-size:12px;color:var(--ink2)">Cl. '+p.cl+'</td>'+
       '<td><span class="pc-bdg '+sc+'">'+p.sens+'</span></td>'+
       '</tr>';
   }).join('');
   return '<div class="tool-section"><h2 class="tool-title">Plan Comptable Général</h2>'+
-    '<p class="tool-sub">'+PLAN_COMPTABLE.length+' comptes essentiels BTS CG — filtrez par classe ou par mot-clé.</p>'+
+    '<p class="tool-sub">'+PLAN_COMPTABLE.length+' comptes essentiels, avec à quoi sert chacun. Cherche par nom, par numéro ou par situation (« électricité », « salaire », « loyer »…). À l\'examen comme au bureau, le plan comptable est fourni : ce qui compte, c\'est de savoir choisir le bon compte.</p>'+
     '<div class="pc-wrap"><div class="pc-srch">'+
-    '<input type="text" id="pc-q" placeholder="Rechercher n° ou intitulé…" autocomplete="off">'+
+    '<input type="text" id="pc-q" placeholder="Nom, numéro ou situation…" autocomplete="off">'+
     '<select id="pc-cl"><option value="0">Toutes les classes</option><option value="1">Cl. 1 — Capitaux</option><option value="2">Cl. 2 — Immobilisations</option><option value="3">Cl. 3 — Stocks</option><option value="4">Cl. 4 — Tiers</option><option value="5">Cl. 5 — Financiers</option><option value="6">Cl. 6 — Charges</option><option value="7">Cl. 7 — Produits</option></select>'+
     '</div>'+
     '<table class="pc-tbl"><thead><tr><th>N°</th><th>Intitulé</th><th>Catégorie</th><th>Classe</th><th>Sens normal</th></tr></thead><tbody id="pc-body">'+rows+'</tbody></table></div></div>';
@@ -6268,7 +6365,7 @@ function toolEcritures(){
     return '<tr class="je-row">'+
       '<td style="width:88px"><input class="ji je-d" type="text" aria-label="Date" value="'+escHtml(r.date)+'" placeholder="jj/mm/aa"></td>'+
       '<td style="width:72px"><input class="ji je-p" type="text" aria-label="Pièce" value="'+escHtml(r.piece)+'" placeholder="Réf."></td>'+
-      '<td style="width:76px"><input class="ji je-c" type="text" aria-label="Numéro de compte" value="'+escHtml(r.compte)+'" placeholder="N°"></td>'+
+      '<td style="width:150px"><input class="ji je-c" type="text" list="cab-accts" autocomplete="off" aria-label="Compte (tape son nom ou son numéro)" value="'+escHtml(r.compte)+'" placeholder="Nom du compte"></td>'+
       '<td style="min-width:110px"><div class="jlib">'+escHtml(pcLib(r.compte))+'</div></td>'+
       '<td><input class="ji je-l" type="text" aria-label="Libellé" value="'+escHtml(r.libelle)+'" placeholder="Libellé…"></td>'+
       '<td style="width:88px"><input class="ji je-db" type="number" aria-label="Débit" value="'+escHtml(r.debit)+'" placeholder="0" style="text-align:right"></td>'+
@@ -6276,7 +6373,7 @@ function toolEcritures(){
       '</tr>';
   }).join('');
   return '<div class="tool-section"><h2 class="tool-title">Saisie d\'écritures</h2>'+
-    '<p class="tool-sub">L\'intitulé se remplit automatiquement depuis le n° de compte. Saisie non persistée entre sessions.</p>'+
+    '<p class="tool-sub">Dans la colonne Compte, tape le nom (banque, clients, TVA collectée…) et choisis dans la liste : le numéro et l\'intitulé se remplissent tout seuls. Saisie non persistée entre sessions.</p>'+cabDatalist()+
     '<div style="overflow-x:auto"><table class="je-tbl"><thead><tr>'+
     '<th>Date</th><th>Pièce</th><th>Compte</th><th>Intitulé</th><th>Libellé</th><th class="r">Débit</th><th class="r">Crédit</th>'+
     '</tr></thead><tbody id="je-body">'+rows+'</tbody></table></div>'+
@@ -7316,7 +7413,7 @@ function viewErpSaisie(){
     var _lib=_num?(erpLib(_num)||'compte inconnu'):'';
     var _lcls='erp-lib'+(_num&&!erpLib(_num)?' erp-lib-warn':'');
     return '<tr class="erp-row">'+
-      '<td style="padding:4px 6px 4px 0"><input class="ji erp-compte" list="erp-comptes" aria-label="Numéro de compte" value="'+escHtml(l.compte)+'" placeholder="N° compte"><div class="'+_lcls+'">'+escHtml(_lib)+'</div></td>'+
+      '<td style="padding:4px 6px 4px 0"><input class="ji erp-compte" list="erp-comptes" aria-label="Numéro de compte" value="'+escHtml(l.compte)+'" placeholder="Nom ou n° de compte"><div class="'+_lcls+'">'+escHtml(_lib)+'</div></td>'+
       '<td style="padding:4px 6px;width:120px"><input class="ji erp-db" type="number" min="0" step="0.01" aria-label="Débit" value="'+escHtml(l.debit)+'" placeholder="0,00" style="text-align:right"></td>'+
       '<td style="padding:4px 0 4px 6px;width:120px"><input class="ji erp-cr" type="number" min="0" step="0.01" aria-label="Crédit" value="'+escHtml(l.credit)+'" placeholder="0,00" style="text-align:right"></td>'+
     '</tr>';
@@ -8673,7 +8770,7 @@ function trainInputTable(exo){
   for(var i=0;i<nRows;i++){
     var pv=pre[i]||{acc:'',side:'D',amt:''};
     rows+='<tr class="train-row">'+
-      '<td><input class="tr-acc" aria-label="Numéro de compte, ligne '+(i+1)+'" value="'+escHtml(pv.acc)+'" placeholder="n° cpte" maxlength="8"></td>'+
+      '<td><input class="tr-acc" list="cab-accts" autocomplete="off" aria-label="Compte, ligne '+(i+1)+' (tape son nom)" value="'+escHtml(pv.acc)+'" placeholder="Nom du compte…"><span class="cab-lib">'+escHtml(pcLib(pv.acc))+'</span></td>'+
       '<td><select class="tr-side" aria-label="Sens, ligne '+(i+1)+'">'+
         '<option value="D"'+(pv.side==='D'?' selected':'')+'>D&eacute;bit</option>'+
         '<option value="C"'+(pv.side==='C'?' selected':'')+'>Cr&eacute;dit</option>'+
@@ -8681,15 +8778,15 @@ function trainInputTable(exo){
       '<td><input class="tr-amt" aria-label="Montant, ligne '+(i+1)+'" value="'+escHtml(pv.amt===''?'':String(pv.amt))+'" placeholder="0,00"></td>'+
     '</tr>';
   }
-  return '<table class="train-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+
-    '<p class="kbd-hint" style="margin-top:6px">Astuce : Entrée dans un champ vérifie l\'écriture.</p>';
+  return cabDatalist()+'<table class="train-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<p class="kbd-hint" style="margin-top:6px">Tape le nom du compte et choisis dans la liste, le numéro s\'inscrit tout seul. Entrée dans un montant vérifie l\'écriture.</p>';
 }
 
 /* ---- Result table ---- */
 function trainResultTable(exo,res){
   var rows=exo.sol.map(function(s,i){
     var ok=res.details[i].ok;
-    return '<tr><td class="mono" style="color:var(--debit);width:60px">'+s.acc+'</td>'+
+    return '<tr><td>'+escHtml(pcLib(s.acc)||s.acc)+' <span class="mono" style="color:var(--ink2);font-size:12px">('+s.acc+')</span></td>'+
       '<td>'+escHtml(s.side==='D'?'Débit':'Crédit')+'</td>'+
       '<td class="mono" style="text-align:right">'+fmt(s.amt)+'</td>'+
       '<td style="text-align:center;font-size:18px">'+(ok?'<span class="tr-ok">&#10003;</span>':'<span class="tr-ko">&#10007;</span>')+'</td></tr>';
@@ -8789,7 +8886,7 @@ function viewTrainErreur(){
   var entryRows=exo.rows.map(function(r){
     var dz=r.side==='D'?'<span class="dz">'+fmt(r.amt)+'</span>':'';
     var cr=r.side==='C'?'<span class="cr">'+fmt(r.amt)+'</span>':'';
-    return '<tr><td class="mono" style="color:var(--debit);width:60px">'+r.acc+'</td>'+
+    return '<tr><td>'+escHtml(pcLib(r.acc)||r.acc)+' <span class="mono" style="color:var(--ink2);font-size:12px">('+r.acc+')</span></td>'+
       '<td>'+escHtml(r.side==='D'?'Débit':'Crédit')+'</td>'+
       '<td class="mono" style="text-align:right">'+dz+cr+'</td></tr>';
   }).join('');
@@ -9019,7 +9116,7 @@ function bindTools(){
   var pcq=document.getElementById('pc-q'),pccl=document.getElementById('pc-cl');
   if(pcq){
     var filterPlan=function(){
-      var q=(pcq.value||'').toLowerCase().trim(),cl=parseInt(pccl.value||'0',10);
+      var q=normalizeStr((pcq.value||'').trim()),cl=parseInt(pccl.value||'0',10);
       var rows=document.querySelectorAll('.pc-row');
       for(var i=0;i<rows.length;i++){
         var r=rows[i];
@@ -9536,9 +9633,12 @@ document.addEventListener('click',function(e){
   else if(a==='dl-tp-grille'){downloadTpGrille();}
   else if(a==='dl-methodo-tp'){downloadMethodoTp();}
   else if(a==='tp-at'){ui.tpAt=t.dataset.k||'ca3';render();}
+  else if(a==='form-confirm'){try{localStorage.setItem('legl.formConfirmed','1');}catch(e){}render();announce('Planning confirmé.');}
+  else if(a==='form-unconfirm'){try{localStorage.removeItem('legl.formConfirmed');}catch(e){}render();}
+  else if(a==='form-carnet'){ui.tab='agenda';ui.agendaSub='carnet';render();focusMain();}
   else if(a==='plan-at'){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';ui.tpAt=t.dataset.k||'ca3';render();focusMain();}
-  else if(a==='form-dates-save'){var _fs=document.getElementById('form-start'),_fe=document.getElementById('form-end'),_ff=document.getElementById('form-fend');if(_fs&&_fs.value)setFormStart(_fs.value);if(_ff&&_ff.value)setFormEnd(_ff.value);if(_fe&&_fe.value)setExamDate(_fe.value);render();announce('Dates de formation enregistrées.');}
-  else if(a==='form-agenda-sync'){var _s0=formStart(),_e0=formEnd(),_ps=state.agenda.periods,_hit=null;_ps.forEach(function(p){if(!_hit&&p.kind==='tp'&&/^Formation/.test(p.label||''))_hit=p;});if(_hit){_hit.start=_s0;_hit.end=_e0;_hit.label='Formation Titre Pro Comptable assistant';}else _ps.push({id:agendaId(),start:_s0,end:_e0,label:'Formation Titre Pro Comptable assistant',kind:'tp'});var _tl=formTimeline();_tl.phases.forEach(function(x){var lab='Étape : '+x.p.n,ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});var sd=localDateStr(x.start),ed=localDateStr(new Date(x.end.getTime()-DAY));if(ex){ex.start=sd;ex.end=ed;}else _ps.push({id:agendaId(),start:sd,end:ed,label:lab,kind:'tp'});});var _ex=getExamDate(),_se=null;_ps.forEach(function(p){if(/^Session du titre/.test(p.label||''))_se=p;});if(_se){_se.start=_ex;_se.end=_ex;_se.label='Session du titre (date à confirmer)';}else _ps.push({id:agendaId(),start:_ex,end:_ex,label:'Session du titre (date à confirmer)',kind:'tp'});save();render();announce('Formation et étapes reportées dans l\'agenda.');}
+  else if(a==='form-dates-save'){var _fs=document.getElementById('form-start'),_fe=document.getElementById('form-end'),_ff=document.getElementById('form-fend');if(_fs&&_fs.value)setFormStart(_fs.value);if(_ff&&_ff.value)setFormEnd(_ff.value);var _fo=document.getElementById('form-order');try{if(_fo&&/^[123]{3}$/.test(_fo.value))localStorage.setItem('legl.ccpOrder',_fo.value);var _st=[];[0,1].forEach(function(i){var a1=document.getElementById('stage'+i+'-s'),b1=document.getElementById('stage'+i+'-e');if(a1&&b1&&a1.value&&b1.value){_st.push(a1.value<=b1.value?[a1.value,b1.value]:[b1.value,a1.value]);}});localStorage.setItem('legl.stages',JSON.stringify(_st));}catch(e){}if(_fe&&_fe.value)setExamDate(_fe.value);render();announce('Dates de formation enregistrées.');}
+  else if(a==='form-agenda-sync'){var _s0=formStart(),_e0=formEnd(),_ps=state.agenda.periods,_hit=null;_ps.forEach(function(p){if(!_hit&&p.kind==='tp'&&/^Formation/.test(p.label||''))_hit=p;});if(_hit){_hit.start=_s0;_hit.end=_e0;_hit.label='Formation Titre Pro Comptable assistant';}else _ps.push({id:agendaId(),start:_s0,end:_e0,label:'Formation Titre Pro Comptable assistant',kind:'tp'});var _tl=formTimeline();_tl.phases.forEach(function(x){var lab='Étape : '+x.p.n,ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});var sd=localDateStr(x.start),ed=localDateStr(new Date(x.end.getTime()-DAY));if(ex){ex.start=sd;ex.end=ed;}else _ps.push({id:agendaId(),start:sd,end:ed,label:lab,kind:'tp'});});formStages().forEach(function(x,i){var lab='Stage en entreprise'+(formStages().length>1?' '+(i+1):''),ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});if(ex){ex.start=x[0];ex.end=x[1];}else _ps.push({id:agendaId(),start:x[0],end:x[1],label:lab,kind:'alternance'});});var _ex=getExamDate(),_se=null;_ps.forEach(function(p){if(/^Session du titre/.test(p.label||''))_se=p;});if(_se){_se.start=_ex;_se.end=_ex;_se.label='Session du titre (date à confirmer)';}else _ps.push({id:agendaId(),start:_ex,end:_ex,label:'Session du titre (date à confirmer)',kind:'tp'});save();render();announce('Formation et étapes reportées dans l\'agenda.');}
   else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
@@ -9991,7 +10091,7 @@ function showOnboarding(){
 /* Dossiers cabinet : libellé du compte et équilibre affichés pendant la saisie. */
 document.addEventListener('input',function(e){
   var tg=e.target;if(!tg||!tg.classList)return;
-  if(tg.classList.contains('cab-acc')){var lab=tg.parentNode.querySelector('.cab-lib');if(lab){var v=(tg.value||'').trim(),l=pcLib(v);lab.textContent=v?(l||'compte inconnu'):'';lab.className='cab-lib'+(v&&!l?' warn':'');}}
+  if(tg.classList.contains('cab-acc')||tg.classList.contains('tr-acc')){var lab=tg.parentNode.querySelector('.cab-lib');if(lab){var v=(tg.value||'').trim(),l=pcLib(v);lab.textContent=v?(l||'compte inconnu'):'';lab.className='cab-lib'+(v&&!l?' warn':'');}}
   if(tg.classList.contains('cab-amt')||tg.classList.contains('cab-side')||tg.classList.contains('cab-acc')){var eq=document.getElementById('cab-eq');if(eq){var rows=cabReadRows(),td=0,tc=0;rows.forEach(function(r){if(r.side==='D')td=r2(td+r.amt);else tc=r2(tc+r.amt);});eq.innerHTML='Débit <b>'+cabMoney(td)+'</b> · Crédit <b>'+cabMoney(tc)+'</b> · '+(td>0&&td===tc?'<span class="eq">équilibré ✓</span>':'<span class="ne">déséquilibré</span>');}}
 });
 document.addEventListener('change',function(e){var tg=e.target;if(tg&&tg.classList&&tg.classList.contains('cab-side')){tg.dispatchEvent(new Event('input',{bubbles:true}));}});
@@ -10007,7 +10107,7 @@ document.addEventListener('keydown',function(e){
   }
   if(cl&&(cl.contains('cab-amt')||cl.contains('cab-f'))){e.preventDefault();var _cv=document.querySelector('[data-action="cab-verify"]');if(_cv)_cv.click();return;}
   if(cl&&cl.contains('tpat-in')&&tg.tagName==='INPUT'){e.preventDefault();var _tv=document.querySelector('[data-action="tp-at-verify"]');if(_tv)_tv.click();return;}
-  if(cl&&(cl.contains('tr-amt')||cl.contains('tr-acc'))){
+  if(cl&&cl.contains('tr-amt')){
     var vb=document.querySelector('[data-action="train-verify-gen"]:not([disabled]),[data-action="day-exo-verify"]:not([disabled]),[data-action="train-mission-verify"]:not([disabled])');
     if(vb){e.preventDefault();vb.click();}
   }
