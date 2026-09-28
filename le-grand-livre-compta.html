@@ -534,6 +534,23 @@ svg{display:block}
 .cab-prt{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.cab-prt svg{width:14px;height:14px}
 .cab-print .cp-step{border-top:1px solid var(--edge);padding-top:12px;margin-top:14px;break-inside:avoid}.cab-print h3{font-size:16px;margin:0 0 8px}.cp-comp{font-size:12px;font-weight:400;color:var(--ink2)}.cp-cons{font-weight:600}.cp-meta{font-size:13px;color:var(--ink2)}.cp-blank td{height:30px}.cp-grid{max-width:620px}.cp-good{font-weight:700;color:var(--valid)}.cp-lines{height:200px;background:repeating-linear-gradient(transparent 0 27px,var(--edge) 27px 28px);border-radius:6px}.cp-expl{font-size:13.5px;color:var(--ink2)}
 @media print{.cab-print .cab-doc{break-inside:avoid}.cp-lines{background:repeating-linear-gradient(#fff 0 27px,#bbb 27px 28px)!important}.cab-layout,.cab-side{display:block}}
+.viz-root{--viz-1:#2a78d6;--viz-2:#eb6834;--viz-3:#1baf7a;margin-top:16px}
+[data-theme="dark"] .viz-root{--viz-1:#3987e5;--viz-2:#d95926;--viz-3:#199e70}
+.viz-wrap{position:relative}
+.viz-root svg#viz-prog{width:100%;height:auto;display:block;overflow:hidden}
+.viz-grid{stroke:var(--edge);stroke-width:1}
+.viz-ax{fill:var(--ink2);font-size:11px}
+.viz-lab{fill:var(--ink);font-size:12px;font-weight:600}
+.viz-line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.viz-s1 .viz-line{stroke:var(--viz-1)}.viz-s2 .viz-line{stroke:var(--viz-2)}.viz-s3 .viz-line{stroke:var(--viz-3)}
+.viz-s1 .viz-mk{fill:var(--viz-1)}.viz-s2 .viz-mk{fill:var(--viz-2)}.viz-s3 .viz-mk{fill:var(--viz-3)}
+.viz-mk *{stroke:var(--card);stroke-width:2}
+.viz-cross{stroke:var(--ink2);stroke-width:1;stroke-dasharray:3 3}
+.viz-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink);margin:0 0 6px}.viz-legend span{display:inline-flex;align-items:center;gap:6px}
+.viz-tip[hidden]{display:none!important}
+.viz-tip{position:absolute;top:8px;background:var(--card);border:1px solid var(--edge);border-radius:8px;padding:6px 10px;font-size:12.5px;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:2px;pointer-events:none;min-width:130px}
+.viz-sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}.viz-s1.viz-sw{background:var(--viz-1)}.viz-s2.viz-sw{background:var(--viz-2)}.viz-s3.viz-sw{background:var(--viz-3)}
+@media print{.viz-tip,.viz-cross{display:none}.viz-root details{display:none}}
 .sess-card{border:1px dashed var(--edge);border-radius:12px;padding:12px 14px;background:var(--paper)}.sess-card.on{border:1.5px solid var(--accent);background:var(--card)}.sess-card svg{width:16px;height:16px}
 .at-grp{margin-bottom:10px}.at-grp-h{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin:0 0 6px}.at-grp-h span:nth-child(2){flex:1;min-width:0}.at-grp-n{font-size:12px}.at-grp .chips{margin:0}
 .tpat-mail{margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}.tpat-mail textarea{width:100%;min-height:180px;font:inherit;line-height:1.5}
@@ -5055,7 +5072,7 @@ var GLOSSAIRE=[
 ];
 
 /* ---- Outils ---- */
-var APP_VERSION='2.5.0';
+var APP_VERSION='2.6.0';
 var ACCENTS=[['','Selon l\'ambiance'],['ocean','Océan'],['emeraude','Émeraude'],['sapin','Sapin'],['indigo','Indigo'],['violet','Violet'],['rose','Rose'],['bordeaux','Bordeaux'],['ambre','Ambre']];
 /* Apparence : chaque option est stockée dans localStorage (legl.<clé>) et posée en attribut data-<clé> sur <html>. */
 var AMBIANCES=[
@@ -5984,7 +6001,48 @@ function tpFiches(){
     '<section class="fch-b fch-m"><h3>Le jour de l\'épreuve</h3><ul>'+TP_FICHE_METHODE.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></section>'+
     '<section class="fch-b fch-r"><h3>À revoir pour moi</h3>'+revH+'</section></div></div>';
 }
+/* ==== Progression dans le temps : un relevé par jour de la préparation de chaque CCP ==== */
+function tpHistSnap(){try{if(!state.tp||typeof state.tp!=='object')return;var d=todayStr(),v=TP_CCP.map(function(c,ci){return readinessOf({code:c.code,mods:c.mods,themes:c.themes,tpIndex:ci}).pct;});
+  if(!state.tp.hist||typeof state.tp.hist!=='object')state.tp.hist={};var prev=state.tp.hist[d];state.tp.hist[d]=v;
+  var ks=Object.keys(state.tp.hist).sort();if(ks.length>400)ks.slice(0,ks.length-400).forEach(function(k){delete state.tp.hist[k];});
+  if(!prev||prev.join()!==v.join())save();}catch(e){}}
+var VIZ_MK=['circle','square','triangle'];
+function vizMarker(k,x,y){var s=4.5;if(k===0)return '<circle cx="'+x+'" cy="'+y+'" r="'+s+'" />';if(k===1)return '<rect x="'+(x-s)+'" y="'+(y-s)+'" width="'+(2*s)+'" height="'+(2*s)+'" rx="1.5" />';return '<path d="M'+x+' '+(y-s-1)+'L'+(x+s+0.5)+' '+(y+s-0.5)+'L'+(x-s-0.5)+' '+(y+s-0.5)+'Z" />';}
+function tpHistChart(){
+  var H=state.tp.hist||{},ks=Object.keys(H).sort();
+  if(ks.length<2)return '<div class="viz-root panel viz-empty"><span class="eyebrow">Ta progression dans le temps</span><p class="tool-sub" style="margin:8px 0 0">La courbe se dessine au fil des jours : chaque jour où tu ouvres l\'app, ta préparation par CCP est notée. Reviens demain pour voir le premier trait.</p></div>';
+  var W=Math.round(Math.max(240,Math.min(640,(window.innerWidth||640)-(window.innerWidth<700?130:330)))),Hh=W<500?250:230,pl=40,pr=W<500?74:86,pt=14,pb=28,t0=isoToDate(ks[0]).getTime(),t1=isoToDate(ks[ks.length-1]).getTime(),span=Math.max(1,t1-t0);
+  var X=function(k){return pl+(isoToDate(k).getTime()-t0)/span*(W-pl-pr);},Y=function(v){return pt+(100-v)/100*(Hh-pt-pb);};
+  var grid=[0,25,50,75,100].map(function(v){return '<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" class="viz-grid"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" class="viz-ax" text-anchor="end">'+v+' %</text>';}).join('');
+  var fmtD=function(k){var p=k.split('-');return p[2]+'/'+p[1];},ticks=[ks[0],ks[Math.floor((ks.length-1)/2)],ks[ks.length-1]].filter(function(k,i,a){return a.indexOf(k)===i;}).map(function(k,i,a){return '<text x="'+X(k)+'" y="'+(Hh-8)+'" class="viz-ax" text-anchor="'+(i===0?'start':(i===a.length-1?'end':'middle'))+'">'+fmtD(k)+'</text>';}).join('');
+  var showMk=ks.length<=24,ends=[];
+  var series=TP_CCP.map(function(c,s){var pts=ks.map(function(k){return [X(k),Y(H[k][s]||0)];});
+    var path='<path class="viz-line" d="'+pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join('')+'"/>';
+    var mk=(showMk?pts:[pts[pts.length-1]]).map(function(p){return vizMarker(s,p[0].toFixed(1),p[1].toFixed(1));}).join('');
+    ends.push({s:s,y:pts[pts.length-1][1],v:H[ks[ks.length-1]][s]||0,code:c.code});
+    return '<g class="viz-s viz-s'+(s+1)+'">'+path+'<g class="viz-mk">'+mk+'</g></g>';}).join('');
+  ends.sort(function(a,b){return a.y-b.y;});for(var i=1;i<ends.length;i++){if(ends[i].y-ends[i-1].y<14)ends[i].y=ends[i-1].y+14;}var _ov=ends[ends.length-1].y-(Hh-pb);if(_ov>0)ends.forEach(function(e){e.y-=_ov;});
+  var lab=ends.map(function(e){return '<text x="'+(W-pr+8)+'" y="'+(e.y+4)+'" class="viz-lab">'+e.code+' '+e.v+' %</text>';}).join('');
+  var legend='<div class="viz-legend">'+TP_CCP.map(function(c,s){return '<span><svg width="14" height="14" viewBox="0 0 14 14" class="viz-s'+(s+1)+'" aria-hidden="true"><g class="viz-mk">'+vizMarker(s,7,7)+'</g></svg>'+c.code+'</span>';}).join('')+'</div>';
+  var rows=ks.slice(-12).reverse().map(function(k){return '<tr><td>'+tpFrDate(k)+'</td>'+H[k].map(function(v){return '<td class="n">'+v+' %</td>';}).join('')+'</tr>';}).join('');
+  var first=H[ks[0]],last=H[ks[ks.length-1]],gain=TP_CCP.map(function(c,s){var g=(last[s]||0)-(first[s]||0);return c.code+' '+(g>=0?'+':'')+g+' pts';}).join(' · ');
+  return '<div class="viz-root panel"><span class="eyebrow">Ta progression dans le temps</span><p class="tool-sub" style="margin:6px 0 8px">Préparation estimée par CCP, du '+tpFrDate(ks[0])+' au '+tpFrDate(ks[ks.length-1])+' : '+gain+'.</p>'+legend+
+    '<div class="viz-wrap"><svg id="viz-prog" data-w="'+W+'" data-pr="'+pr+'" viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Courbe de préparation par CCP ; les valeurs sont dans le tableau qui suit">'+grid+ticks+series+lab+'<line id="viz-x" class="viz-cross" y1="'+pt+'" y2="'+(Hh-pb)+'" x1="-10" x2="-10"/></svg><div id="viz-tip" class="viz-tip" hidden></div></div>'+
+    '<details class="suj-cor"><summary>'+SVG.list+' Voir les valeurs (tableau)</summary><div class="suj-cor-body"><table class="cf-tbl"><thead><tr><th>Date</th>'+TP_CCP.map(function(c){return '<th class="n">'+c.code+'</th>';}).join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div></details></div>';
+}
+function bindViz(){
+  var svg=document.getElementById('viz-prog');if(!svg||svg._b)return;svg._b=1;
+  var H=state.tp.hist||{},ks=Object.keys(H).sort(),tip=document.getElementById('viz-tip'),cx=document.getElementById('viz-x');
+  var W=+svg.dataset.w||640,pl=40,pr=+svg.dataset.pr||86,t0=isoToDate(ks[0]).getTime(),span=Math.max(1,isoToDate(ks[ks.length-1]).getTime()-t0);
+  svg.addEventListener('mousemove',function(ev){var r=svg.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width*W;if(x<pl-10||x>W-pr+10){tip.hidden=true;cx.setAttribute('x1',-10);cx.setAttribute('x2',-10);return;}
+    var best=ks[0],bd=1e9;ks.forEach(function(k){var kx=pl+(isoToDate(k).getTime()-t0)/span*(W-pl-pr),dd=Math.abs(kx-x);if(dd<bd){bd=dd;best=k;}});
+    var kx=pl+(isoToDate(best).getTime()-t0)/span*(W-pl-pr);cx.setAttribute('x1',kx);cx.setAttribute('x2',kx);
+    tip.innerHTML='<b>'+tpFrDate(best)+'</b>'+TP_CCP.map(function(c,s){return '<span><i class="viz-sw viz-s'+(s+1)+'"></i>'+c.code+' : '+H[best][s]+' %</span>';}).join('');
+    tip.hidden=false;var px=kx/W*r.width;tip.style.left=Math.min(r.width-150,Math.max(0,px+12))+'px';});
+  svg.addEventListener('mouseleave',function(){tip.hidden=true;cx.setAttribute('x1',-10);cx.setAttribute('x2',-10);});
+}
 function tpBilanView(){
+  tpHistSnap();
   var now=new Date(),cr=tpCritTotals(),dp=tpDpStatus(),or=tpOralStats();
   var ccps=TP_CCP.map(function(c0,ci){return {code:c0.code,titre:c0.titre,mods:c0.mods,themes:c0.themes,tpIndex:ci};}).map(function(e){var r=readinessOf(e),c=TP_CCP[e.tpIndex];
     var crits=[];c.comps.forEach(function(comp,cj){var n=0,a=0;comp.crit.forEach(function(x,ck){n++;if(tpCritLevel(tpCritKey(e.tpIndex,cj,ck))===2)a++;});crits.push('<tr><td>'+escHtml(comp.t)+'</td><td class="n">'+a+' / '+n+'</td></tr>');});
@@ -5998,7 +6056,7 @@ function tpBilanView(){
   return '<div class="tool-section bil"><div class="print-only">Le Grand Livre · bilan de progression</div><h2 class="tool-title">Bilan de progression</h2>'+
     '<p class="tool-sub">Titre professionnel Comptable assistant (RNCP37121) · établi le '+frDateLong(now)+'. À imprimer ou enregistrer en PDF pour ton formateur ou ton tuteur de stage.</p>'+
     '<div class="row no-print" style="margin:0 0 14px"><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer ou enregistrer en PDF</button><button class="btn-sm" data-action="dl-bilan">'+SVG.dl+' Version texte</button></div>'+
-    '<div class="bil-kpis"><div><b>'+Object.keys(state.passed).length+' / '+MODULES.length+'</b><span>modules validés</span></div><div><b>'+masteredCount()+'</b><span>flashcards maîtrisées</span></div><div><b>'+cr.acquis+' / '+cr.total+'</b><span>critères acquis</span></div><div><b>'+dp.done+' / '+dp.total+'</b><span>CCP illustrés au dossier pro</span></div><div><b>'+or.ok+' / '+or.total+'</b><span>questions d\'entretien maîtrisées</span></div><div><b>'+last30+'</b><span>jours de travail sur 30 jours</span></div></div>'+
+    '<div class="bil-kpis"><div><b>'+Object.keys(state.passed).length+' / '+MODULES.length+'</b><span>modules validés</span></div><div><b>'+masteredCount()+'</b><span>flashcards maîtrisées</span></div><div><b>'+cr.acquis+' / '+cr.total+'</b><span>critères acquis</span></div><div><b>'+dp.done+' / '+dp.total+'</b><span>CCP illustrés au dossier pro</span></div><div><b>'+or.ok+' / '+or.total+'</b><span>questions d\'entretien maîtrisées</span></div><div><b>'+last30+'</b><span>jours de travail sur 30 jours</span></div></div>'+tpHistChart()+
     ccps+'<p class="tool-sub" style="margin-top:12px">Indicateurs issus de l\'application Le Grand Livre (auto-évaluation et exercices corrigés). Ils complètent les évaluations en cours de formation, ils ne les remplacent pas.</p></div>';
 }
 function curReady(){
@@ -7046,7 +7104,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Dossiers cabinet générés à l\'infini</b> pour chaque CCP : un client inédit, ses pièces (factures, relevé, journal de paie, inventaire) et 8 à 10 étapes corrigées. <b>Session blanche de 4 h</b> : trois dossiers générés sous chronomètre, bilan sur les <b>9 compétences</b> et questions d\'<b>entretien technique</b> tirées de tes propres dossiers. Ateliers <b>provisions pour risques</b> et <b>valeurs mobilières de placement</b>, ateliers <b>classés par CCP</b> avec <b>chronomètre</b> et meilleur temps. Accueil et <b>plan de révision</b> calés sur l\'étape en cours du plan de formation. <b>Exemples rédigés</b> pour chaque CCP du dossier professionnel. Examens blancs sans question en double. Atelier <b>écrits professionnels</b> (relances, erreur de facture, note au responsable) avec modèle et grille de relecture. Ateliers <b>exigibilité de la TVA</b> et <b>ajustement des dépréciations</b>. Deux dossiers cabinet : <b>Kerlo Services</b> (CCP2) et <b>Marée Haute</b> (CCP3). <b>Pièges fréquents</b> dans chaque fiche CCP, bouton <b>atelier au hasard</b>. Ateliers <b>budget de trésorerie</b>, <b>congés payés</b>, <b>seuil de rentabilité</b> et <b>emprunt</b>, reliés aux cours et aux fiches. <b>Session du jour</b> centrée sur le CCP en cours. Recherche classée par pertinence. Cartes dédoublonnées, sans récitation de numéros de compte. <b>Fiches récapitulatives</b> d\'une page par CCP, à imprimer pour les dernières semaines. Ateliers <b>lettrage</b>, <b>note de frais</b> et <b>TVA intracommunautaire</b>, cartes filtrables par CCP. <b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>14 dossiers cabinet</b>, <b>21 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Carnet d\'erreurs</b> : tes QCM ratés (examens, quiz, session du jour, dossiers), les étapes de dossiers et les ateliers à reprendre, avec un rejeu dédié. <b>Dossiers imprimables</b> : énoncé papier à grilles vierges et corrigé. <b>Courbe de progression</b> par CCP dans Mon bilan. <b>Dossiers cabinet générés à l\'infini</b> pour chaque CCP : un client inédit, ses pièces (factures, relevé, journal de paie, inventaire) et 8 à 10 étapes corrigées. <b>Session blanche de 4 h</b> : trois dossiers générés sous chronomètre, bilan sur les <b>9 compétences</b> et questions d\'<b>entretien technique</b> tirées de tes propres dossiers. Ateliers <b>provisions pour risques</b> et <b>valeurs mobilières de placement</b>, ateliers <b>classés par CCP</b> avec <b>chronomètre</b> et meilleur temps. Accueil et <b>plan de révision</b> calés sur l\'étape en cours du plan de formation. <b>Exemples rédigés</b> pour chaque CCP du dossier professionnel. Examens blancs sans question en double. Atelier <b>écrits professionnels</b> (relances, erreur de facture, note au responsable) avec modèle et grille de relecture. Ateliers <b>exigibilité de la TVA</b> et <b>ajustement des dépréciations</b>. Deux dossiers cabinet : <b>Kerlo Services</b> (CCP2) et <b>Marée Haute</b> (CCP3). <b>Pièges fréquents</b> dans chaque fiche CCP, bouton <b>atelier au hasard</b>. Ateliers <b>budget de trésorerie</b>, <b>congés payés</b>, <b>seuil de rentabilité</b> et <b>emprunt</b>, reliés aux cours et aux fiches. <b>Session du jour</b> centrée sur le CCP en cours. Recherche classée par pertinence. Cartes dédoublonnées, sans récitation de numéros de compte. <b>Fiches récapitulatives</b> d\'une page par CCP, à imprimer pour les dernières semaines. Ateliers <b>lettrage</b>, <b>note de frais</b> et <b>TVA intracommunautaire</b>, cartes filtrables par CCP. <b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>14 dossiers cabinet</b>, <b>21 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -10529,7 +10587,7 @@ function render(){
     var _foc=focusModeOn()&&(!!ui.dayplan||(ui.tab==='cards'&&ui.session&&ui.session.queue&&ui.session.queue.length>0)||(ui.tab==='exam'&&ui.exam&&!ui.exam.done)||(ui.tab==='outils'&&ui.tool==='annales'&&ui.annale&&!ui.annale.done));
     document.documentElement.classList.toggle('legl-focus',_foc);
     document.getElementById('app').innerHTML=topbar()+'<div class="wrap">'+(_foc?'<div class="focus-bar no-print"><span>'+SVG.star+' Mode focus</span><span class="focus-bar-hint">La navigation revient quand tu quittes la session.</span></div>':'')+html+'</div>'+botnav()+focusWidget();
-    bindDynamic();markScrollables();window.scrollTo(0,0);
+    bindDynamic();markScrollables();bindViz();window.scrollTo(0,0);
   }catch(err){renderError(err);}
 }
 /* Tableaux qui défilent horizontalement sur petit écran : atteignables au clavier. */
@@ -11626,7 +11684,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : dossiers cabinet générés à l\'infini pour les 3 CCP et session blanche de 4 h corrigée automatiquement, avec bilan sur les 9 compétences et questions d\'entretien technique, 21 ateliers classés par CCP et chronométrés, dont provisions et placements, accueil et plan de révision calés sur ton étape, exemples rédigés pour ton dossier pro, écrits professionnels, 14 dossiers cabinet, pièges fréquents dans les fiches CCP, atelier au hasard, session du jour centrée sur ton CCP, plan de formation, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : carnet d\'erreurs, dossiers imprimables (énoncé papier et corrigé), courbe de progression par CCP dans ton bilan, dossiers cabinet générés à l\'infini pour les 3 CCP et session blanche de 4 h corrigée automatiquement, avec bilan sur les 9 compétences et questions d\'entretien technique, 21 ateliers classés par CCP et chronométrés, dont provisions et placements, accueil et plan de révision calés sur ton étape, exemples rédigés pour ton dossier pro, écrits professionnels, 14 dossiers cabinet, pièges fréquents dans les fiches CCP, atelier au hasard, session du jour centrée sur ton CCP, plan de formation, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
@@ -11689,7 +11747,7 @@ document.addEventListener('keydown',function(e){
   MODULES.forEach(function(m){m.quiz.forEach(mix);});EXAM_EXTRA.forEach(mix);MISSIONS.forEach(function(m){m.questions.forEach(mix);});
   CAB_DOSSIERS.forEach(function(d){d.steps.forEach(function(st){if(st.type==='qcm')mix(st);});});
   if(typeof COMM_QUIZ!=='undefined')COMM_QUIZ.forEach(mix);if(typeof EXCEL_QUIZ!=='undefined')EXCEL_QUIZ.forEach(mix);})();
-load();mergeMyCards();applyCursusTitle();render();if(!showOnboarding())showNudge();setInterval(focusTick,1000);
+load();mergeMyCards();applyCursusTitle();if(isTP())tpHistSnap();render();if(!showOnboarding())showNudge();setInterval(focusTick,1000);
 /* Thème « selon l'heure » : vérifié chaque minute. */
 setInterval(function(){if(appGet('mode')!=='heure')return;var th=hourTheme();if(document.documentElement.getAttribute('data-theme')!==th){document.documentElement.setAttribute('data-theme',th);render();}},60000);
 /* Raccourcis (appui long sur l'icône du téléphone, ou lien avec ancre) : #session, #cabinet, #cartes, #plan, #agenda. */
