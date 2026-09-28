@@ -474,6 +474,7 @@ svg{display:block}
 .epr-table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 4px}
 .epr-table th,.epr-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--edge)}
 .epr-table th{color:var(--ink2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+@media(max-width:560px){.epr-table{display:block;overflow-x:auto}.epr-table th,.epr-table td{padding:7px 6px}}
 .epr-table td:first-child{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent);white-space:nowrap}
 .epr-table .epr-coef{font-family:'JetBrains Mono',monospace;text-align:center;font-weight:700}
 .epr-meta{font-size:13px;color:var(--ink2);margin:0 0 8px;line-height:1.6}
@@ -1079,11 +1080,302 @@ html.legl-focus .wrap{max-width:880px;padding-top:22px}
 .page-head h1{font-family:'Fraunces',serif;font-size:clamp(24px,2.8vw,32px);font-weight:600;margin:0;letter-spacing:-.01em}
 .page-head p{margin:0;color:var(--ink2);font-size:14px}
 @media (max-width:900px){
-  .tools-layout{grid-template-columns:1fr}
+  .tools-layout{grid-template-columns:minmax(0,1fr)}.tools-side{min-width:0;overflow-x:auto}
   .tools-side{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px;scrollbar-width:thin}
   .tools-side .tg{display:none}
   .tools-side .tnav{border:1.5px solid var(--edge);background:var(--card);border-radius:99px;white-space:nowrap;flex-shrink:0}
 }
+/* ===== Apparence v1.9 : ambiances complètes (clair + sombre), arrondis, densité, police des titres ===== */
+html[data-ambiance="papier"]{
+  --paper:#F5EFE3;--line:#E8DDC7;--ink:#2A2118;--ink2:#6E5E4C;
+  --card:#FFFCF6;--debit:#1D6B55;--credit:#A4441B;--valid:#3E7A2A;
+  --debit-s:#E1EFE8;--credit-s:#F6E4D8;--valid-s:#E7F0DC;
+  --edge:#E6DAC3;--shadow:0 1px 2px rgba(60,40,20,.06),0 10px 26px -16px rgba(60,40,20,.28);
+  --teal:#1D6B55;--amber:#B7791F;--topbar-bg:rgba(255,252,246,.93);
+  --accent:#6B2737;--accent-fg:#FFFFFF;--accent-hover:#551E2B;
+}
+html[data-ambiance="papier"][data-theme="dark"]{
+  --paper:#17130E;--line:#221C15;--ink:#EFE6D6;--ink2:#B3A38D;
+  --card:#211B14;--debit:#5CC6A4;--credit:#F29B6B;--valid:#9BD37E;
+  --debit-s:#15352B;--credit-s:#3E2416;--valid-s:#21331A;
+  --edge:#352C21;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -16px rgba(0,0,0,.75);
+  --teal:#5CC6A4;--amber:#E8B04B;--topbar-bg:rgba(23,19,14,.94);
+  --accent:#E3A6B3;--accent-fg:#2A0E15;--accent-hover:#D38D9C;
+}
+html[data-ambiance="epure"]{
+  --paper:#FAFAFA;--line:#F0F0F0;--ink:#111418;--ink2:#61666E;
+  --card:#FFFFFF;--debit:#1D5FD1;--credit:#C2410C;--valid:#15803D;
+  --debit-s:#E8F0FD;--credit-s:#FCEDE3;--valid-s:#E6F4EA;
+  --edge:#EAEAEA;--shadow:0 1px 2px rgba(0,0,0,.04);
+  --teal:#1D5FD1;--amber:#C27803;--topbar-bg:rgba(255,255,255,.95);
+  --accent:#111418;--accent-fg:#FFFFFF;--accent-hover:#2B3037;
+}
+html[data-ambiance="epure"][data-theme="dark"]{
+  --paper:#0B0B0C;--line:#141415;--ink:#EDEDED;--ink2:#A0A0A6;
+  --card:#141416;--debit:#7AA7FF;--credit:#FF9A62;--valid:#5FD38D;
+  --debit-s:#14223D;--credit-s:#3A1F10;--valid-s:#10301E;
+  --edge:#26262A;--shadow:none;
+  --teal:#7AA7FF;--amber:#F2C14E;--topbar-bg:rgba(11,11,12,.95);
+  --accent:#EDEDED;--accent-fg:#0B0B0C;--accent-hover:#FFFFFF;
+}
+html[data-ambiance="pastel"]{
+  --paper:#F4F2FB;--line:#E9E5F7;--ink:#2B2748;--ink2:#6B6690;
+  --card:#FFFFFF;--debit:#0F8A7E;--credit:#C2366E;--valid:#2E8540;
+  --debit-s:#DDF3EF;--credit-s:#FBE3EC;--valid-s:#E2F3E4;
+  --edge:#E4DFF4;--shadow:0 1px 2px rgba(60,40,120,.05),0 12px 28px -18px rgba(60,40,120,.3);
+  --teal:#0F8A7E;--amber:#C27803;--topbar-bg:rgba(255,255,255,.92);
+  --accent:#6D4AE0;--accent-fg:#FFFFFF;--accent-hover:#5A38CC;
+}
+html[data-ambiance="pastel"][data-theme="dark"]{
+  --paper:#15122A;--line:#1C1836;--ink:#ECE9FB;--ink2:#A9A3CF;
+  --card:#1E1A38;--debit:#5EDDCD;--credit:#F58CB6;--valid:#7EDB90;
+  --debit-s:#123A3A;--credit-s:#431830;--valid-s:#173622;
+  --edge:#2E2952;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.7);
+  --teal:#5EDDCD;--amber:#F2C14E;--topbar-bg:rgba(21,18,42,.94);
+  --accent:#B6A1FF;--accent-fg:#1A1040;--accent-hover:#A38BFF;
+}
+html[data-ambiance="contraste"]{
+  --paper:#FFFFFF;--line:#FFFFFF;--ink:#000000;--ink2:#2B2B2B;
+  --card:#FFFFFF;--debit:#004C99;--credit:#A30000;--valid:#005C1F;
+  --debit-s:#E3EEFA;--credit-s:#FBE5E5;--valid-s:#E2F4E7;
+  --edge:#5A5A5A;--shadow:none;
+  --teal:#004C99;--amber:#7A4A00;--topbar-bg:#FFFFFF;
+  --accent:#000000;--accent-fg:#FFFFFF;--accent-hover:#222222;
+}
+html[data-ambiance="contraste"][data-theme="dark"]{
+  --paper:#000000;--line:#000000;--ink:#FFFFFF;--ink2:#E0E0E0;
+  --card:#0A0A0A;--debit:#6CC4FF;--credit:#FF8A8A;--valid:#7CFF9E;
+  --debit-s:#0B2A40;--credit-s:#401010;--valid-s:#0B3317;
+  --edge:#BDBDBD;--shadow:none;
+  --teal:#6CC4FF;--amber:#FFD54A;--topbar-bg:#000000;
+  --accent:#FFD400;--accent-fg:#000000;--accent-hover:#FFE14D;
+}
+@media(prefers-color-scheme:dark){
+  html[data-ambiance="papier"]:not([data-theme="light"]){
+    --paper:#17130E;--line:#221C15;--ink:#EFE6D6;--ink2:#B3A38D;--card:#211B14;--debit:#5CC6A4;--credit:#F29B6B;--valid:#9BD37E;
+    --debit-s:#15352B;--credit-s:#3E2416;--valid-s:#21331A;--edge:#352C21;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -16px rgba(0,0,0,.75);
+    --teal:#5CC6A4;--amber:#E8B04B;--topbar-bg:rgba(23,19,14,.94);--accent:#E3A6B3;--accent-fg:#2A0E15;--accent-hover:#D38D9C}
+  html[data-ambiance="epure"]:not([data-theme="light"]){
+    --paper:#0B0B0C;--line:#141415;--ink:#EDEDED;--ink2:#A0A0A6;--card:#141416;--debit:#7AA7FF;--credit:#FF9A62;--valid:#5FD38D;
+    --debit-s:#14223D;--credit-s:#3A1F10;--valid-s:#10301E;--edge:#26262A;--shadow:none;
+    --teal:#7AA7FF;--amber:#F2C14E;--topbar-bg:rgba(11,11,12,.95);--accent:#EDEDED;--accent-fg:#0B0B0C;--accent-hover:#FFFFFF}
+  html[data-ambiance="pastel"]:not([data-theme="light"]){
+    --paper:#15122A;--line:#1C1836;--ink:#ECE9FB;--ink2:#A9A3CF;--card:#1E1A38;--debit:#5EDDCD;--credit:#F58CB6;--valid:#7EDB90;
+    --debit-s:#123A3A;--credit-s:#431830;--valid-s:#173622;--edge:#2E2952;--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 28px -16px rgba(0,0,0,.7);
+    --teal:#5EDDCD;--amber:#F2C14E;--topbar-bg:rgba(21,18,42,.94);--accent:#B6A1FF;--accent-fg:#1A1040;--accent-hover:#A38BFF}
+  html[data-ambiance="contraste"]:not([data-theme="light"]){
+    --paper:#000000;--line:#000000;--ink:#FFFFFF;--ink2:#E0E0E0;--card:#0A0A0A;--debit:#6CC4FF;--credit:#FF8A8A;--valid:#7CFF9E;
+    --debit-s:#0B2A40;--credit-s:#401010;--valid-s:#0B3317;--edge:#BDBDBD;--shadow:none;
+    --teal:#6CC4FF;--amber:#FFD54A;--topbar-bg:#000000;--accent:#FFD400;--accent-fg:#000000;--accent-hover:#FFE14D}
+}
+/* La couleur d'accent choisie prime sur celle de l'ambiance (spécificité renforcée). */
+html[data-accent="emeraude"][data-accent]{--accent:var(--acc-emeraude);--accent-fg:#FFFFFF;--accent-hover:#047857}
+html[data-accent="indigo"][data-accent]{--accent:var(--acc-indigo);--accent-fg:#FFFFFF;--accent-hover:#4338CA}
+html[data-accent="ambre"][data-accent]{--accent:var(--acc-ambre);--accent-fg:#FFFFFF;--accent-hover:#92400E}
+html[data-accent="rose"][data-accent]{--accent:var(--acc-rose);--accent-fg:#FFFFFF;--accent-hover:#9D174F}
+html[data-accent="bordeaux"][data-accent]{--accent:var(--acc-bordeaux);--accent-fg:#FFFFFF;--accent-hover:#551E2B}
+html[data-accent="sapin"][data-accent]{--accent:var(--acc-sapin);--accent-fg:#FFFFFF;--accent-hover:#123D2F}
+html[data-accent="ocean"][data-accent]{--accent:var(--acc-ocean);--accent-fg:#FFFFFF;--accent-hover:#0B5566}
+html[data-accent="violet"][data-accent]{--accent:var(--acc-violet);--accent-fg:#FFFFFF;--accent-hover:#5A38CC}
+:root{--acc-bordeaux:#6B2737;--acc-sapin:#1A5240;--acc-ocean:#0E7490;--acc-violet:#6D4AE0}
+/* Contraste élevé : bordures plus épaisses et soulignement des liens */
+html[data-ambiance="contraste"] .panel,html[data-ambiance="contraste"] .mcard,html[data-ambiance="contraste"] .stat,html[data-ambiance="contraste"] .tool-section,html[data-ambiance="contraste"] .aide-card,html[data-ambiance="contraste"] .prog-card,html[data-ambiance="contraste"] .sim-card{border-width:2px}
+html[data-ambiance="contraste"] a{text-decoration:underline}
+html[data-ambiance="contraste"] .sn-item.on{outline:2px solid var(--ink)}
+/* Fond ligné façon registre comptable (option ; activé d'office avec l'ambiance Papier) */
+html[data-ambiance="papier"]:not([data-ruled="off"]) body,html[data-ruled="on"] body{background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--line) 31px 32px)}
+html[data-ruled="on"] .wrap{background:transparent}
+/* Arrondis */
+html[data-corners="net"] :is(.panel,.stat,.mcard,.aide-card,.ann-card,.suj-q,.tool-section,.prog-card,.sim-card,.train-exo-panel,.train-mode-card,.train-stat,.dash-now,.dash-act,.dash-more,.qopt,.quiz-opt,.tp-tile,.tp-comp,.tp-et,.flash-card,.mdoc,.onb,.nudge,.cab-card,.cab-doc,.plan-phase,.amb-card,.ag-form,.ag-cell,.rev-item,.prio-row,.plan-day,.exo-card,.gloss-item,.srch-box,.focus-panel,.pcg-memo,.rap-card,.card-block){border-radius:4px!important}
+html[data-corners="net"] :is(.btn,.btn-sm,.btn-pri,.btn-gh,.btn-primary,.btn-sec,.sn-item,.sn-cta,.tnav,.tsub,.navbtn,.fi,.jin,.jsel,.ag-input,.ag-select,.ag-textarea,.tpat-in,.micon,.mk,.acc-chip,.chip){border-radius:3px!important}
+html[data-corners="rond"] :is(.panel,.stat,.mcard,.aide-card,.ann-card,.suj-q,.tool-section,.prog-card,.sim-card,.train-exo-panel,.train-mode-card,.train-stat,.dash-now,.dash-act,.dash-more,.qopt,.quiz-opt,.tp-tile,.tp-comp,.tp-et,.flash-card,.mdoc,.onb,.nudge,.cab-card,.cab-doc,.plan-phase,.amb-card,.ag-form,.ag-cell,.rev-item,.prio-row,.plan-day,.exo-card,.gloss-item,.srch-box,.focus-panel,.pcg-memo,.rap-card,.card-block){border-radius:22px!important}
+html[data-corners="rond"] :is(.btn,.btn-sm,.btn-pri,.btn-gh,.btn-primary,.btn-sec,.sn-cta,.navbtn){border-radius:99px!important}
+html[data-corners="rond"] :is(.sn-item,.tnav,.tsub,.fi,.jin,.jsel,.ag-input,.ag-select,.ag-textarea,.tpat-in,.micon,.mk){border-radius:12px!important}
+/* Densité */
+html[data-density="compact"] .wrap{padding-top:20px;padding-bottom:60px}
+html[data-density="compact"] :is(.panel,.tool-section){padding:16px 18px}
+html[data-density="compact"] :is(.stat,.aide-card,.prog-card,.sim-card,.train-exo-panel){padding:12px 14px}
+html[data-density="compact"] .mcard{min-height:0;padding:14px;gap:8px}
+html[data-density="compact"] :is(.grid,.dash-acts,.aide-grid,.prog-grid){gap:10px}
+html[data-density="compact"] .row{margin-top:14px}
+html[data-density="compact"] .page-head{margin-bottom:12px}
+html[data-density="aere"] .wrap{padding-top:44px;padding-bottom:100px}
+html[data-density="aere"] :is(.panel,.tool-section){padding:30px 32px}
+html[data-density="aere"] :is(.grid,.aide-grid,.prog-grid){gap:22px}
+html[data-density="aere"] body{line-height:1.7}
+/* Police des titres */
+html[data-titles="sans"] :is(.serif,.brand b,.prog-big,.cat-head h2,.stat .v,.tool-title,.ann-doss-h,.onb h2,.train-stat .tv,.ag-month-title,.ag-form-title,.ag-section-title,.fiche-title h1,.sn-brand b,.page-head h1,h1,h2,h3){font-family:'Inter',system-ui,sans-serif!important;letter-spacing:-.015em}
+html[data-titles="sans"] [style*="Fraunces"]{font-family:'Inter',system-ui,sans-serif!important}
+html[data-titles="mono"] :is(.serif,.brand b,.prog-big,.cat-head h2,.stat .v,.tool-title,.ann-doss-h,.onb h2,.train-stat .tv,.ag-month-title,.ag-form-title,.ag-section-title,.fiche-title h1,.sn-brand b,.page-head h1,h1,h2){font-family:'JetBrains Mono',ui-monospace,monospace!important;letter-spacing:-.02em}
+html[data-titles="mono"] [style*="Fraunces"]{font-family:'JetBrains Mono',ui-monospace,monospace!important}
+
+/* Plan de formation */
+.ff-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ff-h{font-size:18px;margin:10px 0 2px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ff-sub{color:var(--ink2);font-size:13.5px;margin:0 0 14px}
+.ff{position:relative;margin:8px 0 4px;padding-top:18px}
+.ff-bar{display:flex;gap:3px;height:30px}
+.ff-seg{position:relative;background:var(--paper);border:1px solid var(--edge);border-radius:7px;overflow:hidden;min-width:0}
+.ff-seg.on{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent)}
+.ff-fill{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--valid) 22%,transparent)}
+.ff-lbl{position:relative;display:block;font-size:11px;font-weight:600;color:var(--ink2);padding:0 7px;line-height:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ff-seg.on .ff-lbl{color:var(--ink)}
+.ff-now{position:absolute;top:0;bottom:18px;transform:translateX(-1px);pointer-events:none}
+.ff-now i{position:absolute;top:14px;bottom:0;width:2px;background:var(--credit);border-radius:2px}
+.ff-now b{position:absolute;top:0;left:-30px;width:60px;text-align:center;font-size:10px;font-weight:700;color:var(--credit);text-transform:uppercase;letter-spacing:.04em}
+.ff-mid{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.ff-dates{position:relative;display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.ff-pace{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;font-family:'Inter',sans-serif;letter-spacing:.02em}
+.ff-pace.ok{background:var(--valid-s);color:var(--valid)}.ff-pace.mid{background:var(--debit-s);color:var(--debit)}.ff-pace.late{background:var(--credit-s);color:var(--credit)}
+.ff-items{display:flex;flex-direction:column;gap:6px}
+.ff-items.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ff-item{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 11px;border:1px solid var(--edge);border-radius:10px;background:var(--card);width:100%}
+.ff-item:hover{border-color:var(--accent)}
+.ff-item.done{background:var(--paper)}
+.ff-item.done .ff-l{color:var(--ink2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ink2) 50%,transparent)}
+.ff-chk{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--edge);display:grid;place-items:center;flex-shrink:0;color:var(--valid)}
+.ff-item.done .ff-chk{background:var(--valid-s);border-color:transparent}
+.ff-chk svg{width:14px;height:14px}
+.ff-it{display:flex;flex-direction:column;min-width:0;flex:1}
+.ff-t{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+.ff-l{font-size:13.5px;font-weight:500;color:var(--ink)}
+.ff-go{margin-left:auto;color:var(--ink2);flex-shrink:0}
+.ff-dates-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:6px 0 14px}
+.ff-dates-form label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--ink2)}
+.ff-dates-form input{width:auto}
+.plan-phase{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:18px 20px;margin-bottom:12px}
+.plan-phase.on{border-color:var(--accent);box-shadow:var(--shadow)}
+.pp-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.pp-num{width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.pp-tt{display:flex;flex-direction:column;flex:1;min-width:200px}
+.pp-tt b{font-size:16px}
+.pp-tt span{font-size:12.5px;color:var(--ink2)}
+.pp-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)}
+.pp-d{font-size:13.5px;color:var(--ink2);margin:4px 0 10px}
+.pp-tips{margin:8px 0 0;padding-left:18px;color:var(--ink2);font-size:14px;line-height:1.75}
+.pp-tips b{color:var(--ink)}
+@media(max-width:700px){.ff-items.grid2{grid-template-columns:1fr}.ff-lbl{font-size:9.5px;padding:0 4px}}
+
+/* Dossiers cabinet */
+.cab-sum{margin-top:10px;font-size:13.5px;color:var(--ink2)}
+.cab-sum b{color:var(--ink)}
+.cab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.cab-card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:4px}
+.cab-card h3{margin:6px 0 0;font-size:18px}
+.cab-card p{margin:0;color:var(--ink2);font-size:13.5px}
+.cab-card-top{display:flex;justify-content:space-between;align-items:center}
+.cab-ccp{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:2px 7px;align-self:flex-start}
+.cab-per{font-size:12px;color:var(--ink2)}
+.cab-meta{font-size:12.5px;color:var(--ink2);margin-top:6px}
+.cab-st{font-size:12.5px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:5px;margin-top:4px}
+.cab-st svg{width:14px;height:14px}
+.cab-st.ok{color:var(--valid)}.cab-st.mid{color:var(--debit)}
+.cab-main{min-width:0}
+.cab-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}
+.cab-side{position:sticky;top:16px;background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:14px}
+.cab-client{display:flex;flex-direction:column;gap:3px;padding-bottom:12px;border-bottom:1px solid var(--edge);margin-bottom:8px}
+.cab-client b{font-size:15px}
+.cab-client span:last-child{font-size:12px;color:var(--ink2)}
+.cab-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.cab-step{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:6px 8px;border-radius:8px;font-size:13px;color:var(--ink2)}
+.cab-step:hover{background:var(--paper);color:var(--ink)}
+.cab-step.on{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--ink);font-weight:600}
+.cs-n{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--edge);display:grid;place-items:center;font-size:11px;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.cs-n svg{width:13px;height:13px}
+.cs-n.ok{background:var(--valid-s);color:var(--valid);border-color:transparent}
+.cs-n.ko{background:var(--credit-s);color:var(--credit);border-color:transparent}
+.cab-brief{margin-bottom:14px;background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:12px 16px}
+.cab-brief summary{cursor:pointer;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.cab-brief summary svg{color:var(--debit)}
+.cab-brief .cab-doc{margin-top:12px}
+.cab-step-h h2{font-size:21px;margin:4px 0 12px}
+.cab-doc{overflow-x:auto;border:1px solid var(--edge);border-radius:10px;background:var(--paper);padding:16px 18px;margin:0 0 14px;font-size:13.5px}
+.cab-fact{background:#FFFFFF;color:#1B1B1B;border-color:#D9D9D9;box-shadow:0 1px 0 rgba(0,0,0,.03),0 8px 22px -16px rgba(0,0,0,.35);font-family:'Inter',sans-serif}
+.cab-fact .cf-cond,.cab-fact .cf-ref,.cab-fact .cf-dest span,.cab-fact .cf-em span{color:#555}
+.cf-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.cf-em,.cf-id,.cf-dest{display:flex;flex-direction:column;gap:1px}
+.cf-em b{font-size:15px}
+.cf-id{text-align:right;font-size:12.5px}
+.cf-kind{font-family:'Fraunces',serif;font-size:22px;font-weight:600;letter-spacing:.02em;text-transform:uppercase}
+.cf-dest{margin:0 0 10px auto;max-width:280px;border:1px solid #E3E3E3;border-radius:8px;padding:8px 11px;font-size:13px}
+.cf-dest span:first-child{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+.cf-ref{font-size:12.5px;font-style:italic;margin:0 0 8px}
+.cf-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.cf-tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:inherit;opacity:.7;border-bottom:1.5px solid currentColor;padding:6px 6px}
+.cf-tbl td{padding:6px;border-bottom:1px solid rgba(128,128,128,.22)}
+.cf-tbl .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cf-tbl tr.muted td{opacity:.7}
+.cf-tbl tr.ttc td{font-weight:700;border-bottom:none;border-top:1.5px solid currentColor}
+.cf-tot{margin:8px 0 0 auto;border-collapse:collapse;min-width:260px;font-size:13px}
+.cf-tot td{padding:3px 6px}.cf-tot .n{text-align:right;font-variant-numeric:tabular-nums}
+.cf-tot tr.ttc td{font-weight:700;font-size:14.5px;border-top:1.5px solid #1B1B1B;padding-top:6px}
+.cf-cond{font-size:11.5px;margin:12px 0 0;line-height:1.45}
+.cr-top{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;margin-bottom:8px}
+.cr-top b{font-size:14.5px}.cr-top span{font-size:12.5px;color:var(--ink2)}
+.cab-mail{background:var(--card)}
+.cm-h{display:flex;flex-direction:column;gap:2px;font-size:12.5px;color:var(--ink2);border-bottom:1px solid var(--edge);padding-bottom:8px;margin-bottom:8px}
+.cm-h b{color:var(--ink);display:inline-block;min-width:46px}
+.cab-mail p{margin:0 0 8px;line-height:1.6}
+.cab-consigne{font-weight:600;font-size:14.5px;display:flex;gap:8px;align-items:flex-start;margin:4px 0 12px}
+.cab-consigne svg{flex-shrink:0;margin-top:3px;color:var(--accent)}
+.cab-work{border:1.5px dashed var(--edge);border-radius:12px;padding:14px}
+.cab-jr{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin-bottom:10px}
+.cab-jr b{color:var(--ink);font-family:'JetBrains Mono',monospace}
+.cab-tbl{width:100%;border-collapse:separate;border-spacing:0 6px}
+.cab-tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);font-weight:600}
+.cab-tbl td{vertical-align:top;padding-right:8px}
+.cab-tbl td:first-child{width:auto}.cab-tbl td:nth-child(2){width:120px}.cab-tbl td:nth-child(3){width:150px}
+.cab-acc,.cab-amt,.cab-side,.cab-f{width:100%;padding:9px 10px;border:1.5px solid var(--edge);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;font-size:14px}
+.cab-amt,.cab-f{text-align:right;font-variant-numeric:tabular-nums}
+.cab-acc:focus,.cab-amt:focus,.cab-side:focus,.cab-f:focus{border-color:var(--accent);outline:none}
+.cab-lib{display:block;font-size:12px;color:var(--debit);margin-top:3px;min-height:15px}
+.cab-lib.warn{color:var(--credit)}
+.cab-eq{font-size:12.5px;color:var(--ink2);margin-top:4px}
+.cab-eq .eq{color:var(--valid);font-weight:600}.cab-eq .ne{color:var(--credit);font-weight:600}
+.cab-corr{display:grid;grid-template-columns:1fr;gap:12px;margin:12px 0}
+.cab-corr .eyebrow{margin-bottom:4px}
+.cab-sol tr.ok td{color:var(--ink)}.cab-sol tr.ko td{color:var(--credit)}
+.cab-sol td.mk{width:24px;text-align:center}.cab-sol td.mk svg{width:15px;height:15px}
+.cab-sol tr.ok td.mk{color:var(--valid)}
+.cab-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.cab-fl{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--ink2)}
+.cab-fl em{font-style:normal;font-size:12px;font-weight:600;color:var(--credit);display:flex;align-items:center;gap:4px}
+.cab-fl.ok em{color:var(--valid)}.cab-fl em svg{width:14px;height:14px}
+.cab-fl.ok .cab-f{border-color:var(--valid)}.cab-fl.ko .cab-f{border-color:var(--credit)}
+.cab-ta{width:100%;font:inherit;font-size:14px;line-height:1.6;padding:12px;border:1.5px solid var(--edge);border-radius:10px;background:var(--card);color:var(--ink);resize:vertical}
+.cab-model{margin-top:14px;padding:14px 16px;border-radius:10px;background:var(--valid-s)}
+.cab-model p{margin:6px 0;font-size:13.5px;line-height:1.6}
+.cab-crit{margin-top:12px;display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+.cab-crit label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.cab-crit input{margin-top:3px;width:17px;height:17px;flex-shrink:0}
+.cab-big{font-size:56px;font-weight:600;line-height:1;margin:14px 0 8px;color:var(--accent)}
+.cab-cbars{max-width:560px;margin:20px auto 6px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.cab-cbar{display:grid;grid-template-columns:1fr 140px 48px;gap:10px;align-items:center;font-size:13px}
+.cab-cbar .ptrack{min-width:0;height:8px}
+.cab-cbar b{font-family:'JetBrains Mono',monospace;font-size:12.5px;text-align:right}
+@media(max-width:860px){.cab-layout{grid-template-columns:minmax(0,1fr)}.cab-side{position:static}.cab-steps{flex-direction:row;overflow-x:auto;gap:4px}.cab-step span:last-child{display:none}.cab-step.on span:last-child{display:inline}.cab-cbar{grid-template-columns:1fr 90px 44px}}
+@media(max-width:560px){.cab-tbl td:nth-child(2),.cab-tbl td:nth-child(3){width:auto}.cf-tot{min-width:0;width:100%}.cab-doc{padding:12px}.cab-tbl td:first-child{width:auto}.cab-tbl thead{display:none}.cab-tbl tr{display:grid;grid-template-columns:1fr 1fr;gap:6px;border-bottom:1px solid var(--edge);padding-bottom:8px}.cab-tbl td:first-child{grid-column:1/-1}.cab-tbl td{padding:0}.cf-id{text-align:left}.cf-dest{margin-left:0}}
+.bul .cf-tbl tr.tot td{font-weight:600;background:rgba(128,128,128,.06)}
+.bul .cf-tbl tr.nap td{font-weight:700;font-size:14.5px;border-top:1.5px solid #1B1B1B}
+.bul{overflow-x:auto}
+/* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
+.amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
+.amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
+.amb-card:hover{border-color:var(--ink2)}
+.amb-card.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.amb-prev{height:78px;border-radius:9px;display:flex;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.amb-prev .ap-side{width:28%;padding:7px 5px;display:flex;flex-direction:column;gap:4px}
+.amb-prev .ap-side i{display:block;height:5px;border-radius:3px;opacity:.55}
+.amb-prev .ap-side i.on{opacity:1}
+.amb-prev .ap-main{flex:1;padding:8px;display:flex;flex-direction:column;gap:5px}
+.amb-prev .ap-card{border-radius:5px;padding:5px;display:flex;gap:4px;align-items:center}
+.amb-prev .ap-card b{display:block;height:5px;border-radius:3px;flex:1}
+.amb-prev .ap-btn{align-self:flex-start;height:10px;width:44%;border-radius:4px}
+.amb-name{font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px}.amb-name svg{width:16px;height:16px;color:var(--accent)}
+.amb-desc{font-size:12px;color:var(--ink2);line-height:1.4}
+.app-opt{margin-bottom:18px}
+.app-opt .prog-h{margin-bottom:2px}
+.app-live{margin-top:6px;border:1px dashed var(--edge);border-radius:12px;padding:16px;background:var(--paper)}
 @media print{
   #app{padding-left:0!important}
   .topbar,.navbtn,.back,.btn,.btn-sm,.btn-gh,.btn-pri,.chips,.stepper,#search-overlay,#shortcuts-overlay,.tnav,.botnav,.focus-fab,.focus-panel,.nudge,#onb-back,.confetti{display:none!important}
@@ -1100,7 +1392,7 @@ html.legl-focus .wrap{max-width:880px;padding-top:22px}
   @page{margin:16mm}
 }
 </style>
-<script>(function(){var t=localStorage.getItem('legl.theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);var ac=localStorage.getItem('legl.accent');if(ac&&/^[a-z]+$/.test(ac))document.documentElement.setAttribute('data-accent',ac);var ts=localStorage.getItem('legl.textSize');if(ts==='lg'||ts==='xl')document.documentElement.setAttribute('data-textsize',ts);}());</script>
+<script>(function(){var t=localStorage.getItem('legl.theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);var ac=localStorage.getItem('legl.accent');if(ac&&/^[a-z]+$/.test(ac))document.documentElement.setAttribute('data-accent',ac);var ts=localStorage.getItem('legl.textSize');if(ts==='lg'||ts==='xl')document.documentElement.setAttribute('data-textsize',ts);['ambiance','corners','density','titles','ruled'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v&&/^[a-z]+$/.test(v))document.documentElement.setAttribute('data-'+k,v);});}());</script>
 </head>
 <body>
 <a class="skip-link" href="#app">Aller au contenu</a>
@@ -1156,6 +1448,7 @@ var SVG={
   loupe:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
   moon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
   sun:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
+  palette:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 1 10-10c0 2.8-2.2 4-4 4h-2.2a1.8 1.8 0 0 0-1.3 3.1A1.8 1.8 0 0 1 12 22z"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="11" cy="6.8" r="1.2"/><circle cx="16" cy="8.2" r="1.2"/></svg>',
   print:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>'
 };
 var MICON={
@@ -2934,9 +3227,9 @@ var SKEY='legl.compta.v7';
 var state={passed:{},cards:{},points:0,streak:{last:0,count:0},themeHistory:{},sim:{},agenda:{events:[],periods:[],log:{}},train:{history:[]},notes:{evals:[]},activity:{},skills:{},journal:[],exams:[],erp:{entries:[]},log:[],tp:{crit:{},dp:{},oral:{}}};
 
 function defaultAgenda(){if(isTP())return {events:[],periods:[
-  {id:'p1',start:'2026-09-01',end:'2027-06-30',label:'Formation Titre Pro Comptable assistant — ajuste les dates',kind:'tp'},
+  {id:'p1',start:'2026-11-12',end:'2027-05-18',label:'Formation Titre Pro Comptable assistant',kind:'tp'},
   {id:'p2',start:'2027-03-01',end:'2027-04-30',label:'Période en entreprise — ajuste les dates',kind:'alternance'},
-  {id:'p3',start:'2027-06-14',end:'2027-06-25',label:'Session du titre (écrit + entretiens) — ajuste les dates',kind:'tp'},
+  {id:'p3',start:'2027-05-19',end:'2027-06-01',label:'Session du titre (écrit + entretiens) : au plus tard 2 semaines après la fin des cours',kind:'tp'},
   {id:'p4',start:'2026-12-19',end:'2027-01-03',label:'Vacances — ajuste les dates',kind:'vacances'}
 ],log:{}};return {events:[],periods:[
   {id:'p1',start:'2025-09-01',end:'2026-06-30',label:'Année de préparation BTS CG — ajuste les dates',kind:'bts'},
@@ -2977,6 +3270,8 @@ function normalizeState(){
   state.tp.dp=_lglObj(state.tp.dp)||{};
   state.tp.oral=_lglObj(state.tp.oral)||{};
   state.tp.at=_lglObj(state.tp.at)||{};
+  state.tp.msp=_lglObj(state.tp.msp)||{};
+  state.tp.cab=_lglObj(state.tp.cab)||{};
 }
 function load(){loadStored();normalizeState();}
 function loadStored(){
@@ -3066,6 +3361,7 @@ function exportState(){
       var fm=localStorage.getItem('legl.focusMode');if(fm)settings.focusMode=fm;
       var npd=localStorage.getItem('legl.newPerDay');if(npd)settings.newPerDay=npd;
       var cu=localStorage.getItem('legl.cursus');if(cu)settings.cursus=cu;
+      ['ambiance','corners','density','titles','ruled','formStart','formEnd'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v)settings[k]=v;});
     }catch(e){}
     var payload={app:'legrandlivre',version:1,exportedAt:todayStr(),state:state,settings:settings};
     var data=JSON.stringify(payload,null,2);
@@ -3111,6 +3407,8 @@ function importState(file){
         if(o.settings.cursus==='tp'||o.settings.cursus==='bts')localStorage.setItem('legl.cursus',o.settings.cursus);
         if(o.settings.focusMode==='off')localStorage.setItem('legl.focusMode','off');
         if(/^(0|10|20|30|50)$/.test(String(o.settings.newPerDay)))localStorage.setItem('legl.newPerDay',String(o.settings.newPerDay));
+        ['ambiance','corners','density','titles','ruled'].forEach(function(k){var v=o.settings[k];if(typeof v==='string'&&/^[a-z]+$/.test(v))appSet(k,v);});
+        ['formStart','formEnd'].forEach(function(k){var v=o.settings[k];if(typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.'+k,v);});
       }catch(e){}}
       normalizeState();
       save();render();
@@ -3257,7 +3555,7 @@ function sidenav(){
   var li=LEVELS[getLevelIdx(pts)],lpct=li.next?Math.max(0,Math.min(100,Math.round((pts-li.min)/(li.next-li.min)*100))):100;
   var it=function(on,action,icon,label,badge,extra){return '<button class="sn-item'+(on?' on':'')+'" data-action="'+action+'"'+(extra||'')+(on?' aria-current="page"':'')+'>'+icon+'<span>'+label+'</span>'+(badge||'')+'</button>';};
   var tpOn=function(ks){return ui.tab==='outils'&&ui.tool==='tpca'&&ks.indexOf(ui.tpTab||'ref')>=0;};
-  var dark=document.documentElement.getAttribute('data-theme')==='dark';
+  var dark=(document.documentElement.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark';
   return '<nav class="sidenav no-print" aria-label="Menu latéral">'+
     '<div class="sn-brand"><div class="mk">GL</div><div><b>Le Grand Livre</b><small>Prépa '+escHtml(cursusShort())+'</small></div></div>'+
     '<button class="sn-cta" data-action="day-start" data-len="express">'+SVG.cards+' Session du jour</button>'+
@@ -3266,9 +3564,11 @@ function sidenav(){
     it(ui.tab==='parcours','tab-parcours',SVG.book,'Parcours','<span class="sn-badge">'+n+'/'+MODULES.length+'</span>')+
     it(ui.tab==='cards','tab-cards',SVG.cards,'Flashcards',due>0?'<span class="sn-badge hot">'+due+'</span>':'')+
     it(ui.tab==='exam','tab-exam',SVG.exam,'Examen blanc')+
-    it(ui.tab==='terrain','tab-terrain',SVG.tools,'Terrain & ERP')+
+    it(ui.tab==='terrain'&&!(isTP()&&ui.terrainTab==='cabinet'),'tab-terrain',SVG.tools,'Terrain & ERP')+
     (isTP()?'<div class="sn-group">Titre Pro CA</div>'+
+      it(tpOn(['plan']),'tp-go',SVG.cal,'Plan de formation','',' data-k="plan"')+
       it(tpOn(['ref','grille']),'tp-go',SVG.list,'Référentiel & grille','',' data-k="ref"')+
+      it(ui.tab==='terrain'&&ui.terrainTab==='cabinet','tab-cabinet',SVG.book,'Dossiers cabinet')+
       it(tpOn(['atelier']),'tp-go',SVG.check,'Ateliers pratiques','',' data-k="atelier"')+
       it(tpOn(['msp']),'tp-go',SVG.exam,'Mises en situation','',' data-k="msp"')+
       it(tpOn(['dp','oral']),'tp-go',SVG.book,'Dossier pro & oraux','',' data-k="dp"'):'')+
@@ -3278,6 +3578,7 @@ function sidenav(){
     '<div class="sn-foot"><div class="sn-lvl"><b>'+escHtml(li.name)+'</b> &middot; '+pts+' pts<div class="ptrack" role="img" aria-label="Progression vers le niveau suivant : '+lpct+' %"><div class="pfill" style="width:'+lpct+'%"></div></div></div>'+
     '<div class="sn-tools"><button data-action="search-open" aria-label="Rechercher (Ctrl+K)" title="Rechercher (Ctrl+K)">'+SVG.loupe+'</button>'+
     '<button data-action="toggle-theme" aria-label="Basculer le thème clair ou sombre" title="Mode sombre/clair">'+(dark?SVG.sun:SVG.moon)+'</button>'+
+    '<button data-action="open-apparence" aria-label="Apparence" title="Apparence : ambiance, couleurs, texte">'+SVG.palette+'</button>'+
     '<button data-action="print-page" aria-label="Imprimer ou exporter en PDF" title="Exporter en PDF">'+SVG.print+'</button>'+
     '<button data-action="show-shortcuts" aria-label="Raccourcis clavier" title="Raccourcis clavier (?)" style="font-weight:700;font-size:15px">?</button></div></div>'+
   '</nav>';
@@ -3443,7 +3744,7 @@ function nextDeadline(){
   evs=evs.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
   return evs[0];
 }
-function defaultExamDate(){return isTP()?'2027-06-14':'2028-05-11';}
+function defaultExamDate(){return isTP()?'2027-06-01':'2028-05-11';}
 function getExamDate(){try{var v=localStorage.getItem('legl.examDate');if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))return v;}catch(e){}return defaultExamDate();}
 function setExamDate(v){try{if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.examDate',v);}catch(e){}}
 function themeMasteryPanel(){
@@ -3533,7 +3834,9 @@ var LOG_KINDS={
   exam:{ic:'exam',t:'Examen blanc'},
   annale:{ic:'list',t:'Annale blanche'},
   mission:{ic:'check',t:'Mission comptable'},
-  dayplan:{ic:'star',t:'Session du jour'}
+  dayplan:{ic:'star',t:'Session du jour'},
+  atelier:{ic:'check',t:'Atelier pratique'},
+  cabinet:{ic:'book',t:'Dossier cabinet'}
 };
 function logRelTime(ts){
   var t0=new Date();t0.setHours(0,0,0,0);var startToday=t0.getTime();
@@ -3763,12 +4066,13 @@ function viewAccueil(){
     act(' pri','data-action="day-start" data-len="express"',SVG.cards,'Session du jour express','Environ 10 min : cartes, une écriture, questions ciblées')+
     act('','data-action="dash-review"',SVG.refresh,'Réviser les cartes dues',due>0?due+' carte'+(due>1?'s':'')+' en attente':'Rien à réviser pour l\'instant',due===0)+
     (_nx!==null?act('','data-action="open" data-mi="'+_nx+'"',SVG.book,'Continuer : '+escHtml(MODULES[_nx].title),'Module '+MODULES[_nx].num+' &middot; cours, mémo, quiz'):'')+
-    (isTP()?act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','7 ateliers : rapprochement, CA3, paie, amortissements, affectation…'):act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
+    (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
+      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','7 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
   '</div></section>';
   var head='<div class="dash-head">'+hero+examCard.replace('class="panel"','class="panel dash-count"')+'</div>';
   return head+now+stats+
-    '<div class="dash-grid"><div class="dash-main">'+tpDashboardCard()+epreuveReadinessPanel()+prioritesPanel()+revisionPlanPanel()+'</div>'+
+    '<div class="dash-grid"><div class="dash-main">'+formDashCard()+tpDashboardCard()+epreuveReadinessPanel()+prioritesPanel()+revisionPlanPanel()+'</div>'+
     '<aside class="dash-side" aria-label="Suivi">'+dlBlock+regularityPanel()+badgesPanel()+'</aside></div>'+
     '<details class="dash-more"'+(ui.dashMore?' open':'')+'><summary>Statistiques détaillées <span>évolution, maîtrise par thème, domaines, journal d\'activité</span></summary><div class="dash-more-in">'+progressionPanel()+themeMasteryPanel()+domain+activityLogPanel()+'</div></details>'+
     '<p class="dash-foot">Astuce : <kbd class="sc-kbd">Ctrl</kbd>+<kbd class="sc-kbd">K</kbd> pour chercher et sauter partout, <kbd class="sc-kbd">?</kbd> pour les raccourcis. Installation, sauvegarde et réglages : Outils &rsaquo; Aide &amp; à propos.</p>';
@@ -4353,11 +4657,35 @@ var GLOSSAIRE=[
 ];
 
 /* ---- Outils ---- */
-var APP_VERSION='1.8.0';
-var ACCENTS=[['','Défaut'],['emeraude','Émeraude'],['indigo','Indigo'],['ambre','Ambre'],['rose','Rose']];
+var APP_VERSION='1.9.0';
+var ACCENTS=[['','Selon l\'ambiance'],['ocean','Océan'],['emeraude','Émeraude'],['sapin','Sapin'],['indigo','Indigo'],['violet','Violet'],['rose','Rose'],['bordeaux','Bordeaux'],['ambre','Ambre']];
+/* Apparence : chaque option est stockée dans localStorage (legl.<clé>) et posée en attribut data-<clé> sur <html>. */
+var AMBIANCES=[
+  {k:'',n:'Classique',d:'Bleu ardoise, sobre et net. L\'ambiance d\'origine.',c:['#F2F4F8','#FFFFFF','#13233D','#566378','#0E7490']},
+  {k:'papier',n:'Grand livre',d:'Papier crème, encre brune, bordeaux. Le charme d\'un registre.',c:['#F5EFE3','#FFFCF6','#6B2737','#6E5E4C','#1D6B55']},
+  {k:'epure',n:'Épuré',d:'Blanc, noir, beaucoup d\'air. Rien ne détourne l\'attention.',c:['#FAFAFA','#FFFFFF','#111418','#61666E','#1D5FD1']},
+  {k:'pastel',n:'Douceur',d:'Lavande et menthe, tons doux pour les longues sessions.',c:['#F4F2FB','#FFFFFF','#6D4AE0','#6B6690','#0F8A7E']},
+  {k:'contraste',n:'Contraste élevé',d:'Lisibilité maximale, bordures marquées. Idéal fatigue visuelle.',c:['#FFFFFF','#FFFFFF','#000000','#2B2B2B','#004C99']}
+];
+var APP_OPTS={
+  mode:{t:'Clair ou sombre',o:[['','Automatique (comme l\'ordinateur)'],['light','Toujours clair'],['dark','Toujours sombre']]},
+  corners:{t:'Forme des blocs',o:[['net','Angles nets'],['','Standard'],['rond','Très arrondis']]},
+  density:{t:'Densité de l\'affichage',o:[['compact','Compact'],['','Normale'],['aere','Aérée']]},
+  titles:{t:'Police des titres',o:[['','Élégante (Fraunces)'],['sans','Moderne (Inter)'],['mono','Technique (JetBrains Mono)']]},
+  ruled:{t:'Fond ligné façon registre',o:[['','Auto (avec Grand livre)'],['on','Toujours'],['off','Jamais']]}
+};
+function appGet(k){try{if(k==='mode')return localStorage.getItem('legl.theme')||'';return localStorage.getItem('legl.'+k)||'';}catch(e){return '';}}
+function appSet(k,v){
+  v=/^[a-z]*$/.test(v||'')?(v||''):'';
+  var el=document.documentElement;
+  if(k==='mode'){try{if(v)localStorage.setItem('legl.theme',v);else localStorage.removeItem('legl.theme');}catch(e){}if(v)el.setAttribute('data-theme',v);else el.removeAttribute('data-theme');return;}
+  var lk=k==='textsize'?'textSize':k;
+  try{if(v)localStorage.setItem('legl.'+lk,v);else localStorage.removeItem('legl.'+lk);}catch(e){}
+  if(v)el.setAttribute('data-'+k,v);else el.removeAttribute('data-'+k);
+}
 var TEXTSIZES=[['','Normale'],['lg','Grande'],['xl','Très grande']];
 /* Groupes d'outils (navigation latérale de l'écran Outils). Chaque id doit exister dans TOOL_ITEMS. */
-var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','amortissement','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['aide']]];
+var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','amortissement','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['apparence','aide']]];
 var TOOL_ITEMS=[
   {id:'tpca',label:'Titre Pro CA'},
   {id:'plan',label:'Plan comptable'},
@@ -4371,6 +4699,7 @@ var TOOL_ITEMS=[
   {id:'sujets',label:'Sujets types'},
   {id:'annales',label:'Annales blanches'},
   {id:'methodo',label:'Méthodologie'},
+  {id:'apparence',label:'Apparence'},
   {id:'aide',label:'Aide & à propos'}
 ];
 /* Destinations de navigation pour la recherche Ctrl+K (palette de commandes). */
@@ -4388,6 +4717,9 @@ var NAV_ITEMS=[
   {label:'Communication professionnelle',sub:'Terrain — mises en situation',go:function(){navTerrain('comm');}},
   {label:'Excel comptable',sub:'Terrain — formules et fonctions',go:function(){navTerrain('excel');}},
   {label:'Agenda',sub:'Calendrier, périodes, notes, compétences, carnet',go:function(){ui.tab='agenda';ui.agendaSub='today';}},
+  {label:'Dossiers cabinet',sub:'Clients fictifs à traiter de bout en bout, par CCP : pièces, écritures, calculs, courriels',go:function(){navTerrain('cabinet');}},
+  {label:'Plan de formation',sub:'De la rentrée à la session du titre : étapes, rythme, objectifs de la semaine',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='plan';}},
+  {label:'Apparence',sub:'Ambiance, couleurs, taille du texte, police, densité',go:function(){ui.tab='outils';ui.tool='apparence';}},
   {label:'Espace Titre Pro Comptable assistant',sub:'Référentiel, session d\'examen, 3 CCP et 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='ref';}},
   {label:'Grille d\'auto-évaluation (Titre Pro)',sub:'Critères officiels des 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='grille';}},
   {label:'Dossier professionnel (DP)',sub:'Brouillon du DP par activité type, export texte',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='dp';}},
@@ -4413,6 +4745,7 @@ function viewOutils(){
   else if(ui.tool==='annales')body=toolAnnales();
   else if(ui.tool==='methodo')body=toolMethodo();
   else if(ui.tool==='aide')body=toolAide();
+  else if(ui.tool==='apparence')body=toolApparence();
   else if(ui.tool==='tpca')body=toolTitrePro();
   var _calc=['tva','facture','amortissement','rapprochement','ecritures'].indexOf(ui.tool)>=0;
   return '<div class="page-head"><h1>'+(ui.tool==='tpca'?'Titre Pro Comptable assistant':'Outils')+'</h1><p>Outils &middot; '+escHtml(cursusLabel())+(_calc?' &middot; champs <b>encadrés pleins</b> à saisir, <b>en pointillés</b> calculés':'')+'</p></div>'+
@@ -4999,7 +5332,7 @@ var TP_CCP=[
    ]}
 ];
 var TP_CRIT_LEVELS=['À travailler','En cours','Acquis'];
-var TP_TABS=[['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
+var TP_TABS=[['plan','Plan de formation'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
 var TP_DP_FIELDS=[
   ['desc',"1. Décris les tâches ou opérations que tu as effectuées, et dans quelles conditions"],
   ['moyens',"2. Précise les moyens utilisés (logiciels, documents, procédures)"],
@@ -5338,6 +5671,26 @@ function tpAtSelect(k,f,label,opts,st){
 function tpAtEcr(lines){
   return '<table class="tpat-ecr"><thead><tr><th>Compte</th><th>Débit</th><th>Crédit</th></tr></thead><tbody>'+lines.filter(function(l){return l[1]||l[2];}).map(function(l){return '<tr><td>'+escHtml(l[0])+'</td><td class="mono">'+(l[1]?fmt2(l[1]):'')+'</td><td class="mono">'+(l[2]?fmt2(l[2]):'')+'</td></tr>';}).join('')+'</tbody></table>';
 }
+/* Bulletin de paie reconstitué (présentation simplifiée, taux globaux) pour l'atelier paie. */
+function tpBulletin(s){
+  var d=s.d,x=s.x,m=function(v){return v?fmt2(v):'';},pct=function(v){return String(v).replace('.',',')+' %';};
+  var row=function(lib,base,taux,gain,ret,pat,cls){return '<tr'+(cls?' class="'+cls+'"':'')+'><td>'+lib+'</td><td class="n">'+base+'</td><td class="n">'+taux+'</td><td class="n">'+gain+'</td><td class="n">'+ret+'</td><td class="n">'+pat+'</td></tr>';};
+  var th=x.th.toFixed(2).replace('.',',');
+  var body=row('Salaire de base','151,67 h',th,m(d.base),'','')+
+    (d.h25?row('Heures supplémentaires à 25 %',d.h25+' h',r2(x.th*1.25).toFixed(2).replace('.',','),m(x.m25),'',''):'')+
+    (d.h50?row('Heures supplémentaires à 50 %',d.h50+' h',r2(x.th*1.5).toFixed(2).replace('.',','),m(x.m50),'',''):'')+
+    (d.prime?row('Prime exceptionnelle','','',m(d.prime),'',''):'')+
+    row('<b>Salaire brut</b>','','','<b>'+fmt2(x.brut)+'</b>','','','tot')+
+    row('Cotisations et contributions sociales (taux global)',fmt2(x.brut),pct(d.ts)+' / '+pct(d.tpat),'',m(x.cs),m(x.cp))+
+    row('<b>Net à payer avant impôt</b>','','','<b>'+fmt2(x.net)+'</b>','','','tot')+
+    row('Impôt sur le revenu prélevé à la source',fmt2(x.net),pct(d.tpas),'',m(x.pas),'')+
+    row('<b>Net payé</b>','','','<b>'+fmt2(x.nap)+'</b>','','','nap');
+  return '<div class="cab-doc cab-fact bul"><div class="cf-top"><div class="cf-em"><b>Atelier du Scorff SARL</b><span>12 quai des Indes, 56100 Lorient</span><span>SIRET 845 102 336 00014 · Convention collective du bâtiment</span></div>'+
+    '<div class="cf-id"><span class="cf-kind">Bulletin de paie</span><span>Période : '+escHtml(s.mois)+'</span><span>Payé le dernier jour du mois</span></div></div>'+
+    '<div class="cf-dest"><span>Salarié</span><b>'+escHtml(s.nom)+'</b><span>Emploi : employé qualifié · temps plein 35 h</span></div>'+
+    '<table class="cf-tbl"><thead><tr><th>Élément</th><th class="n">Base</th><th class="n">Taux</th><th class="n">Gain</th><th class="n">Retenue</th><th class="n">Part employeur</th></tr></thead><tbody>'+body+'</tbody></table>'+
+    '<p class="cf-cond">Coût total employeur : <b>'+fmt2(x.cout)+'</b>. Présentation simplifiée : un vrai bulletin détaille les cotisations par risque (santé, retraite, chômage, CSG et CRDS…) et calcule le prélèvement à la source sur le net imposable. Dans ta vie professionnelle, conserve les bulletins sans limitation de durée.</p></div>';
+}
 function tpAtBody(k){
   var st=tpAtState(k),s=st.s,d=s.d,x=s.x,en='',form='',cor='';
   if(k==='ca3'){
@@ -5361,7 +5714,7 @@ function tpAtBody(k){
       '<p class="tool-sub">Arrondis au centime à chaque étape, en partant du taux horaire arrondi.</p>';
     form=tpAtField(k,'th','Taux horaire (base / 151,67)',st)+tpAtField(k,'m25','Heures supplémentaires à 25 %',st)+tpAtField(k,'m50','Heures supplémentaires à 50 %',st)+tpAtField(k,'brut','Salaire brut',st)+tpAtField(k,'cs','Cotisations salariales',st)+
       tpAtField(k,'net','Net avant impôt',st)+tpAtField(k,'pas','Prélèvement à la source',st)+tpAtField(k,'nap','Net à payer',st)+tpAtField(k,'cp','Cotisations patronales',st)+tpAtField(k,'cout','Coût total employeur',st);
-    cor='<h3 class="tpat-h">Écritures de paie</h3>'+tpAtEcr([['641 Rémunérations du personnel',x.brut,0],['431 / 437 Organismes sociaux (part salariale)',0,x.cs],['442 État, impôts recouvrables sur des tiers (PAS)',0,x.pas],['421 Personnel, rémunérations dues',0,x.nap]])+
+    cor='<h3 class="tpat-h">Le bulletin reconstitué</h3>'+tpBulletin(s)+'<h3 class="tpat-h">Écritures de paie</h3>'+tpAtEcr([['641 Rémunérations du personnel',x.brut,0],['431 / 437 Organismes sociaux (part salariale)',0,x.cs],['442 État, impôts recouvrables sur des tiers (PAS)',0,x.pas],['421 Personnel, rémunérations dues',0,x.nap]])+
       tpAtEcr([['645 Charges de sécurité sociale et de prévoyance',x.cp,0],['431 / 437 Organismes sociaux (part patronale)',0,x.cp]]);
   }else if(k==='tdb'){
     var rows=s.mois.map(function(m,i){return '<tr><td>'+m+'</td><td class="mono">'+new Intl.NumberFormat('fr-FR').format(d.n[i])+'</td><td class="mono">'+new Intl.NumberFormat('fr-FR').format(d.n1[i])+'</td></tr>';}).join('');
@@ -5469,6 +5822,118 @@ function tpAtVerify(){
   logSession('atelier','Atelier '+TP_AT.filter(function(a){return a[0]===k;})[0][1],{n:good,d:total});
   announce(good===total?'Sans faute : '+good+' sur '+total+'.':'Résultat : '+good+' réponses justes sur '+total+'. Les valeurs attendues sont affichées.');
 }
+/* ==== Plan de formation Titre Pro : de la rentrée (12 novembre 2026 par défaut) à la session du titre ==== */
+var FORM_PHASES=[
+  {k:'fond',n:'Les fondations',s:'Bases',w:8,d:'Partie double, plan comptable, journal et balance, bilan et compte de résultat. Le socle sur lequel tout le reste s\'appuie.',
+    mods:['partie-double','pcg','organisation','bilan','resultat'],at:[],msp:null,ccp:''},
+  {k:'ccp1',n:'CCP1 · Le quotidien comptable',s:'CCP1',w:30,d:'Factures clients et fournisseurs, TVA, règlements, banque et rapprochement, suivi de trésorerie.',
+    mods:['tva','ecriture','facture','reglements','rapprochement','budget'],at:['ba','rap'],msp:'CCP1',ccp:'CCP1'},
+  {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
+    mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','paie','tdb'],msp:'CCP2',ccp:'CCP2'},
+  {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
+    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','aff'],msp:'CCP3',ccp:'CCP3'},
+  {k:'final',n:'Dossier pro & session',s:'Session',w:14,d:'Finaliser le dossier professionnel, préparer les entretiens, enchaîner les mises en situation complètes.',
+    mods:[],at:[],msp:'TPCA',ccp:''}
+];
+function formStart(){try{var v=localStorage.getItem('legl.formStart');if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))return v;}catch(e){}return '2026-11-12';}
+function setFormStart(v){try{if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.formStart',v);}catch(e){}}
+function formEnd(){try{var v=localStorage.getItem('legl.formEnd');if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))return v;}catch(e){}return '2027-05-18';}
+function setFormEnd(v){try{if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v))localStorage.setItem('legl.formEnd',v);}catch(e){}}
+function isoToDate(s){var p=String(s).split('-');return new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));}
+function frDateLong(d){return d.getDate()+' '+AG_MONTHS_LOWER[d.getMonth()]+' '+d.getFullYear();}
+var MOIS_ABR=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+function frDateShort(d){return d.getDate()+' '+MOIS_ABR[d.getMonth()];}
+function modIdx(id){for(var i=0;i<MODULES.length;i++){if(MODULES[i].id===id)return i;}return -1;}
+/* Calendrier des phases : bornes proportionnelles aux poids, entre la rentrée et la session. */
+function formTimeline(){
+  var a=isoToDate(formStart()),fe=isoToDate(formEnd()),b=isoToDate(getExamDate());
+  if(fe<=a)fe=new Date(a.getTime()+180*DAY);
+  if(b<fe)b=new Date(fe.getTime()+14*DAY);
+  b=new Date(b.getTime()+DAY);
+  /* Les 4 premières étapes occupent la formation jusqu'à 3 semaines avant sa fin ; la dernière va jusqu'au jour de la session inclus. */
+  var m=new Date(Math.max(a.getTime()+(fe-a)*0.6,fe.getTime()-21*DAY));
+  var tot=b-a,span=m-a,main=FORM_PHASES.slice(0,-1),wsum=main.reduce(function(s,p){return s+p.w;},0),acc=0;
+  var phases=main.map(function(p){var s=new Date(a.getTime()+Math.round(span*acc/wsum));acc+=p.w;var e=new Date(a.getTime()+Math.round(span*acc/wsum));return {p:p,start:s,end:e};});
+  phases.push({p:FORM_PHASES[FORM_PHASES.length-1],start:m,end:b});
+  var now=new Date();now.setHours(0,0,0,0);
+  var cur=-1;phases.forEach(function(x,i){if(now>=x.start&&now<x.end)cur=i;});
+  if(now>=b)cur=phases.length-1;
+  var weeks=Math.max(1,Math.ceil(tot/(7*DAY))),week=now<a?0:Math.min(weeks,Math.floor((now-a)/(7*DAY))+1);
+  return {start:a,end:b,fend:fe,phases:phases,cur:cur,before:now<a,after:now>=b,weeks:weeks,week:week,now:now,pct:Math.max(0,Math.min(100,Math.round((now-a)/tot*100)))};
+}
+/* Éléments à cocher d'une phase : tout est évalué d'après ta progression réelle dans l'app. */
+function formItems(p){
+  var out=[];
+  p.mods.forEach(function(id){var i=modIdx(id);if(i<0)return;var m=MODULES[i];out.push({t:'Module',l:m.title,done:!!state.passed[id],a:'data-action="open" data-mi="'+i+'"'});});
+  p.at.forEach(function(k){var at=TP_AT.filter(function(x){return x[0]===k;})[0];if(!at)return;var s=state.tp.at&&state.tp.at[k];out.push({t:'Atelier',l:at[1],done:!!(s&&s.ok>0),a:'data-action="plan-at" data-k="'+k+'"'});});
+  if(typeof CAB_DOSSIERS!=='undefined'){CAB_DOSSIERS.forEach(function(d){if(p.ccp&&d.ccp===p.ccp){var s=cabState(d.id);out.push({t:'Dossier cabinet',l:d.client,done:!!s.done,a:'data-action="cab-open" data-id="'+d.id+'"'});}});}
+  if(p.msp){var ms=state.tp.msp&&state.tp.msp[p.msp];out.push({t:'Mise en situation',l:p.msp==='TPCA'?'Session complète chronométrée (4 h)':'Mise en situation '+p.msp+' chronométrée',done:!!(ms&&ms.n>0),a:'data-action="tp-go" data-k="msp"'});}
+  if(p.k==='fond'){out.push({t:'Flashcards',l:'100 cartes maîtrisées',done:masteredCount()>=100,a:'data-action="tab-cards"'});}
+  if(p.k==='final'){
+    var dp=tpDpStatus(),or=tpOralStats(),cr=tpCritTotals();
+    out.push({t:'Dossier pro',l:'Les 3 CCP illustrés dans ton dossier professionnel',done:dp.done>=dp.total,a:'data-action="tp-go" data-k="dp"'});
+    out.push({t:'Entretiens',l:'25 questions d\'entretien maîtrisées sur '+or.total,done:or.ok>=25,a:'data-action="tp-go" data-k="oral"'});
+    out.push({t:'Auto-évaluation',l:'30 critères acquis sur '+cr.total,done:cr.acquis>=30,a:'data-action="tp-go" data-k="grille"'});
+    out.push({t:'Flashcards',l:'600 cartes maîtrisées',done:masteredCount()>=600,a:'data-action="tab-cards"'});
+  }
+  return out;
+}
+function formPhaseStats(p){var it=formItems(p),d=it.filter(function(x){return x.done;}).length;return {items:it,done:d,total:it.length,pct:it.length?Math.round(d/it.length*100):0};}
+/* Ce que je te conseille cette semaine : les éléments non faits de la phase en cours, puis ceux laissés en arrière. */
+function formThisWeek(tl,max){
+  max=max||3;var idx=tl.before?0:(tl.cur<0?0:tl.cur),list=[];
+  for(var i=0;i<=idx&&list.length<max;i++){var st=formPhaseStats(tl.phases[i].p);st.items.forEach(function(x){if(!x.done&&list.length<max){x.ph=tl.phases[i].p.s;list.push(x);}});}
+  if(!list.length&&idx+1<tl.phases.length){formPhaseStats(tl.phases[idx+1].p).items.forEach(function(x){if(!x.done&&list.length<max){x.ph=tl.phases[idx+1].p.s;x.ahead=true;list.push(x);}});}
+  return list;
+}
+function formPace(tl,i){
+  var x=tl.phases[i],st=formPhaseStats(x.p);if(!st.total)return null;
+  var span=x.end-x.start,el=Math.max(0,Math.min(1,(tl.now-x.start)/span));
+  var diff=st.pct-Math.round(el*100);
+  if(diff>=10)return {k:'ok',t:'En avance'};if(diff>=-15)return {k:'mid',t:'Dans les temps'};return {k:'late',t:'À rattraper'};
+}
+function formFrise(tl){
+  var tot=tl.end-tl.start;
+  var segs=tl.phases.map(function(x,i){var w=(x.end-x.start)/tot*100,st=formPhaseStats(x.p);
+    return '<div class="ff-seg'+(i===tl.cur?' on':'')+(x.end<=tl.now?' past':'')+'" style="width:'+w.toFixed(2)+'%" title="'+escHtml(x.p.n)+' · '+frDateShort(x.start)+' → '+frDateShort(new Date(x.end.getTime()-DAY))+'"><span class="ff-fill" style="width:'+st.pct+'%"></span><span class="ff-lbl">'+escHtml(x.p.s)+'</span></div>';}).join('');
+  var mark=(!tl.before&&!tl.after)?'<span class="ff-now" style="left:'+tl.pct+'%"><i></i><b>Aujourd\'hui</b></span>':'';
+  return '<div class="ff"><div class="ff-bar">'+segs+'</div>'+mark+'<div class="ff-dates"><span>Rentrée '+frDateShort(tl.start)+'</span><span class="ff-mid" style="left:'+((tl.fend-tl.start)/(tl.end-tl.start)*100).toFixed(1)+'%">Fin des cours '+frDateShort(tl.fend)+'</span><span>Session '+frDateShort(new Date(tl.end.getTime()-DAY))+'</span></div></div>';
+}
+function formItemBtn(x,compact){
+  return '<button class="ff-item'+(x.done?' done':'')+'" '+x.a+'><span class="ff-chk">'+(x.done?SVG.check:'')+'</span><span class="ff-it"><span class="ff-t">'+escHtml(x.t)+(x.ph&&compact?' · '+escHtml(x.ph):'')+'</span><span class="ff-l">'+escHtml(x.l)+'</span></span>'+(x.done?'':'<span class="ff-go">'+SVG.arR+'</span>')+'</button>';
+}
+function formDashCard(){
+  if(!isTP())return '';
+  var tl=formTimeline(),head,sub;
+  if(tl.before){var dj=Math.round((tl.start-tl.now)/DAY);head='La formation commence dans '+dj+' jour'+(dj>1?'s':'');sub='Rentrée le '+frDateLong(tl.start)+'. Prends de l\'avance sur les fondations : tu arriveras serein.';}
+  else if(tl.after){head='Session du titre';sub='Tout se joue maintenant : mises en situation complètes, dossier pro, entretiens.';}
+  else{var ph=tl.phases[tl.cur];head='Semaine '+tl.week+' sur '+tl.weeks+' · '+ph.p.n;var _pe=frDateShort(new Date(ph.end.getTime()-DAY));sub='Étape du '+frDateShort(ph.start)+' au '+_pe+(/\.$/.test(_pe)?'':'.')+' Fin des cours le '+frDateLong(tl.fend)+'.';}
+  var pace=(!tl.before&&tl.cur>=0)?formPace(tl,tl.cur):null;
+  var items=formThisWeek(tl,3).map(function(x){return formItemBtn(x,true);}).join('')||'<p style="color:var(--valid);margin:6px 0 0">Tout est fait pour cette phase. Bravo, passe à la suivante !</p>';
+  return '<div class="panel ff-card" style="margin-top:24px"><div class="ff-head"><span class="eyebrow">Mon plan de formation</span><button class="btn-sm" data-action="tp-go" data-k="plan">'+SVG.cal+' Voir le plan complet</button></div>'+
+    '<h3 class="ff-h">'+escHtml(head)+(pace?' <span class="ff-pace '+pace.k+'">'+pace.t+'</span>':'')+'</h3><p class="ff-sub">'+escHtml(sub)+'</p>'+formFrise(tl)+
+    '<div class="eyebrow" style="margin:16px 0 6px">'+(tl.before?'Pour prendre de l\'avance':'Cette semaine, je te conseille')+'</div><div class="ff-items">'+items+'</div></div>';
+}
+function tpPlan(){
+  var tl=formTimeline();
+  var intro='<div class="tool-section"><h2 class="tool-title">Mon plan de formation</h2>'+
+    '<p class="tool-sub">Ton parcours découpé en 5 grandes étapes, de la rentrée jusqu\'à la session du titre. Chaque étape se coche <b>toute seule</b> au fil de ta progression dans l\'app (modules validés, ateliers réussis, dossiers cabinet, mises en situation). Si ton centre suit un autre ordre, pas de souci : avance où tu veux, le plan s\'adapte.</p>'+
+    '<div class="ff-dates-form"><label>Début de la formation<input class="ji" type="date" id="form-start" value="'+escHtml(formStart())+'"></label><label>Fin de la formation<input class="ji" type="date" id="form-fend" value="'+escHtml(formEnd())+'"></label><label>Session du titre<input class="ji" type="date" id="form-end" value="'+escHtml(getExamDate())+'"></label><button class="btn-sm" data-action="form-dates-save">'+SVG.check+' Enregistrer les dates</button><button class="btn-sm" data-action="form-agenda-sync">'+SVG.cal+' Reporter dans l\'agenda</button></div>'+
+    formFrise(tl)+'</div>';
+  var cards=tl.phases.map(function(x,i){
+    var st=formPhaseStats(x.p),pace=(i===tl.cur&&!tl.before)?formPace(tl,i):null,state_=x.end<=tl.now?'Terminée':(i===tl.cur?'En cours':'À venir');
+    return '<div class="plan-phase'+(i===tl.cur?' on':'')+'"><div class="pp-head"><span class="pp-num">'+(i+1)+'</span><div class="pp-tt"><b>'+escHtml(x.p.n)+'</b><span>'+frDateShort(x.start)+' → '+frDateShort(new Date(x.end.getTime()-DAY))+' · '+Math.max(1,Math.round((x.end-x.start)/(7*DAY)))+' semaines · '+state_+'</span></div>'+
+      (pace?'<span class="ff-pace '+pace.k+'">'+pace.t+'</span>':'')+'<span class="pp-pct">'+st.done+' / '+st.total+'</span></div>'+
+      '<p class="pp-d">'+escHtml(x.p.d)+'</p><div class="ptrack" style="height:6px;margin:0 0 12px"><div class="pfill" style="width:'+st.pct+'%"></div></div>'+
+      '<div class="ff-items grid2">'+st.items.map(function(it){return formItemBtn(it,false);}).join('')+'</div></div>';
+  }).join('');
+  var tips='<div class="tool-section" style="margin-top:16px"><h3 class="tool-title" style="font-size:18px">Mon rythme conseillé</h3><ul class="pp-tips">'+
+    '<li><b>Chaque jour de cours</b> : 10 minutes de session du jour le soir (cartes dues et une écriture). C\'est ce qui fait tenir la mémoire.</li>'+
+    '<li><b>Chaque semaine</b> : un module validé ou revu, un atelier pratique, et une page de ton dossier pro dès que tu fais quelque chose en entreprise.</li>'+
+    '<li><b>À la fin de chaque CCP</b> : sa mise en situation chronométrée, puis un dossier cabinet complet.</li>'+
+    '<li><b>Pendant le stage</b> : note chaque tâche réelle dans le carnet de bord de l\'agenda. C\'est la matière première de ton dossier professionnel et de l\'entretien.</li></ul></div>';
+  return intro+'<div style="margin-top:16px">'+cards+'</div>'+tips;
+}
 function toolTitrePro(){
   var tab=ui.tpTab||'ref',body;
   if(tab==='grille')body=tpGrille();
@@ -5476,6 +5941,7 @@ function toolTitrePro(){
   else if(tab==='oral')body=tpOral();
   else if(tab==='msp')body=tpMsp();
   else if(tab==='atelier')body=tpAteliers();
+  else if(tab==='plan')body=tpPlan();
   else body=tpRef();
   var sw=isTP()?'':'<div class="epr-note" style="margin-bottom:14px">'+SVG.warn+'<span>Ton cursus actuel est le BTS CG. Pour adapter tout le tableau de bord au titre professionnel, <a data-action="set-cursus" data-k="tp" style="color:var(--debit);text-decoration:underline;cursor:pointer">passe en mode Titre Pro</a>.</span></div>';
   return sw+tpSubNav()+body;
@@ -5616,6 +6082,33 @@ function downloadFiche(filter){
     document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},300);
   }catch(e){alert('Erreur lors de la génération de la fiche.');}
 }
+function ambPreview(c){
+  return '<span class="amb-prev" style="background:'+c[0]+'"><span class="ap-side" style="background:'+c[1]+'"><i class="on" style="background:'+c[2]+'"></i><i style="background:'+c[3]+'"></i><i style="background:'+c[3]+'"></i><i style="background:'+c[3]+'"></i></span>'+
+    '<span class="ap-main"><span class="ap-card" style="background:'+c[1]+'"><b style="background:'+c[3]+';opacity:.5"></b><b style="background:'+c[4]+';flex:.4"></b></span><span class="ap-card" style="background:'+c[1]+'"><b style="background:'+c[3]+';opacity:.35"></b></span><span class="ap-btn" style="background:'+c[2]+'"></span></span></span>';
+}
+function appChips(k){
+  var cur=appGet(k);
+  return '<div class="acc-chips">'+APP_OPTS[k].o.map(function(o){var on=cur===o[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="app-set" data-o="'+k+'" data-k="'+o[0]+'" aria-pressed="'+(on?'true':'false')+'">'+escHtml(o[1])+'</button>';}).join('')+'</div>';
+}
+function toolApparence(){
+  var amb=appGet('ambiance'),acc=appGet('accent'),tsz=appGet('textSize');
+  var cards=AMBIANCES.map(function(a){var on=amb===a.k;return '<button class="amb-card'+(on?' on':'')+'" data-action="app-set" data-o="ambiance" data-k="'+a.k+'" aria-pressed="'+(on?'true':'false')+'">'+ambPreview(a.c)+'<span class="amb-name">'+escHtml(a.n)+(on?' '+SVG.check:'')+'</span><span class="amb-desc">'+escHtml(a.d)+'</span></button>';}).join('');
+  var accents=ACCENTS.map(function(ac){var on=acc===ac[0];var col=ac[0]?'var(--acc-'+ac[0]+')':'conic-gradient(#13233D,#6B2737,#6D4AE0,#13233D)';return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-accent" data-k="'+ac[0]+'" aria-pressed="'+(on?'true':'false')+'"><span class="acc-dot" style="background:'+col+'"></span>'+escHtml(ac[1])+'</button>';}).join('');
+  var sizes=TEXTSIZES.map(function(tz){var on=tsz===tz[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-textsize" data-k="'+tz[0]+'" aria-pressed="'+(on?'true':'false')+'">'+tz[1]+'</button>';}).join('');
+  var opt=function(k,help){return '<div class="app-opt"><div class="prog-h">'+escHtml(APP_OPTS[k].t)+'</div>'+appChips(k)+(help?'<p class="tool-sub" style="margin:6px 0 0">'+help+'</p>':'')+'</div>';};
+  var live='<div class="app-live"><div class="eyebrow">Aperçu en direct</div><h3 class="serif" style="font-size:22px;margin:6px 0 4px">Facture FV-2027-014</h3><p style="margin:0 0 10px;color:var(--ink2);font-size:14px">Vente de marchandises au client Garnier, 1 200 € HT, TVA 20 %.</p>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><span class="pc-bdg pc-dz">Clients (411) · débit 1 440 €</span><span class="pc-bdg pc-cr2">Ventes (707) · crédit 1 200 €</span></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-pri" type="button" tabindex="-1">'+SVG.check+' Vérifier</button><button class="btn-sm" type="button" tabindex="-1">Voir le corrigé</button></div></div>';
+  return '<div class="tool-section"><h2 class="tool-title">Apparence</h2>'+
+    '<p class="tool-sub">Rends l\'application agréable à tes yeux. Chaque choix s\'applique tout de suite, se garde sur cet appareil et voyage avec l\'export de ta progression.</p>'+
+    '<div class="app-opt"><div class="prog-h">Ambiance</div><div class="amb-grid">'+cards+'</div></div>'+
+    opt('mode','« Automatique » suit le réglage clair ou sombre de ton ordinateur ou de ton téléphone.')+
+    '<div class="app-opt"><div class="prog-h">Couleur d\'accent</div><div class="acc-chips">'+accents+'</div><p class="tool-sub" style="margin:6px 0 0">Boutons, onglet actif, barres de progression. « Selon l\'ambiance » garde la couleur prévue par l\'ambiance.</p></div>'+
+    '<div class="app-opt"><div class="prog-h">Taille du texte</div><div class="acc-chips">'+sizes+'</div></div>'+
+    opt('titles','')+opt('corners','')+opt('density','« Compact » montre plus de choses à l\'écran, « Aérée » repose les yeux.')+opt('ruled','Des lignes horizontales discrètes, comme sur un vrai grand livre.')+
+    live+
+    '<div class="row"><button class="btn-sm" data-action="app-reset">'+SVG.refresh+' Revenir aux réglages d\'origine</button></div></div>';
+}
 function toolAide(){
   var kbd=[
     ['Ctrl + K','Ouvrir la recherche'],
@@ -5629,16 +6122,12 @@ function toolAide(){
     '<div style="margin-bottom:16px"><div class="prog-h">Formation visée</div><div class="acc-chips">'+
       [['tp','Titre Pro Comptable assistant (niv. 4)'],['bts','BTS Comptabilité & Gestion']].map(function(c){var on=getCursus()===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-cursus" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+escHtml(c[1])+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Adapte le tableau de bord (préparation par CCP ou par épreuve), le programme, la méthodologie, les annales et le suivi de compétences. Ta progression est commune aux deux.</p></div>'+
-    '<div style="margin-bottom:16px"><div class="prog-h">Couleur d\'accent</div><div class="acc-chips">'+
-      (function(){var cur='';try{cur=localStorage.getItem('legl.accent')||'';}catch(e){}return ACCENTS.map(function(ac){var on=cur===ac[0];var col=ac[0]?'var(--acc-'+ac[0]+')':'var(--accent)';return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-accent" data-k="'+ac[0]+'"><span class="acc-dot" style="background:'+col+'"></span>'+ac[1]+'</button>';}).join('');})()+
-    '</div></div>'+
+    '<div style="margin-bottom:16px"><div class="prog-h">Apparence</div><p class="tool-sub" style="margin:4px 0 8px">Ambiance, couleurs, taille du texte, police et densité ont leur propre page.</p><button class="btn-sm" data-action="tool" data-k="apparence">'+SVG.star+' Personnaliser l\'apparence</button></div>'+
     '<div style="margin-bottom:16px"><div class="prog-h">Mode focus pendant les sessions</div><div class="acc-chips">'+
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
-    '<div style="margin-bottom:16px"><div class="prog-h">Taille du texte</div><div class="acc-chips">'+
-      (function(){var cur='';try{cur=localStorage.getItem('legl.textSize')||'';}catch(e){}return TEXTSIZES.map(function(tz){var on=cur===tz[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-textsize" data-k="'+tz[0]+'">'+tz[1]+'</button>';}).join('');})()+
-    '</div><p class="tool-sub" style="margin:8px 0 0">Agrandit le texte des cours, cartes, exercices et sujets pour un meilleur confort de lecture (utile en cas de dyslexie ou de fatigue visuelle).</p></div>'+
     '<div class="aide-grid">'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 6 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 5 ambiances, 9 couleurs, police, densité et arrondis au choix. Bulletin de paie reconstitué dans l\'atelier paie.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -5887,19 +6376,463 @@ function toolRapprochement(){
 
 
 /* ======== LOT B : TERRAIN VIEWS ======== */
+/* ==== Dossiers cabinet guidés : un client, un dossier, traité de bout en bout comme en cabinet (données testées par cab_test.mjs) ==== */
+var CAB_CABINET="Cabinet Duval & Associés";
+var CAB_ACCTS_EXTRA=[
+  {num:'1061',lib:'Réserve légale',cl:1,cat:'Bilan',sens:'C'},
+  {num:'1068',lib:'Autres réserves',cl:1,cat:'Bilan',sens:'C'},
+  {num:'119',lib:'Report à nouveau (solde débiteur)',cl:1,cat:'Bilan',sens:'D'},
+  {num:'1688',lib:'Intérêts courus sur emprunts',cl:1,cat:'Bilan',sens:'C'},
+  {num:'28184',lib:'Amortissements du mobilier',cl:2,cat:'Bilan',sens:'C'},
+  {num:'397',lib:'Dépréciations des stocks de marchandises',cl:3,cat:'Bilan',sens:'C'},
+  {num:'425',lib:'Personnel — avances et acomptes',cl:4,cat:'Bilan',sens:'D'},
+  {num:'437',lib:'Autres organismes sociaux',cl:4,cat:'Bilan',sens:'C'},
+  {num:'4421',lib:'État — prélèvement à la source (impôt sur le revenu)',cl:4,cat:'Bilan',sens:'C'},
+  {num:'44586',lib:'TVA sur factures non parvenues',cl:4,cat:'Bilan',sens:'D'},
+  {num:'457',lib:'Associés — dividendes à payer',cl:4,cat:'Bilan',sens:'C'},
+  {num:'491',lib:'Dépréciations des comptes clients',cl:4,cat:'Bilan',sens:'C'},
+  {num:'654',lib:'Pertes sur créances irrécouvrables',cl:6,cat:'Gestion',sens:'D'},
+  {num:'6815',lib:'Dotations aux provisions d\'exploitation',cl:6,cat:'Gestion',sens:'D'},
+  {num:'68173',lib:'Dotations aux dépréciations des stocks',cl:6,cat:'Gestion',sens:'D'},
+  {num:'68174',lib:'Dotations aux dépréciations des créances',cl:6,cat:'Gestion',sens:'D'},
+  {num:'6241',lib:'Transports sur achats',cl:6,cat:'Gestion',sens:'D'}
+];
+var CAB_DOSSIERS=[
+/* ------------------------------------------------------------------ CCP1 ------------------------------------------------------------------ */
+{id:'c1',ccp:'CCP1',client:'SARL Bois & Lumière',secteur:'Négoce de luminaires',periode:'Mars 2027',duree:35,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Dossier Bois & Lumière : la saisie de mars',corps:["Bonjour,","Je te confie le dossier de la SARL Bois & Lumière pour le mois de mars. Le gérant, M. Fabre, a déposé ses pièces hier : factures d'achat et de vente, un avoir, le relevé bancaire.","Tu contrôles chaque pièce avant de la saisir, tu passes les écritures, puis tu me prépares le montant de TVA du mois. Il y a aussi une facture douteuse d'un prestataire : dis-moi ce que tu en penses.","Merci !"]},
+ steps:[
+  {type:'ecr',comp:1,titre:'Facture d\'achat de marchandises',journal:'ACH',date:'03/03/27',piece:'LUM-2291',
+   doc:{type:'facture',emetteur:{nom:'Luminor SAS',adr:'14 rue des Artisans, 69007 Lyon',siret:'812 455 961 00027'},dest:{nom:'SARL Bois & Lumière',adr:'8 place du Marché, 37000 Tours'},num:'LUM-2291',date:'03/03/2027',echeance:'02/04/2027',lignes:[['Suspension « Aria » laiton',40,55]],remise:10,tva:20,cond:'Paiement à 30 jours. Pas d\'escompte pour paiement anticipé. Pénalités de retard : 3 fois le taux d\'intérêt légal. Indemnité forfaitaire pour frais de recouvrement : 40 €.'},
+   consigne:'Contrôle la facture puis enregistre-la au journal des achats.',
+   sol:[{acc:'607',side:'D',amt:1980},{acc:'44566',side:'D',amt:396},{acc:'401',side:'C',amt:2376}],
+   e:'La remise de 10 % se déduit avant la TVA : 2 200 − 220 = 1 980 € HT. On enregistre le net commercial en Achats de marchandises (607), la TVA déductible (44566) sur 1 980, et la dette fournisseur TTC (401).'},
+  {type:'ecr',comp:0,titre:'Facture de vente',journal:'VTE',date:'09/03/27',piece:'FV-2027-031',
+   doc:{type:'facture',emetteur:{nom:'SARL Bois & Lumière',adr:'8 place du Marché, 37000 Tours',siret:'901 332 114 00012'},dest:{nom:'Hôtel des Tilleuls',adr:'2 allée des Tilleuls, 37100 Tours'},num:'FV-2027-031',date:'09/03/2027',echeance:'08/04/2027',lignes:[['Lampadaire « Nordic » chêne',12,180]],remise:5,tva:20,cond:'Paiement à 30 jours fin de mois. Pénalités de retard : 3 fois le taux d\'intérêt légal. Indemnité forfaitaire pour frais de recouvrement : 40 €.'},
+   consigne:'Enregistre cette facture émise au journal des ventes.',
+   sol:[{acc:'411',side:'D',amt:2462.4},{acc:'707',side:'C',amt:2052},{acc:'44571',side:'C',amt:410.4}],
+   e:'2 160 − 5 % (108) = 2 052 € HT. Le client doit le TTC : 2 052 + 410,40 = 2 462,40 € au débit de Clients (411). La vente va au crédit de 707 et la TVA collectée au crédit de 44571.'},
+  {type:'qcm',comp:1,titre:'Une facture qui cloche',
+   doc:{type:'facture',emetteur:{nom:'Électro Services',adr:'3 impasse Volta, 37300 Joué-lès-Tours',siret:'498 120 773 00041'},dest:{nom:'SARL Bois & Lumière',adr:'8 place du Marché, 37000 Tours'},num:'ES-0457',date:'12/03/2027',echeance:'11/04/2027',lignes:[['Mise en conformité du tableau électrique du magasin',1,650]],remise:0,tva:10,cond:'Paiement à réception.'},
+   q:'Cette prestation d\'entretien est soumise au taux normal de 20 %. Que fais-tu ?',
+   o:['Je l\'enregistre telle quelle, c\'est au fournisseur de corriger','Je corrige moi-même la TVA à 130 € et je l\'enregistre','Je ne la saisis pas et je demande au fournisseur une facture rectificative (ou un avoir et une nouvelle facture)','Je la paie tout de suite pour éviter les pénalités'],c:2,
+   e:'Une facture erronée ne se corrige jamais à la main : seul l\'émetteur peut la rectifier. On la met en attente, on prévient le client et on demande au fournisseur une facture rectificative, sinon la TVA déduite serait contestable en cas de contrôle.'},
+  {type:'ecr',comp:0,titre:'Avoir pour retour de marchandises',journal:'VTE',date:'16/03/27',piece:'AV-2027-004',
+   doc:{type:'facture',avoir:true,emetteur:{nom:'SARL Bois & Lumière',adr:'8 place du Marché, 37000 Tours',siret:'901 332 114 00012'},dest:{nom:'Hôtel des Tilleuls',adr:'2 allée des Tilleuls, 37100 Tours'},num:'AV-2027-004',date:'16/03/2027',ref:'Retour de 2 lampadaires défectueux, facture FV-2027-031',lignes:[['Lampadaire « Nordic » chêne (retour)',2,180]],remise:5,tva:20,cond:'Avoir à déduire de votre prochain règlement.'},
+   consigne:'L\'hôtel a retourné deux lampadaires défectueux. Enregistre l\'avoir émis.',
+   sol:[{acc:'707',side:'D',amt:342,alt:['709']},{acc:'44571',side:'D',amt:68.4},{acc:'411',side:'C',amt:410.4}],
+   e:'Un retour de marchandises annule une partie de la vente : on passe l\'écriture inverse de la facture, pour 360 − 5 % = 342 € HT et 68,40 € de TVA. Le compte 709 (rabais, remises, ristournes accordés) est aussi accepté par de nombreux cabinets.'},
+  {type:'ecr',comp:2,titre:'Encaissement du client',journal:'BQ',date:'28/03/27',piece:'RB-03',
+   doc:{type:'releve',banque:'Crédit du Centre',compte:'FR76 1234 5000 0102 3456 7890 112',periode:'Mars 2027',init:6240,lignes:[['28/03','VIR HOTEL DES TILLEULS FV2027031 AV2027004',0,2052]]},
+   consigne:'Le relevé montre le virement de l\'hôtel. Il a déduit l\'avoir. Enregistre l\'encaissement.',
+   sol:[{acc:'512',side:'D',amt:2052},{acc:'411',side:'C',amt:2052}],
+   e:'2 462,40 − 410,40 = 2 052 €. Le compte de l\'hôtel est désormais soldé : facture, avoir et règlement peuvent être lettrés ensemble.'},
+  {type:'ecr',comp:1,titre:'Règlement du fournisseur',journal:'BQ',date:'30/03/27',piece:'RB-03',
+   doc:{type:'releve',banque:'Crédit du Centre',compte:'FR76 1234 5000 0102 3456 7890 112',periode:'Mars 2027',init:8292,lignes:[['30/03','VIR LUMINOR SAS FACT LUM-2291',2376,0]]},
+   consigne:'Enregistre le virement fait au fournisseur Luminor.',
+   sol:[{acc:'401',side:'D',amt:2376},{acc:'512',side:'C',amt:2376}],
+   e:'On solde la dette fournisseur (débit de 401) et la banque diminue (crédit de 512).'},
+  {type:'ecr',comp:2,titre:'Frais bancaires',journal:'BQ',date:'31/03/27',piece:'RB-03',
+   doc:{type:'releve',banque:'Crédit du Centre',compte:'FR76 1234 5000 0102 3456 7890 112',periode:'Mars 2027',init:5916,lignes:[['31/03','COMMISSION TENUE DE COMPTE HT 18,00 TVA 3,60',21.6,0]]},
+   consigne:'La banque a prélevé des frais soumis à TVA. Enregistre-les.',
+   sol:[{acc:'627',side:'D',amt:18},{acc:'44566',side:'D',amt:3.6},{acc:'512',side:'C',amt:21.6}],
+   e:'Les commissions de tenue de compte sont des services bancaires (627). Quand la banque facture la TVA, elle est déductible.'},
+  {type:'calc',comp:1,titre:'La TVA du mois',
+   doc:{type:'table',titre:'Récapitulatif des pièces saisies en mars',head:['Pièce','TVA collectée','TVA déductible'],rows:[['FV-2027-031','410,40',''],['AV-2027-004','− 68,40',''],['LUM-2291','','396,00'],['Frais bancaires','','3,60']]},
+   consigne:'Sur ces seules pièces, calcule la TVA du mois (la facture Électro Services reste en attente).',
+   f:[{k:'col',l:'TVA collectée nette (€)',v:342},{k:'ded',l:'TVA déductible (€)',v:399.6},{k:'cr',l:'Crédit de TVA (€)',v:57.6}],
+   e:'Collectée : 410,40 − 68,40 = 342 €. Déductible : 396 + 3,60 = 399,60 €. La déductible dépasse la collectée : crédit de TVA de 57,60 €, reporté sur la déclaration suivante (compte 44567).'},
+  {type:'redac',comp:1,titre:'Courriel au fournisseur',
+   consigne:'Rédige le courriel à Électro Services pour obtenir une facture rectificative. Écris-le au brouillon, puis compare avec le modèle.',
+   crit:['L\'objet cite la facture (numéro, date)','L\'erreur est décrite précisément (taux de 10 % au lieu de 20 %)','La demande est claire : facture rectificative ou avoir + nouvelle facture','Le ton est courtois et professionnel, avec une formule de politesse','Tu signes au nom du cabinet et du client'],
+   modele:['Objet : Facture ES-0457 du 12/03/2027, demande de facture rectificative','Bonjour,','Nous tenons la comptabilité de la SARL Bois & Lumière. En contrôlant votre facture ES-0457 du 12 mars 2027 (mise en conformité du tableau électrique, 650 € HT), nous constatons que la TVA a été calculée au taux de 10 %, alors que cette prestation relève du taux normal de 20 %.','Pourriez-vous nous adresser une facture rectificative, ou un avoir accompagné d\'une nouvelle facture ? Le règlement interviendra dès réception.','Nous vous remercions par avance et restons à votre disposition.','Cordialement,','[Prénom Nom], Cabinet Duval & Associés, pour le compte de la SARL Bois & Lumière']}
+ ]},
+{id:'c2',ccp:'CCP1',client:'Garage Lemaire',secteur:'Entretien et réparation automobile',periode:'Avril 2027',duree:40,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Garage Lemaire : clients en retard et trésorerie',corps:["Bonjour,","M. Lemaire s'inquiète : sa trésorerie baisse alors que l'atelier tourne à plein. Il nous demande de faire le point sur ses clients en retard, de rapprocher le compte bancaire d'avril et de lui dire à quoi s'attendre en mai.","Prépare la balance âgée au 30 avril, calcule ce qu'on peut réclamer au client le plus en retard, fais le rapprochement bancaire avec ses écritures, puis la prévision de mai. Je relirai tout.","Bon courage !"]},
+ steps:[
+  {type:'calc',comp:0,titre:'Balance âgée au 30 avril',
+   doc:{type:'table',titre:'Factures clients non réglées au 30/04/2027',head:['Client','Facture','Échéance','Montant TTC'],rows:[['Transports Maillard','F-4410','15/05/2027','1 800,00'],['Taxis Bonnet','F-4378','10/04/2027','960,00'],['SAS Vitalis','F-4315','20/03/2027','2 280,00'],['Auto-école Roy','F-4260','14/02/2027','3 600,00']]},
+   consigne:'Classe les factures par ancienneté du retard au 30 avril.',
+   f:[{k:'nonechu',l:'Non échu (€)',v:1800},{k:'r30',l:'Retard de 1 à 30 jours (€)',v:960},{k:'r60',l:'Retard de 31 à 60 jours (€)',v:2280},{k:'r60p',l:'Retard de plus de 60 jours (€)',v:3600},{k:'echu',l:'Total échu (€)',v:6840}],
+   e:'Taxis Bonnet : 20 jours de retard. SAS Vitalis : 41 jours. Auto-école Roy : 75 jours. Transports Maillard n\'est pas encore échu. Total échu : 960 + 2 280 + 3 600 = 6 840 €.'},
+  {type:'qcm',comp:0,titre:'Quelle relance pour l\'Auto-école Roy ?',
+   q:'L\'Auto-école Roy a 75 jours de retard et n\'a répondu ni à l\'appel ni à la lettre de relance du mois dernier. Que proposes-tu à M. Lemaire ?',
+   o:['Attendre encore un mois, c\'est un bon client','Une mise en demeure par lettre recommandée avec accusé de réception','Passer tout de suite la créance en perte','Bloquer toutes les factures des autres clients'],c:1,
+   e:'Après une relance amiable puis une lettre de relance restées sans effet, l\'étape suivante est la mise en demeure en recommandé avec AR : elle fixe un dernier délai et ouvre la voie au recouvrement (injonction de payer). On ne passe pas en perte une créance qui n\'est pas définitivement irrécouvrable.'},
+  {type:'calc',comp:0,titre:'Pénalités de retard',
+   consigne:'Les conditions générales du garage prévoient des pénalités au taux annuel de 12 % et l\'indemnité forfaitaire légale de 40 €. Calcule ce que l\'on peut réclamer à l\'Auto-école Roy au 30 avril (75 jours, base 365 jours).',
+   f:[{k:'pen',l:'Pénalités de retard (€)',v:88.77},{k:'tot',l:'Total réclamable en plus de la facture (€)',v:128.77}],
+   e:'3 600 × 12 % × 75 / 365 = 88,77 €. On ajoute l\'indemnité forfaitaire pour frais de recouvrement de 40 € due par un client professionnel : 128,77 €.'},
+  {type:'calc',comp:2,titre:'Rapprochement bancaire',
+   doc:{type:'table',titre:'Au 30/04/2027',head:['Élément','Montant'],rows:[['Solde du relevé bancaire (en faveur du garage)','8 420,00'],['Solde du compte 512 dans la comptabilité (débiteur)','7 905,00'],['Chèque n° 4512 remis au fournisseur Pneus Ouest le 28/04, pas encore sur le relevé','640,00'],['Virement de Taxis Bonnet du 29/04, sur le relevé, pas encore comptabilisé','205,00'],['Prélèvement de l\'assurance du local le 30/04, sur le relevé, pas encore comptabilisé','330,00']]},
+   consigne:'Établis l\'état de rapprochement : calcule les deux soldes rectifiés.',
+   f:[{k:'banque',l:'Solde rectifié côté banque (€)',v:7780},{k:'compta',l:'Solde rectifié côté comptabilité (€)',v:7780}],
+   e:'Côté banque : 8 420 − 640 (chèque pas encore débité) = 7 780. Côté comptabilité : 7 905 + 205 (virement reçu) − 330 (prélèvement) = 7 780. Les deux soldes rectifiés sont égaux : le rapprochement est justifié.'},
+  {type:'ecr',comp:2,titre:'Régularisation : le virement reçu',journal:'BQ',date:'30/04/27',piece:'RAP-04',
+   consigne:'Passe l\'écriture qui manquait en comptabilité pour le virement de Taxis Bonnet (acompte sur sa facture).',
+   sol:[{acc:'512',side:'D',amt:205},{acc:'411',side:'C',amt:205}],
+   e:'Seuls les éléments du relevé non comptabilisés donnent lieu à écriture. Le chèque de 640 € est déjà en comptabilité : on attend simplement qu\'il soit débité.'},
+  {type:'ecr',comp:2,titre:'Régularisation : le prélèvement',journal:'BQ',date:'30/04/27',piece:'RAP-04',
+   consigne:'Passe l\'écriture du prélèvement d\'assurance (l\'assurance n\'est pas soumise à TVA).',
+   sol:[{acc:'616',side:'D',amt:330},{acc:'512',side:'C',amt:330}],
+   e:'Les primes d\'assurance vont en 616 et ne supportent pas de TVA déductible (elles sont soumises à une taxe spéciale, non récupérable).'},
+  {type:'calc',comp:2,titre:'Prévision de trésorerie de mai',
+   doc:{type:'table',titre:'Prévisions pour mai 2027',head:['Élément','Montant'],rows:[['Trésorerie au 1er mai (rapprochée)','7 780,00'],['Encaissements clients attendus','12 400,00'],['Achats de pièces à payer','6 850,00'],['Salaires nets et charges sociales','5 900,00'],['Loyer et assurances','1 450,00'],['TVA à décaisser d\'avril','1 350,00'],['Échéance d\'emprunt','980,00']]},
+   consigne:'Calcule le total des décaissements et la trésorerie prévue au 31 mai.',
+   f:[{k:'dec',l:'Total des décaissements (€)',v:16530},{k:'fin',l:'Trésorerie au 31 mai (€)',v:3650}],
+   e:'Décaissements : 6 850 + 5 900 + 1 450 + 1 350 + 980 = 16 530 €. Trésorerie finale : 7 780 + 12 400 − 16 530 = 3 650 €. Elle reste positive, mais fond vite : relancer les 6 840 € échus changerait tout.'},
+  {type:'redac',comp:0,titre:'Relance amiable',
+   consigne:'Rédige la relance amiable par courriel à SAS Vitalis (41 jours de retard sur la facture F-4315 de 2 280 €). Au brouillon, puis compare.',
+   crit:['L\'objet cite la facture et le mot « relance »','Les références complètes : numéro, date d\'échéance, montant','Le ton reste cordial (possible oubli)','Une date de règlement souhaitée est proposée','Tu joins la facture ou proposes un duplicata, et tu laisses un contact'],
+   modele:['Objet : Relance, facture F-4315 échue le 20/03/2027','Bonjour,','Sauf erreur de notre part, la facture F-4315 d\'un montant de 2 280,00 € TTC, arrivée à échéance le 20 mars 2027, reste à ce jour impayée.','Il s\'agit peut-être d\'un simple oubli. Nous vous remercions de bien vouloir procéder à son règlement d\'ici le 10 mai 2027. Vous trouverez la facture en pièce jointe.','Si le paiement a été effectué entre-temps, merci de ne pas tenir compte de ce message.','Cordialement,','[Prénom Nom], pour le Garage Lemaire']}
+ ]},
+/* ------------------------------------------------------------------ CCP2 ------------------------------------------------------------------ */
+{id:'c3',ccp:'CCP2',client:'SAS Horizon Déco',secteur:'Vente de mobilier et décoration',periode:'Mai 2027',duree:30,
+ brief:{de:'Karim Benali, expert-comptable',objet:'Horizon Déco : la CA3 de mai',corps:["Bonjour,","La SAS Horizon Déco est au régime réel normal : déclaration de TVA mensuelle (CA3). Les comptes de mai sont saisis. Prépare la déclaration à partir des soldes ci-joints, passe l'écriture de liquidation et le paiement.","Attention, il y a un achat d'immobilisation ce mois-ci et des ventes à deux taux.","Merci."]},
+ steps:[
+  {type:'calc',comp:0,titre:'Les bases et la TVA brute',
+   doc:{type:'table',titre:'Balance extraite au 31/05/2027 (mouvements du mois)',head:['Compte','Solde'],rows:[['Ventes de marchandises à 20 % (HT)','48 500,00 C'],['Ventes à 10 % : prestations de pose (HT)','6 200,00 C'],['TVA collectée','10 320,00 C'],['TVA déductible sur immobilisations','1 240,00 D'],['TVA déductible sur autres biens et services','5 860,00 D']]},
+   consigne:'Contrôle la TVA collectée en recalculant la TVA brute par taux.',
+   f:[{k:'t20',l:'TVA à 20 % (€)',v:9700},{k:'t10',l:'TVA à 10 % (€)',v:620},{k:'brute',l:'Total TVA brute (€)',v:10320}],
+   e:'48 500 × 20 % = 9 700 € et 6 200 × 10 % = 620 €. Total : 10 320 €, identique au solde du compte : la TVA collectée est justifiée par les bases.'},
+  {type:'calc',comp:0,titre:'La TVA nette',
+   consigne:'Calcule la TVA déductible totale et la TVA nette due de mai.',
+   f:[{k:'ded',l:'Total TVA déductible (€)',v:7100},{k:'due',l:'TVA nette due (€)',v:3220}],
+   e:'Déductible : 1 240 (immobilisations) + 5 860 (autres biens et services) = 7 100 €. TVA nette due : 10 320 − 7 100 = 3 220 €.'},
+  {type:'qcm',comp:0,titre:'Remplir la CA3',
+   q:'Sur le formulaire CA3, où portes-tu les 1 240 € de TVA sur l\'achat de l\'immobilisation ?',
+   o:['Ligne 08, opérations au taux normal','Ligne 19, biens constituant des immobilisations','Ligne 20, autres biens et services','Ligne 22, report du crédit apparaissant sur la déclaration précédente'],c:1,
+   e:'La CA3 distingue la TVA déductible sur immobilisations (ligne 19) et sur les autres biens et services (ligne 20). Les lignes 08, 9B et 09 servent aux bases et à la TVA collectée par taux.'},
+  {type:'ecr',comp:0,titre:'Écriture de liquidation',journal:'OD',date:'31/05/27',piece:'CA3-05',
+   consigne:'Passe l\'écriture de liquidation de la TVA de mai.',
+   sol:[{acc:'44571',side:'D',amt:10320},{acc:'44562',side:'C',amt:1240},{acc:'44566',side:'C',amt:5860},{acc:'44551',side:'C',amt:3220}],
+   e:'On solde la TVA collectée (débit) et les TVA déductibles (crédit). La différence est la dette envers l\'État : TVA à décaisser (44551) au crédit.'},
+  {type:'ecr',comp:0,titre:'Paiement de la TVA',journal:'BQ',date:'19/06/27',piece:'CA3-05',
+   consigne:'La TVA est télépayée en juin avec la déclaration. Enregistre le paiement.',
+   sol:[{acc:'44551',side:'D',amt:3220},{acc:'512',side:'C',amt:3220}],
+   e:'Le télépaiement solde le compte 44551. Il intervient à la date limite du calendrier fiscal de l\'entreprise, en général entre le 15 et le 24 du mois suivant.'},
+  {type:'calc',comp:0,titre:'Et si c\'était un crédit ?',
+   consigne:'En juin, Horizon Déco a beaucoup acheté pour la rentrée : TVA collectée 2 400 €, TVA déductible 3 150 €. Calcule le résultat.',
+   f:[{k:'credit',l:'Crédit de TVA (€)',v:750}],
+   e:'3 150 − 2 400 = 750 € de crédit. Dans l\'écriture de liquidation, il va au débit du compte 44567 « Crédit de TVA à reporter », puis s\'impute sur la déclaration de juillet (ligne 22).'},
+  {type:'qcm',comp:0,titre:'Ranger la déclaration',
+   q:'Une fois la CA3 télédéclarée, que conserves-tu dans le dossier du client ?',
+   o:['Rien, l\'administration a tout','L\'accusé de réception, la déclaration et les justificatifs des montants (balance, calculs)','Seulement le relevé bancaire du paiement','Uniquement les factures de vente'],c:1,
+   e:'En cabinet, chaque déclaration est justifiée : accusé de réception, déclaration, et un dossier de travail qui relie chaque montant aux comptes (c\'est ce que regarde le jury : « les bases sont justifiées, les montants cohérents »).'}
+ ]},
+{id:'c4',ccp:'CCP2',client:'Atelier Morin',secteur:'Menuiserie, 4 salariés',periode:'Avril 2027',duree:35,
+ brief:{de:'Sophie Garnier, responsable paie',objet:'Paie d\'avril, Atelier Morin',corps:["Bonjour,","M. Morin m'a transmis les variables d'avril. Peux-tu préparer le bulletin de Lucas Petitjean (heures supplémentaires et prime), puis passer les écritures de paie ?","Pour cet exercice, on reste sur des taux globaux simplifiés : 22 % de cotisations salariales, 42 % de cotisations patronales, prélèvement à la source au taux transmis par l'administration.","Et je te rappelle la règle d'or : les données de paie ne sortent pas du service. Merci !"]},
+ steps:[
+  {type:'calc',comp:1,titre:'Le salaire brut',
+   doc:{type:'table',titre:'Variables d\'avril 2027 · Lucas Petitjean, menuisier',head:['Élément','Valeur'],rows:[['Salaire de base mensuel (151,67 h)','2 150,00 €'],['Heures supplémentaires majorées à 25 %','6 h'],['Prime de chantier','120,00 €'],['Taux de prélèvement à la source','3,5 %']]},
+   consigne:'Calcule le taux horaire (arrondi au centime), le montant des heures supplémentaires et le salaire brut.',
+   f:[{k:'th',l:'Taux horaire (€)',v:14.18},{k:'hs',l:'Heures supplémentaires (€)',v:106.35},{k:'brut',l:'Salaire brut (€)',v:2376.35}],
+   e:'2 150 / 151,67 = 14,18 €. Heures sup : 6 × 14,18 × 1,25 = 106,35 €. Brut : 2 150 + 106,35 + 120 = 2 376,35 €.'},
+  {type:'calc',comp:1,titre:'Du brut au net',
+   consigne:'Calcule les cotisations salariales (22 %), le net avant impôt, le prélèvement à la source (3,5 % du net avant impôt, simplification) et le net à payer.',
+   f:[{k:'cs',l:'Cotisations salariales (€)',v:522.8},{k:'net',l:'Net avant impôt (€)',v:1853.55},{k:'pas',l:'Prélèvement à la source (€)',v:64.87},{k:'nap',l:'Net à payer (€)',v:1788.68}],
+   e:'2 376,35 × 22 % = 522,80 €. Net avant impôt : 1 853,55 €. PAS : 1 853,55 × 3,5 % = 64,87 €. Net à payer : 1 788,68 €. Sur un vrai bulletin, le PAS s\'applique au net imposable, qui réintègre la CSG et la CRDS non déductibles.'},
+  {type:'ecr',comp:1,titre:'Écriture de paie',journal:'OD',date:'30/04/27',piece:'PAIE-04',
+   consigne:'Enregistre la paie de Lucas Petitjean (salaire et retenues).',
+   sol:[{acc:'641',side:'D',amt:2376.35},{acc:'431',side:'C',amt:522.8},{acc:'4421',side:'C',amt:64.87},{acc:'421',side:'C',amt:1788.68}],
+   e:'Le brut est la charge (641). On le répartit entre ce qui est dû aux organismes sociaux (431), à l\'État au titre du prélèvement à la source (4421) et au salarié (421).'},
+  {type:'ecr',comp:1,titre:'Cotisations patronales',journal:'OD',date:'30/04/27',piece:'PAIE-04',
+   consigne:'Enregistre les cotisations patronales (42 % du brut, arrondi au centime).',
+   sol:[{acc:'645',side:'D',amt:998.07},{acc:'431',side:'C',amt:998.07}],
+   e:'2 376,35 × 42 % = 998,07 €. Coût total pour l\'employeur : 2 376,35 + 998,07 = 3 374,42 €.'},
+  {type:'ecr',comp:1,titre:'Virement du salaire',journal:'BQ',date:'30/04/27',piece:'PAIE-04',
+   consigne:'Le salaire net est viré le 30 avril. Enregistre le paiement.',
+   sol:[{acc:'421',side:'D',amt:1788.68},{acc:'512',side:'C',amt:1788.68}],
+   e:'Le virement solde la dette envers le salarié. Les cotisations (431) et le PAS (4421) seront payés avec la DSN.'},
+  {type:'qcm',comp:1,titre:'La DSN',
+   q:'L\'Atelier Morin compte 4 salariés et paie ses salaires en fin de mois. Quand la DSN d\'avril doit-elle être transmise ?',
+   o:['Le 31 décembre, une fois par an','Au plus tard le 5 mai','Au plus tard le 15 mai','Quand le salarié la demande'],c:2,
+   e:'La DSN est mensuelle. Échéance : le 5 du mois suivant pour les entreprises de 50 salariés et plus, le 15 pour les autres. Elle déclare les salaires, les cotisations et le prélèvement à la source.'},
+  {type:'qcm',comp:1,titre:'Confidentialité',
+   q:'Un salarié de l\'atelier t\'appelle : « Tu peux me dire combien gagne Lucas ? C\'est pour comparer. » Que réponds-tu ?',
+   o:['Je lui donne le chiffre, c\'est un collègue','Je refuse poliment : les données de paie sont confidentielles, je ne communique que ses propres informations','Je lui dis de regarder le bulletin de Lucas','Je transmets la question à Lucas'],c:1,
+   e:'Les données de paie sont personnelles et confidentielles (RGPD, secret professionnel du cabinet). C\'est même un critère d\'évaluation du titre : « les règles de confidentialité sont respectées ».'},
+  {type:'calc',comp:1,titre:'Congés payés',
+   consigne:'Lucas est entré le 1er décembre 2026. Il acquiert 2,5 jours ouvrables de congés par mois travaillé. Combien de jours a-t-il acquis au 30 avril 2027 ?',
+   f:[{k:'cp',l:'Jours ouvrables acquis',v:12.5}],
+   e:'De décembre à avril : 5 mois × 2,5 = 12,5 jours ouvrables (arrondis à 13 jours en pratique, l\'arrondi se faisant au jour supérieur).'}
+ ]},
+/* ------------------------------------------------------------------ CCP3 ------------------------------------------------------------------ */
+{id:'c5',ccp:'CCP3',client:'SARL Atelier Brun',secteur:'Fabrication de meubles',periode:'Clôture au 31/12/2026',duree:35,
+ brief:{de:'Karim Benali, expert-comptable',objet:'Atelier Brun : les immobilisations',corps:["Bonjour,","On attaque la clôture 2026 de l'Atelier Brun. Je te confie le fichier des immobilisations : une machine achetée en avril, et le véhicule utilitaire vendu en juin.","Calcule les dotations, passe la cession proprement (sortie de l'actif et prix de vente), et dis-moi si l'opération dégage une plus-value.","Amortissements en linéaire, prorata au mois. Merci !"]},
+ steps:[
+  {type:'calc',comp:0,titre:'La nouvelle machine',
+   doc:{type:'table',titre:'Fichier des immobilisations · acquisition 2026',head:['Élément','Valeur'],rows:[['Désignation','Scie à panneaux SP-3000'],['Date de mise en service','01/04/2026'],['Valeur d\'origine (HT)','24 000,00 €'],['Durée d\'utilisation','5 ans, linéaire']]},
+   consigne:'Calcule l\'annuité pleine, la dotation 2026 (prorata de 9 mois) et la valeur nette comptable au 31/12/2026.',
+   f:[{k:'ann',l:'Annuité pleine (€)',v:4800},{k:'dot',l:'Dotation 2026 (€)',v:3600},{k:'vnc',l:'VNC au 31/12/2026 (€)',v:20400}],
+   e:'24 000 / 5 = 4 800 €. D\'avril à décembre : 9 mois, soit 4 800 × 9/12 = 3 600 €. VNC : 24 000 − 3 600 = 20 400 €.'},
+  {type:'ecr',comp:0,titre:'Dotation de la machine',journal:'OD',date:'31/12/26',piece:'INV-01',
+   consigne:'Passe la dotation aux amortissements de la scie.',
+   sol:[{acc:'6811',side:'D',amt:3600},{acc:'28154',side:'C',amt:3600}],
+   e:'La dotation est une charge (6811). L\'amortissement cumulé se lit au crédit du compte 28154, qui vient en diminution du matériel industriel au bilan.'},
+  {type:'calc',comp:0,titre:'Le véhicule cédé',
+   doc:{type:'table',titre:'Fichier des immobilisations · cession 2026',head:['Élément','Valeur'],rows:[['Désignation','Fourgon utilitaire'],['Date de mise en service','02/01/2023'],['Valeur d\'origine (HT)','18 000,00 €'],['Durée d\'utilisation','5 ans, linéaire'],['Date de cession','30/06/2026'],['Prix de cession (HT)','9 000,00 €']]},
+   consigne:'Calcule la dotation complémentaire 2026 (jusqu\'à la cession), le cumul des amortissements à la date de cession et la VNC.',
+   f:[{k:'dotc',l:'Dotation complémentaire 2026 (€)',v:1800},{k:'cum',l:'Amortissements cumulés (€)',v:12600},{k:'vnc',l:'VNC à la date de cession (€)',v:5400}],
+   e:'Annuité : 18 000 / 5 = 3 600 €. 2023, 2024, 2025 : 10 800 €. 2026 : 6 mois, soit 1 800 €. Cumul : 12 600 €. VNC : 18 000 − 12 600 = 5 400 €.'},
+  {type:'ecr',comp:0,titre:'Dotation complémentaire',journal:'OD',date:'30/06/26',piece:'CES-01',
+   consigne:'Passe la dotation complémentaire du fourgon.',
+   sol:[{acc:'6811',side:'D',amt:1800},{acc:'28182',side:'C',amt:1800}],
+   e:'Avant de sortir un bien, on l\'amortit jusqu\'à la date de cession.'},
+  {type:'ecr',comp:0,titre:'Sortie du fourgon de l\'actif',journal:'OD',date:'30/06/26',piece:'CES-01',
+   consigne:'Sors le fourgon du bilan (valeur d\'origine et amortissements).',
+   sol:[{acc:'28182',side:'D',amt:12600},{acc:'675',side:'D',amt:5400},{acc:'2182',side:'C',amt:18000}],
+   e:'On annule la valeur d\'origine (crédit de 2182) et les amortissements cumulés (débit de 28182). La différence, la VNC, devient une charge exceptionnelle : valeur comptable des éléments cédés (675).'},
+  {type:'ecr',comp:0,titre:'Le prix de cession',journal:'BQ',date:'30/06/26',piece:'CES-01',
+   doc:{type:'facture',emetteur:{nom:'SARL Atelier Brun',adr:'22 route de Nantes, 49000 Angers',siret:'790 214 553 00018'},dest:{nom:'Transports Maillard',adr:'5 rue du Port, 49100 Angers'},num:'FV-2026-188',date:'30/06/2026',lignes:[['Fourgon utilitaire d\'occasion (cession)',1,9000]],remise:0,tva:20,cond:'Réglé ce jour par virement.'},
+   consigne:'Le fourgon (sur lequel la TVA avait été récupérée) est vendu 9 000 € HT, payé par virement. Enregistre la cession.',
+   sol:[{acc:'512',side:'D',amt:10800},{acc:'775',side:'C',amt:9000},{acc:'44571',side:'C',amt:1800}],
+   e:'Le prix de cession est un produit exceptionnel (775). Un véhicule utilitaire dont la TVA a été déduite à l\'achat est vendu avec TVA.'},
+  {type:'qcm',comp:0,titre:'Le résultat de cession',
+   q:'Quel est le résultat de la cession du fourgon ?',
+   o:['Une moins-value de 3 600 €','Une plus-value de 3 600 €','Une plus-value de 9 000 €','Ni plus-value ni moins-value'],c:1,
+   e:'Produit de cession (775) 9 000 − VNC (675) 5 400 = plus-value de 3 600 €. Elle apparaît dans le résultat exceptionnel.'}
+ ]},
+{id:'c6',ccp:'CCP3',client:'SAS Vitalis',secteur:'Distribution de produits bio',periode:'Clôture au 31/12/2026',duree:45,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Vitalis : travaux d\'inventaire et affectation',corps:["Bonjour,","Pour la clôture de Vitalis, il reste les travaux d'inventaire : les stocks, un client en difficulté, l'assurance payée d'avance, une facture d'électricité pas encore reçue et les intérêts de l'emprunt.","L'assemblée générale se tiendra en juin : prépare aussi l'affectation du résultat, les associés veulent 25 000 € de dividendes.","Documente bien chaque écriture, je relis avant de valider."]},
+ steps:[
+  {type:'ecr',comp:1,titre:'Annulation du stock initial',journal:'OD',date:'31/12/26',piece:'INV-01',
+   doc:{type:'table',titre:'Stocks de marchandises',head:['Élément','Montant'],rows:[['Stock au 01/01/2026 (inventaire précédent)','18 000,00 €'],['Stock au 31/12/2026 (inventaire physique valorisé)','21 500,00 €'],['Dont produits proches de la date limite, valeur probable de vente inférieure au coût','1 200,00 € de perte estimée']]},
+   consigne:'Première écriture : annule le stock initial.',
+   sol:[{acc:'6037',side:'D',amt:18000},{acc:'370',side:'C',amt:18000}],
+   e:'Le stock initial sort du bilan et passe en variation des stocks (6037) au débit.'},
+  {type:'ecr',comp:1,titre:'Constatation du stock final',journal:'OD',date:'31/12/26',piece:'INV-01',
+   consigne:'Deuxième écriture : constate le stock final.',
+   sol:[{acc:'370',side:'D',amt:21500},{acc:'6037',side:'C',amt:21500}],
+   e:'Le stock final entre au bilan. Le solde de 6037 est créditeur de 3 500 € : le stock a augmenté, ce qui réduit le coût d\'achat des marchandises vendues.'},
+  {type:'ecr',comp:1,titre:'Dépréciation du stock',journal:'OD',date:'31/12/26',piece:'INV-01',
+   consigne:'Constate la dépréciation des produits proches de la date limite.',
+   sol:[{acc:'68173',side:'D',amt:1200},{acc:'397',side:'C',amt:1200}],
+   e:'Quand la valeur actuelle est inférieure au coût, on déprécie : dotation (68173) et dépréciation au crédit de 397, en diminution du stock à l\'actif.'},
+  {type:'ecr',comp:1,titre:'Un client douteux',journal:'OD',date:'31/12/26',piece:'INV-02',
+   doc:{type:'mail',de:'Direction financière, SAS Vitalis',a:'Cabinet Duval & Associés',objet:'Client Dupré SARL',corps:['Bonjour,','Notre client Dupré SARL vient d\'être placé en redressement judiciaire. Il nous doit la facture F-2026-341 de 3 000 € TTC (2 500 € HT). Notre avocat estime que nous récupérerons environ 60 % de la créance.','Bien à vous.']},
+   consigne:'Reclasse la créance de Dupré SARL en créance douteuse.',
+   sol:[{acc:'416',side:'D',amt:3000},{acc:'411',side:'C',amt:3000}],
+   e:'Dès qu\'un risque de non-paiement apparaît, la créance est isolée en Clients douteux (416), pour son montant TTC.'},
+  {type:'ecr',comp:1,titre:'Dépréciation de la créance',journal:'OD',date:'31/12/26',piece:'INV-02',
+   consigne:'Déprécie la créance de Dupré SARL (perte estimée à 40 %).',
+   sol:[{acc:'68174',side:'D',amt:1000},{acc:'491',side:'C',amt:1000}],
+   e:'La dépréciation se calcule sur le HT : la TVA sera récupérée si la créance devient irrécouvrable. 2 500 × 40 % = 1 000 €.'},
+  {type:'ecr',comp:1,titre:'Assurance payée d\'avance',journal:'OD',date:'31/12/26',piece:'INV-03',
+   consigne:'Le 1er octobre 2026, Vitalis a payé 2 400 € d\'assurance pour 12 mois (déjà enregistrés en charges). Rattache la bonne part à 2027.',
+   sol:[{acc:'486',side:'D',amt:1800},{acc:'616',side:'C',amt:1800}],
+   e:'D\'octobre à décembre, 3 mois concernent 2026. Les 9 autres mois (2 400 × 9/12 = 1 800 €) concernent 2027 : on diminue la charge et on constate une charge constatée d\'avance (486).'},
+  {type:'ecr',comp:1,titre:'Facture non parvenue',journal:'OD',date:'31/12/26',piece:'INV-04',
+   consigne:'La consommation d\'électricité de décembre est estimée à 450 € HT (TVA 20 %). La facture arrivera en janvier. Enregistre la charge à payer.',
+   sol:[{acc:'606',side:'D',amt:450,alt:['6061']},{acc:'44586',side:'D',amt:90},{acc:'408',side:'C',amt:540}],
+   e:'La charge appartient à 2026 : achats non stockés (606) au débit, la TVA en attente de facture en 44586, et la dette en Fournisseurs, factures non parvenues (408). L\'écriture sera extournée au 1er janvier.'},
+  {type:'ecr',comp:2,titre:'Intérêts courus',journal:'OD',date:'31/12/26',piece:'INV-05',
+   consigne:'Les intérêts de l\'emprunt sont payés chaque 1er avril. Du 1er octobre au 31 décembre, 320 € d\'intérêts ont couru. Enregistre-les.',
+   sol:[{acc:'661',side:'D',amt:320},{acc:'1688',side:'C',amt:320}],
+   e:'Les intérêts courus mais non échus sont une charge de 2026 (661) et une dette rattachée à l\'emprunt (1688).'},
+  {type:'calc',comp:2,titre:'Affectation du résultat',
+   doc:{type:'table',titre:'Données pour l\'assemblée générale',head:['Élément','Montant'],rows:[['Bénéfice de l\'exercice 2026','42 000,00 €'],['Capital social','80 000,00 €'],['Réserve légale déjà constituée','6 500,00 €'],['Report à nouveau','0,00 €'],['Dividendes décidés','25 000,00 €']]},
+   consigne:'La réserve légale reçoit 5 % du bénéfice jusqu\'à atteindre 10 % du capital. Calcule la dotation, puis ce qui reste mis en autres réserves.',
+   f:[{k:'rl',l:'Dotation à la réserve légale (€)',v:1500},{k:'autres',l:'Autres réserves (€)',v:15500}],
+   e:'5 % de 42 000 = 2 100 €, mais le plafond est de 8 000 € (10 % du capital) et 6 500 € sont déjà constitués : on ne dote que 1 500 €. Reste : 42 000 − 1 500 − 25 000 = 15 500 € en autres réserves.'},
+  {type:'ecr',comp:2,titre:'Écriture d\'affectation',journal:'OD',date:'30/06/27',piece:'AG-2027',
+   consigne:'Passe l\'écriture d\'affectation décidée par l\'assemblée.',
+   sol:[{acc:'120',side:'D',amt:42000},{acc:'1061',side:'C',amt:1500},{acc:'1068',side:'C',amt:15500},{acc:'457',side:'C',amt:25000}],
+   e:'Le compte de résultat (120) est soldé. Les réserves augmentent les capitaux propres, les dividendes deviennent une dette envers les associés (457) jusqu\'à leur paiement.'}
+ ]}
+];
+(function(){var have={};PLAN_COMPTABLE.forEach(function(p){have[p.num]=1;});CAB_ACCTS_EXTRA.forEach(function(p){if(!have[p.num])PLAN_COMPTABLE.push(p);});PLAN_COMPTABLE.sort(function(a,b){return String(a.num).localeCompare(String(b.num),undefined,{numeric:true});});})();
+function cabById(id){for(var i=0;i<CAB_DOSSIERS.length;i++){if(CAB_DOSSIERS[i].id===id)return CAB_DOSSIERS[i];}return null;}
+function cabState(id){if(!state.tp.cab)state.tp.cab={};var s=state.tp.cab[id];if(!s||typeof s!=='object'){s={i:0,r:{},done:false,best:0,n:0};state.tp.cab[id]=s;}if(!s.r||typeof s.r!=='object')s.r={};return s;}
+function cabMoney(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' €';}
+function cabFact(d){var b=0;d.lignes.forEach(function(l){b+=l[1]*l[2];});b=r2(b);var rem=r2(b*(d.remise||0)/100),ht=r2(b-rem),tva=r2(ht*d.tva/100);return {b:b,rem:rem,ht:ht,tva:tva,ttc:r2(ht+tva)};}
+/* Rendu d'une pièce justificative : facture, avoir, relevé bancaire, courriel ou tableau. */
+function cabDocHTML(d){
+  if(!d)return '';
+  if(d.type==='facture'){
+    var t=cabFact(d);
+    var lines=d.lignes.map(function(l){return '<tr><td>'+escHtml(l[0])+'</td><td class="n">'+l[1]+'</td><td class="n">'+cabMoney(l[2])+'</td><td class="n">'+cabMoney(r2(l[1]*l[2]))+'</td></tr>';}).join('');
+    var tot=(d.remise?'<tr><td>Montant brut HT</td><td class="n">'+cabMoney(t.b)+'</td></tr><tr><td>Remise '+d.remise+' %</td><td class="n">− '+cabMoney(t.rem)+'</td></tr>':'')+
+      '<tr><td>'+(d.remise?'Net commercial HT':'Total HT')+'</td><td class="n">'+cabMoney(t.ht)+'</td></tr><tr><td>TVA '+String(d.tva).replace('.',',')+' %</td><td class="n">'+cabMoney(t.tva)+'</td></tr>'+
+      '<tr class="ttc"><td>'+(d.avoir?'Total de l\'avoir TTC':'Net à payer TTC')+'</td><td class="n">'+cabMoney(t.ttc)+'</td></tr>';
+    return '<div class="cab-doc cab-fact"><div class="cf-top"><div class="cf-em"><b>'+escHtml(d.emetteur.nom)+'</b><span>'+escHtml(d.emetteur.adr)+'</span>'+(d.emetteur.siret?'<span>SIRET '+escHtml(d.emetteur.siret)+'</span>':'')+'</div>'+
+      '<div class="cf-id"><span class="cf-kind">'+(d.avoir?'Avoir':'Facture')+'</span><span>N° '+escHtml(d.num)+'</span><span>Du '+escHtml(d.date)+'</span>'+(d.echeance?'<span>Échéance '+escHtml(d.echeance)+'</span>':'')+'</div></div>'+
+      '<div class="cf-dest"><span>Destinataire</span><b>'+escHtml(d.dest.nom)+'</b><span>'+escHtml(d.dest.adr)+'</span></div>'+
+      (d.ref?'<p class="cf-ref">'+escHtml(d.ref)+'</p>':'')+
+      '<table class="cf-tbl"><thead><tr><th>Désignation</th><th class="n">Qté</th><th class="n">PU HT</th><th class="n">Montant HT</th></tr></thead><tbody>'+lines+'</tbody></table>'+
+      '<table class="cf-tot"><tbody>'+tot+'</tbody></table>'+
+      (d.cond?'<p class="cf-cond">'+escHtml(d.cond)+'</p>':'')+'</div>';
+  }
+  if(d.type==='releve'){
+    var sol=d.init,rows=d.lignes.map(function(l){sol=r2(sol-l[2]+l[3]);return '<tr><td class="mono">'+escHtml(l[0])+'</td><td>'+escHtml(l[1])+'</td><td class="n">'+(l[2]?cabMoney(l[2]):'')+'</td><td class="n">'+(l[3]?cabMoney(l[3]):'')+'</td></tr>';}).join('');
+    return '<div class="cab-doc cab-rel"><div class="cr-top"><b>'+escHtml(d.banque)+'</b><span>Relevé de compte · '+escHtml(d.periode)+'</span><span class="mono">'+escHtml(d.compte)+'</span></div>'+
+      '<table class="cf-tbl"><thead><tr><th>Date</th><th>Libellé</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody><tr class="muted"><td></td><td>Solde précédent</td><td></td><td class="n">'+cabMoney(d.init)+'</td></tr>'+rows+
+      '<tr class="ttc"><td></td><td>Nouveau solde créditeur</td><td></td><td class="n">'+cabMoney(sol)+'</td></tr></tbody></table><p class="cf-cond">Vu de la banque : un débit est une sortie d\'argent pour le client, un crédit une entrée.</p></div>';
+  }
+  if(d.type==='mail'){
+    return '<div class="cab-doc cab-mail"><div class="cm-h"><span><b>De</b> '+escHtml(d.de)+'</span><span><b>À</b> '+escHtml(d.a)+'</span><span><b>Objet</b> '+escHtml(d.objet)+'</span></div>'+d.corps.map(function(p){return '<p>'+escHtml(p)+'</p>';}).join('')+'</div>';
+  }
+  var head=d.head?'<thead><tr>'+d.head.map(function(h,i){return '<th'+(i>0&&i===d.head.length-1?' class="n"':'')+'>'+escHtml(h)+'</th>';}).join('')+'</tr></thead>':'';
+  return '<div class="cab-doc"><div class="cr-top"><b>'+escHtml(d.titre||'')+'</b></div><table class="cf-tbl">'+head+'<tbody>'+d.rows.map(function(r){return '<tr>'+r.map(function(c,i){return '<td'+(i>0&&i===r.length-1?' class="n"':'')+'>'+escHtml(c)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';
+}
+function cabAcctList(){var seen={},out=[];PLAN_COMPTABLE.forEach(function(p){if(!seen[p.num]){seen[p.num]=1;out.push(p);}});return out;}
+function cabDatalist(){return '<datalist id="cab-accts">'+cabAcctList().map(function(p){return '<option value="'+escHtml(p.num)+'" label="'+escHtml(p.lib)+'">'+escHtml(p.lib)+'</option>';}).join('')+'</datalist>';}
+function cabEcrInput(st,prev){
+  var rows='';
+  for(var i=0;i<st.sol.length;i++){
+    var pv=(prev&&prev[i])||{acc:'',side:i<st.sol.filter(function(l){return l.side==='D';}).length?'D':'C',amt:''};
+    rows+='<tr class="cab-row"><td><input class="cab-acc" list="cab-accts" aria-label="Compte, ligne '+(i+1)+'" value="'+escHtml(pv.acc)+'" placeholder="Tape un nom : banque, clients…" autocomplete="off"><span class="cab-lib">'+escHtml(pcLib(pv.acc))+'</span></td>'+
+      '<td><select class="cab-side" aria-label="Sens, ligne '+(i+1)+'"><option value="D"'+(pv.side==='D'?' selected':'')+'>Débit</option><option value="C"'+(pv.side==='C'?' selected':'')+'>Crédit</option></select></td>'+
+      '<td><input class="cab-amt" inputmode="decimal" aria-label="Montant, ligne '+(i+1)+'" value="'+escHtml(pv.amt===''||pv.amt==null?'':String(pv.amt).replace('.',','))+'" placeholder="0,00"></td></tr>';
+  }
+  return cabDatalist()+'<table class="cab-tbl"><thead><tr><th>Compte</th><th>Sens</th><th>Montant (€)</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<div class="cab-eq" id="cab-eq"></div><p class="kbd-hint">Tape le nom du compte (banque, TVA collectée…) et choisis dans la liste : le numéro s\'inscrit tout seul. Entrée pour vérifier.</p>';
+}
+function cabReadRows(){var rows=document.querySelectorAll('.cab-row'),out=[];for(var i=0;i<rows.length;i++){out.push({acc:((rows[i].querySelector('.cab-acc')||{}).value||'').trim(),side:(rows[i].querySelector('.cab-side')||{}).value||'D',amt:parseAmt((rows[i].querySelector('.cab-amt')||{}).value)});}return out;}
+function cabReadDOM(){
+  var run=ui.cab;if(!run)return;var d=cabById(run.id);if(!d)return;var cs=cabState(d.id),st=d.steps[cs.i];if(!st)return;var r=cs.r[cs.i];if(r&&r.v)return;
+  if(st.type==='ecr'&&document.querySelector('.cab-row'))run.draft=cabReadRows();
+  if(st.type==='calc'){var els=document.querySelectorAll('.cab-f'),o={};for(var i=0;i<els.length;i++)o[els[i].dataset.k]=els[i].value;if(els.length)run.draft=o;}
+  if(st.type==='redac'){var ta=document.getElementById('cab-redac');if(ta)run.draft=ta.value;}
+}
+function cabVerifyEcr(sol,rows){
+  var used=[],det=sol.map(function(s){for(var i=0;i<rows.length;i++){if(used.indexOf(i)<0&&(rows[i].acc===s.acc||(s.alt&&s.alt.indexOf(rows[i].acc)>=0))&&rows[i].side===s.side&&Math.abs(rows[i].amt-s.amt)<0.005){used.push(i);return true;}}return false;});
+  var td=0,tc=0;rows.forEach(function(r){if(r.side==='D')td=r2(td+r.amt);else tc=r2(tc+r.amt);});
+  return {ok:det.every(Boolean),det:det,td:td,tc:tc,bal:td>0&&td===tc};
+}
+function cabCompLabel(d,ci){var c=null;TP_CCP.forEach(function(x){if(x.code===d.ccp)c=x;});return c&&c.comps[ci]?c.comps[ci].t:d.ccp;}
+function cabStepScore(st,r){if(!r||!r.v)return null;if(st.type==='redac')return r.crit?r.crit.filter(Boolean).length/st.crit.length:0;return r.ok?1:0;}
+function cabScore(d){var cs=cabState(d.id),got=0,tot=0;d.steps.forEach(function(st,i){var s=cabStepScore(st,cs.r[i]);tot++;if(s!=null)got+=s;});return {got:Math.round(got*10)/10,tot:tot,pct:tot?Math.round(got/tot*100):0};}
+function viewCabinetList(){
+  var groups=['CCP1','CCP2','CCP3'].map(function(code){
+    var ccp=TP_CCP.filter(function(c){return c.code===code;})[0];
+    var cards=CAB_DOSSIERS.filter(function(d){return d.ccp===code;}).map(function(d){
+      var cs=cabState(d.id),started=Object.keys(cs.r).length>0&&!cs.done;
+      var status=cs.done?'<span class="cab-st ok">'+SVG.check+' Terminé · meilleur score '+cs.best+' %</span>':(started?'<span class="cab-st mid">En cours · étape '+(cs.i+1)+' / '+d.steps.length+'</span>':'<span class="cab-st">Nouveau</span>');
+      return '<div class="cab-card"><div class="cab-card-top"><span class="cab-ccp">'+d.ccp+'</span><span class="cab-per">'+escHtml(d.periode)+'</span></div>'+
+        '<h3>'+escHtml(d.client)+'</h3><p>'+escHtml(d.secteur)+'</p>'+
+        '<div class="cab-meta">'+d.steps.length+' étapes · environ '+d.duree+' min</div>'+status+
+        '<div class="row" style="margin-top:12px"><button class="btn btn-pri" data-action="cab-open" data-id="'+d.id+'">'+(started?'Reprendre':(cs.done?'Rouvrir':'Ouvrir le dossier'))+' '+SVG.arR+'</button></div></div>';
+    }).join('');
+    return '<div class="cat-head"><h2>'+code+'</h2><span class="ix">'+escHtml(ccp?ccp.titre:'')+'</span><span class="rule"></span></div><div class="cab-grid">'+cards+'</div>';
+  }).join('');
+  var nDone=CAB_DOSSIERS.filter(function(d){return cabState(d.id).done;}).length;
+  return '<div class="tool-section"><h2 class="tool-title">Dossiers cabinet</h2>'+
+    '<p class="tool-sub">Tu es collaborateur au '+escHtml(CAB_CABINET)+'. Chaque dossier est un vrai client : un courriel de ta cheffe de mission, des pièces à contrôler (factures, relevés, avoirs), des écritures à passer, des calculs, parfois un courriel à rédiger. Tout est corrigé et chaque résultat nourrit ton suivi par compétence du titre.</p>'+
+    '<div class="cab-sum"><b>'+nDone+' / '+CAB_DOSSIERS.length+'</b> dossiers terminés · ta progression est enregistrée à chaque étape, tu peux t\'arrêter et reprendre plus tard.</div></div>'+groups;
+}
+function viewCabinet(){
+  var run=ui.cab;if(!run)return viewCabinetList();
+  var d=cabById(run.id);if(!d){ui.cab=null;return viewCabinetList();}
+  var cs=cabState(d.id);
+  var back='<button class="back" data-action="cab-list">'+SVG.arL+' Tous les dossiers</button>';
+  var side='<aside class="cab-side"><div class="cab-client"><span class="cab-ccp">'+d.ccp+'</span><b>'+escHtml(d.client)+'</b><span>'+escHtml(d.secteur)+' · '+escHtml(d.periode)+'</span></div><ol class="cab-steps">'+
+    d.steps.map(function(st,i){var r=cs.r[i],sc=cabStepScore(st,r),cls=i===cs.i&&!run.bilan?' on':'';var mk=sc==null?'<span class="cs-n">'+(i+1)+'</span>':(sc>=0.8?'<span class="cs-n ok">'+SVG.check+'</span>':'<span class="cs-n ko">'+SVG.x+'</span>');
+      return '<li><button class="cab-step'+cls+'" data-action="cab-go" data-i="'+i+'">'+mk+'<span>'+escHtml(st.titre)+'</span></button></li>';}).join('')+
+    '<li><button class="cab-step'+(run.bilan?' on':'')+'" data-action="cab-bilan"><span class="cs-n">'+SVG.star+'</span><span>Bilan du dossier</span></button></li></ol></aside>';
+  var main=run.bilan?cabBilanHTML(d):cabStepHTML(d,cs);
+  return back+'<div class="cab-layout">'+side+'<div class="cab-main">'+main+'</div></div>';
+}
+function cabBrief(d){return '<details class="cab-brief"'+(cabState(d.id).i===0&&!Object.keys(cabState(d.id).r).length?' open':'')+'><summary>'+SVG.book+' Courriel de mission : '+escHtml(d.brief.objet)+'</summary>'+cabDocHTML({type:'mail',de:d.brief.de,a:'Toi',objet:d.brief.objet,corps:d.brief.corps})+'</details>';}
+function cabStepHTML(d,cs){
+  var i=cs.i,st=d.steps[i],r=cs.r[i],done=!!(r&&r.v),run=ui.cab;
+  var head='<div class="cab-step-h"><span class="eyebrow">Étape '+(i+1)+' sur '+d.steps.length+' · '+escHtml(cabCompLabel(d,st.comp))+'</span><h2>'+escHtml(st.titre)+'</h2></div>';
+  var body=cabDocHTML(st.doc)+(st.consigne?'<p class="cab-consigne">'+SVG.arR+' '+escHtml(st.consigne)+'</p>':'');
+  var nav='<div class="row"><button class="btn-sm" data-action="cab-prev"'+(i===0?' disabled':'')+'>'+SVG.arL+' Précédente</button>'+(done?'<button class="btn btn-pri" data-action="cab-next">'+(i<d.steps.length-1?'Étape suivante '+SVG.arR:'Voir le bilan '+SVG.arR)+'</button>':'')+'</div>';
+  if(st.type==='ecr'){
+    if(!done){body+='<div class="cab-work"><div class="cab-jr"><span>Journal <b>'+escHtml(st.journal)+'</b></span><span>Date <b>'+escHtml(st.date)+'</b></span><span>Pièce <b>'+escHtml(st.piece)+'</b></span></div>'+cabEcrInput(st,run.draft)+'<div class="row" style="margin-top:10px"><button class="btn btn-pri" data-action="cab-verify">'+SVG.check+' Vérifier l\'écriture</button><button class="btn-sm" data-action="cab-skip">Voir le corrigé</button></div></div>';}
+    else{
+      var sol=st.sol.map(function(l,k){var ok=r.det&&r.det[k];return '<tr class="'+(ok?'ok':'ko')+'"><td>'+escHtml(pcLib(l.acc)||l.acc)+' <span class="mono">('+l.acc+')</span></td><td class="n">'+(l.side==='D'?cabMoney(l.amt):'')+'</td><td class="n">'+(l.side==='C'?cabMoney(l.amt):'')+'</td><td class="mk">'+(ok?SVG.check:SVG.x)+'</td></tr>';}).join('');
+      var mine=(r.u||[]).map(function(l){return '<tr><td>'+escHtml(pcLib(l.acc)||l.acc||'—')+(l.acc?' <span class="mono">('+escHtml(l.acc)+')</span>':'')+'</td><td class="n">'+(l.side==='D'&&l.amt?cabMoney(l.amt):'')+'</td><td class="n">'+(l.side==='C'&&l.amt?cabMoney(l.amt):'')+'</td></tr>';}).join('');
+      body+='<div class="quiz-fb '+(r.ok?'ok':'ko')+'">'+(r.ok?SVG.check+'&nbsp; Écriture juste et équilibrée.':(r.skip?SVG.eye+'&nbsp; Corrigé affiché, étape comptée comme à revoir.':SVG.x+'&nbsp; Pas tout à fait. Compare avec le corrigé.'))+'</div>'+
+        '<div class="cab-corr"><div><div class="eyebrow">Corrigé</div><table class="cf-tbl cab-sol"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th><th></th></tr></thead><tbody>'+sol+'</tbody></table></div>'+
+        (mine&&!r.skip&&!r.ok?'<div><div class="eyebrow">Ta saisie</div><table class="cf-tbl"><thead><tr><th>Compte</th><th class="n">Débit</th><th class="n">Crédit</th></tr></thead><tbody>'+mine+'</tbody></table></div>':'')+'</div>'+
+        '<div class="qexpl"><span style="color:var(--debit);flex-shrink:0">'+SVG.dot+'</span><span>'+escHtml(st.e)+'</span></div>';
+    }
+  }else if(st.type==='calc'){
+    var dr=done?(r.u||{}):(run.draft||{});
+    body+='<div class="cab-work"><div class="cab-fields">'+st.f.map(function(f){var st2=done?(r.det&&r.det[f.k]?' ok':' ko'):'';return '<label class="cab-fl'+st2+'"><span>'+escHtml(f.l)+'</span><input class="cab-f" inputmode="decimal" data-k="'+f.k+'" value="'+escHtml(dr[f.k]||'')+'"'+(done?' disabled':'')+'>'+(done?'<em>'+(r.det&&r.det[f.k]?SVG.check:'Attendu : '+String(f.v).replace('.',','))+'</em>':'')+'</label>';}).join('')+'</div>'+
+      (done?'':'<div class="row" style="margin-top:10px"><button class="btn btn-pri" data-action="cab-verify">'+SVG.check+' Vérifier</button><button class="btn-sm" data-action="cab-skip">Voir le corrigé</button></div>')+'</div>';
+    if(done)body+='<div class="quiz-fb '+(r.ok?'ok':'ko')+'">'+(r.ok?SVG.check+'&nbsp; Tout est juste.':SVG.x+'&nbsp; Certaines valeurs sont à revoir.')+'</div><div class="qexpl"><span style="color:var(--debit);flex-shrink:0">'+SVG.dot+'</span><span>'+escHtml(st.e)+'</span></div>';
+  }else if(st.type==='qcm'){
+    body+='<p class="qq serif">'+escHtml(st.q)+'</p><div class="qopts">'+st.o.map(function(o,k){var cls='qopt';if(done){if(k===st.c)cls+=' good';else if(k===r.pick)cls+=' bad';}return '<button class="'+cls+'" data-action="cab-pick" data-k="'+k+'"'+(done?' disabled':'')+'><span class="key">'+String.fromCharCode(65+k)+'</span><span>'+escHtml(o)+'</span></button>';}).join('')+'</div>';
+    if(done)body+='<div class="qexpl"><span style="color:var(--debit);flex-shrink:0">'+SVG.dot+'</span><span><b>'+(r.ok?'Exact. ':'À retenir. ')+'</b>'+escHtml(st.e)+'</span></div>';
+  }else if(st.type==='redac'){
+    var txt=done?(r.u||''):(typeof run.draft==='string'?run.draft:'');
+    body+='<textarea id="cab-redac" class="ag-textarea cab-ta" rows="9" placeholder="Écris ton courriel ici…"'+(done?' readonly':'')+'>'+escHtml(txt)+'</textarea>';
+    if(!run.showModel&&!done)body+='<div class="row" style="margin-top:10px"><button class="btn btn-pri" data-action="cab-model">'+SVG.eye+' Comparer avec le modèle</button></div>';
+    else{
+      var chk=done?(r.crit||[]):(run.crit||[]);
+      body+='<div class="cab-model"><div class="eyebrow">Modèle possible</div>'+st.modele.map(function(p){return '<p>'+escHtml(p)+'</p>';}).join('')+'</div>'+
+        '<div class="cab-crit"><div class="eyebrow">Ton auto-évaluation (coche ce que ton texte respecte)</div>'+st.crit.map(function(c,k){return '<label><input type="checkbox" class="cab-ck" data-k="'+k+'"'+(chk[k]?' checked':'')+(done?' disabled':'')+'> '+escHtml(c)+'</label>';}).join('')+'</div>'+
+        (done?'':'<div class="row" style="margin-top:10px"><button class="btn btn-pri" data-action="cab-redac-done">'+SVG.check+' Valider mon auto-évaluation</button></div>');
+    }
+  }
+  return (i===0?cabBrief(d):'')+'<div class="panel cab-panel">'+head+body+nav+'</div>';
+}
+function cabBilanHTML(d){
+  var cs=cabState(d.id),sc=cabScore(d),byComp={};
+  d.steps.forEach(function(st,i){var k=st.comp;if(!byComp[k])byComp[k]={got:0,tot:0};byComp[k].tot++;var s=cabStepScore(st,cs.r[i]);if(s!=null)byComp[k].got+=s;});
+  var bars=Object.keys(byComp).map(function(k){var b=byComp[k],p=Math.round(b.got/b.tot*100);return '<div class="cab-cbar"><span>'+escHtml(cabCompLabel(d,+k))+'</span><div class="ptrack"><div class="pfill" style="width:'+p+'%;background:'+(p>=80?'var(--valid)':p>=50?'var(--debit)':'var(--credit)')+'"></div></div><b>'+p+' %</b></div>';}).join('');
+  var nEcr=d.steps.filter(function(s){return s.type==='ecr';}).length;
+  var remaining=d.steps.length-Object.keys(cs.r).filter(function(k){return cs.r[k]&&cs.r[k].v;}).length;
+  var word=sc.pct>=85?'Dossier traité comme un pro. Ta cheffe de mission valide sans retouche.':sc.pct>=60?'Bon travail. Reprends les étapes marquées d\'une croix, puis refais le dossier dans quelques jours.':'Pas de panique : relis les corrigés, revois le module correspondant, et retente le dossier.';
+  return '<div class="panel cab-panel" style="text-align:center"><div class="eyebrow">Bilan · '+escHtml(d.client)+'</div>'+
+    '<div class="serif cab-big">'+sc.pct+' %</div><p style="color:var(--ink2);margin:0 0 6px">'+(remaining?remaining+' étape'+(remaining>1?'s':'')+' non traitée'+(remaining>1?'s':'')+' · ':'')+word+'</p>'+
+    (cs.done?'<p style="color:var(--ink2);font-size:13px;margin:0">Meilleur score sur ce dossier : '+cs.best+' % · traité '+cs.n+' fois</p>':'')+
+    '<div class="cab-cbars">'+bars+'</div>'+
+    '<div class="row" style="justify-content:center">'+(nEcr?'<button class="btn btn-pri" data-action="cab-erp">'+SVG.tools+' Envoyer les '+nEcr+' écritures au simulateur ERP</button>':'')+
+    '<button class="btn-sm" data-action="cab-restart">'+SVG.refresh+' Refaire le dossier</button><button class="btn-sm" data-action="cab-list">'+SVG.arL+' Autres dossiers</button></div>'+
+    '<p class="tool-sub" style="margin-top:14px">Dans le simulateur, tu retrouves ces écritures dans les journaux, le grand livre et la balance : idéal pour t\'entraîner au lettrage et au contrôle. Comme le dossier ne contient que les écritures de ces étapes, le contrôle peut signaler des soldes inhabituels : c\'est l\'occasion de t\'exercer à les expliquer.</p></div>';
+}
+function cabFinish(d){
+  var cs=cabState(d.id),sc=cabScore(d);
+  if(!cs.done||!ui.cab.credited){cs.n=(cs.n||0)+1;cs.done=true;if(sc.pct>cs.best)cs.best=sc.pct;cs.last=Date.now();ui.cab.credited=true;
+    var g=Math.round(sc.pct/10)*3;if(g>0){state.points=(state.points||0)+g;}
+    logSession('cabinet','Dossier cabinet — '+d.client,{n:Math.round(sc.got),d:sc.tot});save();}
+}
+function cabAction(a,t){
+  var run=ui.cab,d=run?cabById(run.id):null,cs=d?cabState(d.id):null,y=window.scrollY;
+  if(a==='cab-open'){var id=t.dataset.id;if(!cabById(id))return;ui.tab='terrain';ui.terrainTab='cabinet';ui.cab={id:id};var c0=cabState(id);if(c0.done&&Object.keys(c0.r).length===d0Len(id)){ui.cab.bilan=true;}render();focusMain();return;}
+  if(a==='cab-list'){ui.cab=null;render();return;}
+  if(!d)return;
+  var st=d.steps[cs.i];
+  if(a==='cab-go'){cs.i=Math.max(0,Math.min(d.steps.length-1,parseInt(t.dataset.i,10)||0));run.bilan=false;run.draft=null;run.showModel=false;run.crit=null;save();render();return;}
+  if(a==='cab-bilan'){run.bilan=true;render();return;}
+  if(a==='cab-prev'){if(cs.i>0){cs.i--;run.draft=null;run.showModel=false;save();}render();return;}
+  if(a==='cab-next'){run.draft=null;run.showModel=false;run.crit=null;if(cs.i<d.steps.length-1){cs.i++;save();}else{run.bilan=true;cabFinish(d);}render();return;}
+  if(a==='cab-restart'){state.tp.cab[d.id]={i:0,r:{},done:cs.done,best:cs.best,n:cs.n};ui.cab={id:d.id};save();render();return;}
+  if(a==='cab-verify'){
+    if(st.type==='ecr'){var rows=cabReadRows(),v=cabVerifyEcr(st.sol,rows);cs.r[cs.i]={v:1,ok:v.ok,det:v.det,u:rows};announce(v.ok?'Écriture juste.':'Écriture à revoir, le corrigé est affiché.');}
+    else if(st.type==='calc'){var els=document.querySelectorAll('.cab-f'),u={},det={},ok=true;for(var i=0;i<els.length;i++)u[els[i].dataset.k]=els[i].value;st.f.forEach(function(f){var n=tpNum(u[f.k]);det[f.k]=isFinite(n)&&Math.abs(n-f.v)<=(f.tol||0.011);if(!det[f.k])ok=false;});cs.r[cs.i]={v:1,ok:ok,det:det,u:u};announce(ok?'Tout est juste.':'Certaines valeurs sont à revoir.');}
+    run.draft=null;save();render();window.scrollTo(0,y);return;
+  }
+  if(a==='cab-skip'){cs.r[cs.i]={v:1,ok:false,skip:true,det:st.type==='ecr'?st.sol.map(function(){return false;}):{},u:st.type==='ecr'?[]:{}};run.draft=null;save();render();window.scrollTo(0,y);return;}
+  if(a==='cab-pick'){if(st.type!=='qcm'||(cs.r[cs.i]&&cs.r[cs.i].v))return;var k=parseInt(t.dataset.k,10);cs.r[cs.i]={v:1,ok:k===st.c,pick:k};save();render();window.scrollTo(0,y);announce(k===st.c?'Bonne réponse.':'Réponse inexacte, l\'explication est affichée.');return;}
+  if(a==='cab-model'){run.showModel=true;render();window.scrollTo(0,y);return;}
+  if(a==='cab-redac-done'){var cks=document.querySelectorAll('.cab-ck'),arr=[];for(var j=0;j<cks.length;j++)arr[parseInt(cks[j].dataset.k,10)]=!!cks[j].checked;var nOk=arr.filter(Boolean).length;cs.r[cs.i]={v:1,ok:nOk>=st.crit.length-1,crit:arr,u:typeof run.draft==='string'?run.draft:''};run.draft=null;run.showModel=false;save();render();window.scrollTo(0,y);return;}
+  if(a==='cab-erp'){
+    if(!state.erp)state.erp={entries:[]};if(!state.erp.entries)state.erp.entries=[];var base=Date.now(),n=0;
+    d.steps.forEach(function(s2,k){if(s2.type!=='ecr')return;n++;state.erp.entries.push({id:'e'+base+'-c'+k,journal:s2.journal,date:s2.date,piece:s2.piece,libelle:d.client+' — '+s2.titre,lignes:s2.sol.map(function(l){return {compte:l.acc,debit:l.side==='D'?String(l.amt):'',credit:l.side==='C'?String(l.amt):''};})});});
+    save();ui.cab=null;ui.terrainTab='erp';ui.erpView='journaux';render();announce(n+' écritures ajoutées au simulateur ERP.');return;
+  }
+}
+function d0Len(id){var d=cabById(id);return d?d.steps.length:0;}
 function viewTerrain(){
-  var tabs={sim:'Journée en cabinet',comm:'Communication pro',excel:'Excel comptable',exercices:'Exercices',missions:'Missions',erp:'Simulateur ERP'};
-  var groups=[['Pratiquer',['exercices','missions','erp']],['Mises en situation',['sim','comm','excel']]];
+  var tabs={cabinet:'Dossiers cabinet',sim:'Journée en cabinet',comm:'Communication pro',excel:'Excel comptable',exercices:'Exercices',missions:'Missions',erp:'Simulateur ERP'};
+  var groups=[['Pratiquer',['cabinet','exercices','missions','erp']],['Mises en situation',['sim','comm','excel']]];
   var sub=groups.map(function(g){return '<div class="tg">'+g[0]+'</div>'+g[1].map(function(k){
     return '<button class="tnav'+(ui.terrainTab===k?' on':'')+'" data-action="terrain-tab" data-k="'+k+'"'+(ui.terrainTab===k?' aria-current="page"':'')+'>'+tabs[k]+'</button>';
   }).join('');}).join('');
   var body;
-  if(ui.terrainTab==='sim')body=viewSim();
+  if(ui.terrainTab==='cabinet')body=viewCabinet();
+  else if(ui.terrainTab==='sim')body=viewSim();
   else if(ui.terrainTab==='comm')body=viewComm();
   else if(ui.terrainTab==='exercices')body=viewExercices();
   else if(ui.terrainTab==='missions')body=viewMissions();
   else if(ui.terrainTab==='erp')body=viewErp();
   else body=viewExcel();
+  if(ui.terrainTab==='cabinet'&&ui.cab)return '<div class="page-head"><h1>Dossiers cabinet</h1><p>'+escHtml(CAB_CABINET)+' · Titre Pro Comptable assistant</p></div>'+body;
   return '<div class="page-head"><h1>Terrain</h1><p>Saisie dans le simulateur ERP, exercices d\'écritures notés, missions et mises en situation</p></div>'+
     '<div class="tools-layout"><nav class="tools-side" aria-label="Terrain">'+sub+'</nav><div class="tools-main">'+body+'</div></div>';
 }
@@ -8291,6 +9224,8 @@ function announceCard(){var s=ui.session;if(!s)return;if(s.queue.length===0){ann
 function announceDayNext(){var dp=ui.dayplan;if(!dp)return;if(dp.i>=dp.items.length){announce('Session du jour terminée.');return;}var it=dp.items[dp.i];if(it.kind==='card'){var c=CARDS.find(function(x){return x.id===it.id;});if(c)announce('Carte suivante : '+c.q);}else if(it.kind==='exo'){announce('Exercice de saisie suivant.');}else if(it.kind==='q'){announce('Question suivante : '+String(it.q||'').replace(/<[^>]*>/g,''));}}
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-action]');if(!t)return;var a=t.dataset.action;
+  if(ui.tab==='terrain'&&ui.terrainTab==='cabinet')cabReadDOM();
+  if(a.indexOf('cab-')===0){if(t.disabled)return;cabAction(a,t);return;}
   /* Préserve les saisies écritures avant tout re-rendu */
   if(ui.tab==='outils'&&ui.tool==='ecritures')jeReadDOM();
   if(ui.tab==='terrain'&&ui.terrainTab==='erp'&&ui.erpDraft)erpReadDraft();
@@ -8330,6 +9265,7 @@ document.addEventListener('click',function(e){
   else if(a==='tab-exam'){clearExamTimer();ui.tab='exam';ui.exam=null;render();focusMain();}
   else if(a==='tab-outils'){ui.tab='outils';if(ui.tool==='tpca'&&isTP())ui.tool='plan';render();focusMain();}
   else if(a==='tab-terrain'){ui.tab='terrain';render();focusMain();}
+  else if(a==='tab-cabinet'){ui.tab='terrain';ui.terrainTab='cabinet';ui.cab=null;render();focusMain();}
   else if(a==='tab-agenda'){ui.tab='agenda';ui.agendaSub='today';render();focusMain();}
   else if(a==='show-shortcuts'){shortcutsOpen();}
   else if(a==='agenda-prev-month'){ui.agendaMonth--;if(ui.agendaMonth<0){ui.agendaMonth=11;ui.agendaYear--;}render();}
@@ -8586,7 +9522,7 @@ document.addEventListener('click',function(e){
   else if(a==='dl-ics'){downloadIcs();}
   else if(a==='dl-annale'){downloadAnnale(t.dataset.k);}
   else if(a==='annale-start'){var _ac=t.dataset.k,_am=null;ANNALES.forEach(function(x){if(x.code===_ac)_am=x;});if(_am){ui.tab='outils';ui.tool='annales';var _dur=_am.dureeMin*60;ui.annale={code:_ac,dur:_dur,deadline:Date.now()+_dur*1000,done:false,scored:{}};startAnnaleTimer();}render();}
-  else if(a==='annale-finish'){var _an=ui.annale;if(_an){_an.done=true;clearAnnaleTimer();if(!_an._logged){_an._logged=true;var _aa=null;ANNALES.forEach(function(x){if(x.code===_an.code)_aa=x;});var _got=0,_sc=_an.scored||{};Object.keys(_sc).forEach(function(k){_got+=(_sc[k]||0);});var _tot=_aa?annaleTotal(_aa):0;logSession('annale','Annale '+_an.code,_tot?{n:_got,d:_tot}:null);}}render();}
+  else if(a==='annale-finish'){var _an=ui.annale;if(_an){_an.done=true;clearAnnaleTimer();if(!_an._logged){_an._logged=true;var _aa=null;ANNALES.forEach(function(x){if(x.code===_an.code)_aa=x;});var _got=0,_sc=_an.scored||{};Object.keys(_sc).forEach(function(k){_got+=(_sc[k]||0);});var _tot=_aa?annaleTotal(_aa):0;logSession('annale','Annale '+_an.code,_tot?{n:_got,d:_tot}:null);if(_aa&&_aa.cursus==='tp'){if(!state.tp.msp)state.tp.msp={};var _mp=state.tp.msp[_an.code]||{n:0,best:0};_mp.n++;var _pc=_tot?Math.round(_got/_tot*100):0;if(_pc>_mp.best)_mp.best=_pc;_mp.last=Date.now();state.tp.msp[_an.code]=_mp;save();}}}render();}
   else if(a==='annale-quit'){var _anq=ui.annale;if(_anq&&!_anq.done&&!confirm('Quitter l\'annale en cours ? Le minuteur et ton auto-évaluation seront perdus.'))return;clearAnnaleTimer();ui.annale=null;render();}
   else if(a==='annale-check'){if(ui.annale){var _box=t.querySelector('input'),_k=t.dataset.q;if(_box&&_box.checked)ui.annale.scored[_k]=parseFloat(t.dataset.pts);else delete ui.annale.scored[_k];var _tot=0;Object.keys(ui.annale.scored).forEach(function(kk){_tot+=ui.annale.scored[kk];});var _se=document.getElementById('ann-score');if(_se)_se.textContent=_tot;}return;}
   else if(a==='set-cursus'){var _cu=t.dataset.k==='bts'?'bts':'tp';try{localStorage.setItem('legl.cursus',_cu);}catch(e){}applyCursusTitle();_srchIdx=null;render();announce(_cu==='tp'?'Cursus : Titre professionnel Comptable assistant.':'Cursus : BTS Comptabilité et Gestion.');}
@@ -8600,6 +9536,9 @@ document.addEventListener('click',function(e){
   else if(a==='dl-tp-grille'){downloadTpGrille();}
   else if(a==='dl-methodo-tp'){downloadMethodoTp();}
   else if(a==='tp-at'){ui.tpAt=t.dataset.k||'ca3';render();}
+  else if(a==='plan-at'){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';ui.tpAt=t.dataset.k||'ca3';render();focusMain();}
+  else if(a==='form-dates-save'){var _fs=document.getElementById('form-start'),_fe=document.getElementById('form-end'),_ff=document.getElementById('form-fend');if(_fs&&_fs.value)setFormStart(_fs.value);if(_ff&&_ff.value)setFormEnd(_ff.value);if(_fe&&_fe.value)setExamDate(_fe.value);render();announce('Dates de formation enregistrées.');}
+  else if(a==='form-agenda-sync'){var _s0=formStart(),_e0=formEnd(),_ps=state.agenda.periods,_hit=null;_ps.forEach(function(p){if(!_hit&&p.kind==='tp'&&/^Formation/.test(p.label||''))_hit=p;});if(_hit){_hit.start=_s0;_hit.end=_e0;_hit.label='Formation Titre Pro Comptable assistant';}else _ps.push({id:agendaId(),start:_s0,end:_e0,label:'Formation Titre Pro Comptable assistant',kind:'tp'});var _tl=formTimeline();_tl.phases.forEach(function(x){var lab='Étape : '+x.p.n,ex=null;_ps.forEach(function(p){if(p.label===lab)ex=p;});var sd=localDateStr(x.start),ed=localDateStr(new Date(x.end.getTime()-DAY));if(ex){ex.start=sd;ex.end=ed;}else _ps.push({id:agendaId(),start:sd,end:ed,label:lab,kind:'tp'});});var _ex=getExamDate(),_se=null;_ps.forEach(function(p){if(/^Session du titre/.test(p.label||''))_se=p;});if(_se){_se.start=_ex;_se.end=_ex;_se.label='Session du titre (date à confirmer)';}else _ps.push({id:agendaId(),start:_ex,end:_ex,label:'Session du titre (date à confirmer)',kind:'tp'});save();render();announce('Formation et étapes reportées dans l\'agenda.');}
   else if(a==='tp-at-new'){var _ak=ui.tpAt||'ca3';tpAtState(_ak);ui.tpAtData[_ak]={s:TP_AT_GEN[_ak](),ans:{},res:null,revealed:false};var _y7=window.scrollY;render();window.scrollTo(0,_y7);announce('Nouveau cas généré.');}
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
@@ -8607,20 +9546,23 @@ document.addEventListener('click',function(e){
   else if(a==='tp-oral-next'){tpOralPick();var _y4=window.scrollY;render();window.scrollTo(0,_y4);}
   else if(a==='tp-oral-reveal'){if(ui.tpOral){ui.tpOral.revealed=true;var _oq=null;ENTRETIEN_TP.forEach(function(q){if(q.id===ui.tpOral.id)_oq=q;});var _y5=window.scrollY;render();window.scrollTo(0,_y5);if(_oq)announce('Pistes : '+_oq.p);}}
   else if(a==='tp-oral-rate'){if(ui.tpOral){state.tp.oral[ui.tpOral.id]=t.dataset.k==='1'?1:0;save();tpOralPick();var _y6=window.scrollY;render();window.scrollTo(0,_y6);}}
-  else if(a==='set-accent'){var _ac=t.dataset.k||'';try{if(_ac)localStorage.setItem('legl.accent',_ac);else localStorage.removeItem('legl.accent');}catch(e){}if(_ac)document.documentElement.setAttribute('data-accent',_ac);else document.documentElement.removeAttribute('data-accent');render();}
+  else if(a==='set-accent'){var _ac=t.dataset.k||'';try{if(_ac)localStorage.setItem('legl.accent',_ac);else localStorage.removeItem('legl.accent');}catch(e){}if(_ac)document.documentElement.setAttribute('data-accent',_ac);else document.documentElement.removeAttribute('data-accent');var _ya=window.scrollY;render();window.scrollTo(0,_ya);}
+  else if(a==='app-set'){var _ao=t.dataset.o;if(APP_OPTS[_ao]||_ao==='ambiance'){appSet(_ao,t.dataset.k||'');var _yb=window.scrollY;render();window.scrollTo(0,_yb);announce('Apparence mise à jour.');}}
+  else if(a==='app-reset'){['ambiance','corners','density','titles','ruled','mode','textsize'].forEach(function(k){appSet(k,'');});try{localStorage.removeItem('legl.accent');}catch(e){}document.documentElement.removeAttribute('data-accent');render();announce('Apparence d\'origine rétablie.');}
   else if(a==='set-focusmode'){try{if(t.dataset.k==='off')localStorage.setItem('legl.focusMode','off');else localStorage.removeItem('legl.focusMode');}catch(e){}render();}
   else if(a==='set-newperday'){var _nv=parseInt(t.dataset.k,10);try{if(NEW_PER_DAY_OPTS.indexOf(_nv)>=0)localStorage.setItem('legl.newPerDay',String(_nv));}catch(e){}render();announce('Nouvelles cartes par jour : '+(_nv===0?'illimité':_nv)+'.');}
-  else if(a==='set-textsize'){var _ts=t.dataset.k||'';try{if(_ts)localStorage.setItem('legl.textSize',_ts);else localStorage.removeItem('legl.textSize');}catch(e){}if(_ts)document.documentElement.setAttribute('data-textsize',_ts);else document.documentElement.removeAttribute('data-textsize');render();}
+  else if(a==='set-textsize'){var _ts=t.dataset.k||'';try{if(_ts)localStorage.setItem('legl.textSize',_ts);else localStorage.removeItem('legl.textSize');}catch(e){}if(_ts)document.documentElement.setAttribute('data-textsize',_ts);else document.documentElement.removeAttribute('data-textsize');var _yc=window.scrollY;render();window.scrollTo(0,_yc);}
   else if(a==='weekgoal-inc'){setWeekGoal(getWeekGoal()+1);render();}
   else if(a==='weekgoal-dec'){setWeekGoal(getWeekGoal()-1);render();}
   else if(a==='toggle-theme'){
-    var _cur=document.documentElement.getAttribute('data-theme');
+    var _cur=document.documentElement.getAttribute('data-theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
     var _next=_cur==='dark'?'light':'dark';
     document.documentElement.setAttribute('data-theme',_next);
     try{localStorage.setItem('legl.theme',_next);}catch(e){}
     render();
   }
   else if(a==='search-open'){searchOpen();}
+  else if(a==='open-apparence'){ui.tab='outils';ui.tool='apparence';render();}
   else if(a==='print-page'){window.print();}
 });
 
@@ -9005,11 +9947,14 @@ function buildNudge(){
   if(dl){var d=daysUntil(dl.date);if(d>=0&&d<=7){var ttl=dl.title||'(sans titre)';parts.push(d===0?('Échéance aujourd\'hui : '+ttl+'.'):('Échéance dans '+d+' jour'+(d>1?'s':'')+' : '+ttl+'.'));}}
   var streak=state.streak.count||0;
   if(streak>=2)parts.push('Série de '+streak+' jours, garde le rythme !');
+  var _le=0;try{_le=parseInt(localStorage.getItem('legl.lastExport'),10)||0;}catch(e){}
+  if((state.points||0)>=50&&(!_le||Date.now()-_le>14*DAY))parts.push(_le?'Ta dernière sauvegarde date de plus de 2 semaines : exporte ta progression (Parcours, en bas de page).':'Pense à sauvegarder ta progression (Parcours, en bas de page, « Exporter »).');
   return parts.join(' ');
 }
 function showNudge(){
   if(ui.nudgeShown)return;
-  var msg=buildNudge();
+  var msg=buildNudge(),_news=false;
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : ton plan de formation, 6 dossiers cabinet guidés et 5 ambiances visuelles (bouton palette). '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
@@ -9017,7 +9962,7 @@ function showNudge(){
   el.innerHTML='<button class="nudge-x" data-action="nudge-close" aria-label="Fermer le rappel">×</button><span>'+escHtml(msg)+'</span>';
   document.body.appendChild(el);
   ui.nudgeShown=true;
-  setTimeout(function(){var n=document.getElementById('nudge');if(n&&n.parentNode)n.parentNode.removeChild(n);},7000);
+  setTimeout(function(){var n=document.getElementById('nudge');if(n&&n.parentNode)n.parentNode.removeChild(n);},_news?14000:7000);
 }
 function showOnboarding(){
   try{if(localStorage.getItem('legl.onboarded'))return false;}catch(e){return false;}
@@ -9026,14 +9971,16 @@ function showOnboarding(){
     [SVG.book,'Parcours',MODULES.length+' modules en 3 étapes : cours, mémo visuel, quiz. Coche-les au fil de l\'eau.'],
     [SVG.cards,'Flashcards',CARDS.length+' cartes en répétition espacée : les cartes ratées reviennent vite.'],
     [SVG.exam,'Examen blanc','Entraîne-toi en conditions, chronométré, avec correction et historique.'],
-    [SVG.star,'Terrain &amp; simulateur ERP','Cas pratiques et saisie comptable comme dans un vrai logiciel.'],
+    [SVG.star,'Terrain &amp; simulateur ERP','Dossiers cabinet guidés, cas pratiques et saisie comptable comme dans un vrai logiciel.'],
     [SVG.cal,'Agenda','Planifie tes révisions, suis tes compétences et ton carnet de bord.']
   ];
+  if(isTP())items.splice(0,0,[SVG.cal,'Plan de formation','Ton parcours de la rentrée à la session du titre, découpé par CCP, avec les objectifs de la semaine.']);
+  items.push([SVG.palette,'Apparence','Choisis ton ambiance (Grand livre, Épuré, Douceur…), ta couleur et la taille du texte : bouton palette en bas du menu.']);
   var lis=items.map(function(it){return '<div class="onb-item"><span class="onb-ic">'+it[0]+'</span><div><b>'+it[1]+'</b><p>'+it[2]+'</p></div></div>';}).join('');
   var el=document.createElement('div');
   el.className='onb-back';el.id='onb-back';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Bienvenue');
   el.innerHTML='<div class="onb"><h2 class="serif">Bienvenue !</h2>'+
-    '<p class="onb-lede">Le Grand Livre réunit tout pour réussir '+(isTP()?'le Titre professionnel Comptable assistant (niveau 4)':'le BTS Comptabilité &amp; Gestion')+'. Voici tes cinq espaces :</p>'+
+    '<p class="onb-lede">Le Grand Livre réunit tout pour réussir '+(isTP()?'le Titre professionnel Comptable assistant (niveau 4)':'le BTS Comptabilité &amp; Gestion')+'. Voici l\'essentiel :</p>'+
     lis+
     '<p class="onb-lede" style="margin-top:16px;margin-bottom:0">Astuce : <b style="color:var(--ink)">Ctrl+K</b> pour chercher et sauter partout, <b style="color:var(--ink)">?</b> pour la liste des raccourcis clavier.'+(isTP()?' Le référentiel du titre, ta grille d\'auto-évaluation, ton dossier professionnel et l\'entraînement aux entretiens sont dans <b style="color:var(--ink)">Outils › Titre Pro CA</b>.':' Formation visée modifiable dans Outils › Aide.')+'</p>'+
     '<div class="row" style="margin-top:24px"><button class="btn btn-pri" data-action="onboard-done">'+SVG.check+' Commencer</button></div></div>';
@@ -9041,6 +9988,13 @@ function showOnboarding(){
   var _obBtn=el.querySelector('[data-action="onboard-done"]');if(_obBtn)try{_obBtn.focus();}catch(e){}
   return true;
 }
+/* Dossiers cabinet : libellé du compte et équilibre affichés pendant la saisie. */
+document.addEventListener('input',function(e){
+  var tg=e.target;if(!tg||!tg.classList)return;
+  if(tg.classList.contains('cab-acc')){var lab=tg.parentNode.querySelector('.cab-lib');if(lab){var v=(tg.value||'').trim(),l=pcLib(v);lab.textContent=v?(l||'compte inconnu'):'';lab.className='cab-lib'+(v&&!l?' warn':'');}}
+  if(tg.classList.contains('cab-amt')||tg.classList.contains('cab-side')||tg.classList.contains('cab-acc')){var eq=document.getElementById('cab-eq');if(eq){var rows=cabReadRows(),td=0,tc=0;rows.forEach(function(r){if(r.side==='D')td=r2(td+r.amt);else tc=r2(tc+r.amt);});eq.innerHTML='Débit <b>'+cabMoney(td)+'</b> · Crédit <b>'+cabMoney(tc)+'</b> · '+(td>0&&td===tc?'<span class="eq">équilibré ✓</span>':'<span class="ne">déséquilibré</span>');}}
+});
+document.addEventListener('change',function(e){var tg=e.target;if(tg&&tg.classList&&tg.classList.contains('cab-side')){tg.dispatchEvent(new Event('input',{bubbles:true}));}});
 /* Saisie d'écriture au clavier : Entrée valide (ERP -> enregistrer ; exercices/missions/session du jour -> vérifier). Champs compte/datalist exclus. */
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter')return;
@@ -9051,6 +10005,7 @@ document.addEventListener('keydown',function(e){
     if(isAmt||isHead){e.preventDefault();var b=document.querySelector('[data-action="erp-save"]');if(b)b.click();}
     return;
   }
+  if(cl&&(cl.contains('cab-amt')||cl.contains('cab-f'))){e.preventDefault();var _cv=document.querySelector('[data-action="cab-verify"]');if(_cv)_cv.click();return;}
   if(cl&&cl.contains('tpat-in')&&tg.tagName==='INPUT'){e.preventDefault();var _tv=document.querySelector('[data-action="tp-at-verify"]');if(_tv)_tv.click();return;}
   if(cl&&(cl.contains('tr-amt')||cl.contains('tr-acc'))){
     var vb=document.querySelector('[data-action="train-verify-gen"]:not([disabled]),[data-action="day-exo-verify"]:not([disabled]),[data-action="train-mission-verify"]:not([disabled])');
