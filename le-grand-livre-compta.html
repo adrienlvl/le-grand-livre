@@ -554,6 +554,7 @@ svg{display:block}
 .dp-idf{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:14px}.dp-idf .tp-lbl{grid-row:1}@media(max-width:640px){.dp-idf{grid-template-columns:1fr}.dp-idf .tp-lbl{grid-row:auto}}
 .dpp{max-width:760px}.dpp h1{font-family:'Fraunces',serif;font-size:28px;margin:6px 0}.dpp h2{font-family:'Fraunces',serif;font-size:19px;margin:0 0 10px;color:var(--accent)}.dpp h3{font-size:15px;margin:14px 0 8px}.dpp-cover{padding:26px 0 30px;border-bottom:2px solid var(--ink)}.dpp-k{text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--ink2);margin:0}.dpp-id{margin-top:26px;line-height:1.9}.dpp-note{font-size:12.5px;color:var(--ink2)}.dpp-toc,.dpp-at{padding-top:18px;margin-top:18px;border-top:1px solid var(--edge)}.dpp-f{margin:0 0 10px}.dpp-f b{font-size:13.5px}.dpp-f p{margin:4px 0 0;line-height:1.55}.dpp-empty{color:var(--ink2);font-style:italic}
 @media print{body:has(.dpp) .page-head,body:has(.dpp) #app>.print-only,body:has(.dpp)>.print-only{display:none!important}body:has(.dpp) .tools-layout,body:has(.dpp) .panel:has(.dpp){border:0!important;padding:0!important;background:#fff!important}.dpp-cover{border-bottom:0!important;padding-top:120px!important}.dpp h2{color:#000!important}.dpp-at,.dpp-toc{break-before:page;border-top:0}.dpp-ex{break-inside:avoid}}
+.rec{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px}.rec audio{height:36px;max-width:100%}.rec-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#fff;margin-right:2px;animation:recp 1s infinite}.rec-dot.off{background:var(--credit);animation:none}@keyframes recp{50%{opacity:.35}}@media (prefers-reduced-motion:reduce){.rec-dot{animation:none}}.rec-on{background:var(--credit)!important;border-color:var(--credit)!important}
 .sess-card{border:1px dashed var(--edge);border-radius:12px;padding:12px 14px;background:var(--paper)}.sess-card.on{border:1.5px solid var(--accent);background:var(--card)}.sess-card svg{width:16px;height:16px}
 .at-grp{margin-bottom:10px}.at-grp-h{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin:0 0 6px}.at-grp-h span:nth-child(2){flex:1;min-width:0}.at-grp-n{font-size:12px}.at-grp .chips{margin:0}
 .tpat-mail{margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}.tpat-mail textarea{width:100%;min-height:180px;font:inherit;line-height:1.5}
@@ -6208,16 +6209,37 @@ function oralMockTick(){
   if(MOCK_TIMER)clearInterval(MOCK_TIMER);
   MOCK_TIMER=setInterval(function(){var m=ui.oralMock;if(!m||m.done){clearInterval(MOCK_TIMER);MOCK_TIMER=null;return;}var left=Math.max(0,Math.round((m.end-Date.now())/1000));var el=document.getElementById('mock-time');if(el)el.textContent=fmtTime(left);if(left<=0){m.done=true;render();}},1000);
 }
+/* Enregistreur de réponses orales : tout reste en mémoire sur l'appareil, rien n'est envoyé ni sauvegardé. */
+var REC={rec:null,chunks:[],urls:{},dur:{},id:null,t0:0,timer:null};
+function recSupported(){try{return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);}catch(e){return false;}}
+function recBlock(id){
+  if(!recSupported())return '<p class="tool-sub rec-na">L\'enregistrement vocal n\'est pas disponible sur cet appareil : réponds à voix haute et chronomètre-toi.</p>';
+  var on=REC.rec&&REC.id===id,has=REC.urls[id];
+  return '<div class="rec">'+(on?'<button class="btn btn-pri rec-on" data-action="rec-stop"><span class="rec-dot" aria-hidden="true"></span> Arrêter l\'enregistrement <span class="mono" id="rec-time">00:00</span></button>':'<button class="btn-sm" data-action="rec-start" data-id="'+id+'"><span class="rec-dot off" aria-hidden="true"></span> '+(has?'Recommencer l\'enregistrement':'M\'enregistrer')+'</button>')+
+    (has&&!on?'<audio controls preload="metadata" src="'+has+'" aria-label="Réécouter ma réponse"></audio><span class="tool-sub" style="margin:0">'+fmtTime(REC.dur[id]||0)+'</span>':'')+'</div>';
+}
+function recStart(id){
+  if(REC.rec)recStop();
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    var mr=new MediaRecorder(stream);REC.rec=mr;REC.chunks=[];REC.id=id;REC.t0=Date.now();
+    mr.ondataavailable=function(e){if(e.data&&e.data.size)REC.chunks.push(e.data);};
+    mr.onstop=function(){try{stream.getTracks().forEach(function(t){t.stop();});}catch(e){}var rid=mr._id;if(REC.urls[rid])try{URL.revokeObjectURL(REC.urls[rid]);}catch(e){}REC.urls[rid]=URL.createObjectURL(new Blob(REC.chunks,{type:mr.mimeType||'audio/webm'}));REC.dur[rid]=Math.round((Date.now()-mr._t0)/1000);var y=window.scrollY;render();window.scrollTo(0,y);};
+    mr._id=id;mr._t0=REC.t0;mr.start();
+    if(REC.timer)clearInterval(REC.timer);REC.timer=setInterval(function(){var el=document.getElementById('rec-time');if(el)el.textContent=fmtTime(Math.round((Date.now()-REC.t0)/1000));},500);
+    var y=window.scrollY;render();window.scrollTo(0,y);announce('Enregistrement en cours. Réponds comme devant le jury.');
+  }).catch(function(){announce('Micro non disponible ou non autorisé.');alert('Impossible d\'accéder au micro. Vérifie l\'autorisation du micro pour l\'application.');});
+}
+function recStop(){if(!REC.rec)return;var mr=REC.rec;REC.rec=null;REC.id=null;if(REC.timer){clearInterval(REC.timer);REC.timer=null;}try{mr.stop();}catch(e){}}
 function oralMockView(){
   var m=ui.oralMock,qs=m.ids.map(function(id){return ENTRETIEN_TP.filter(function(q){return q.id===id;})[0];});
   var label=m.kind==='final'?'Entretien final blanc':'Entretien technique blanc';
   if(!m.done){
     var q=qs[m.i],left=Math.max(0,Math.round((m.end-Date.now())/1000));
     return '<div class="panel mock"><div class="mock-top"><span class="eyebrow">'+label+' · question '+(m.i+1)+' sur '+qs.length+'</span><span class="mock-time mono" id="mock-time">'+fmtTime(left)+'</span></div>'+
-      '<p class="serif mock-q">'+escHtml(q.q)+'</p><p class="tool-sub">Réponds à voix haute, debout si tu peux, en 2 à 3 minutes. Le jury peut rebondir : prépare un exemple tiré de ton stage.</p>'+
+      '<p class="serif mock-q">'+escHtml(q.q)+'</p><p class="tool-sub">Réponds à voix haute, debout si tu peux, en 2 à 3 minutes. Le jury peut rebondir : prépare un exemple tiré de ton stage.</p>'+recBlock(q.id)+
       '<div class="row"><button class="btn btn-pri" data-action="mock-next">'+(m.i<qs.length-1?'Question suivante '+SVG.arR:'Terminer l\'entretien')+'</button><button class="btn-sm" data-action="mock-stop">Arrêter</button></div></div>';
   }
-  var rows=qs.map(function(q){var r=m.rate[q.id];return '<div class="suj-q"><div class="suj-qh"><span class="suj-num">'+escHtml(q.k==='final'?'EF':q.k.replace('CCP','C'))+'</span><span class="suj-txt">'+escHtml(q.q)+'</span></div><div class="suj-cor-body" style="margin-top:8px">'+escHtml(q.p)+'</div>'+
+  var rows=qs.map(function(q){var r=m.rate[q.id];return '<div class="suj-q"><div class="suj-qh"><span class="suj-num">'+escHtml(q.k==='final'?'EF':q.k.replace('CCP','C'))+'</span><span class="suj-txt">'+escHtml(q.q)+'</span></div>'+(REC.urls[q.id]?'<div class="rec" style="margin-top:8px"><span class="tool-sub" style="margin:0">Ta réponse :</span><audio controls preload="metadata" src="'+REC.urls[q.id]+'" aria-label="Réécouter ma réponse"></audio></div>':'')+'<div class="suj-cor-body" style="margin-top:8px">'+escHtml(q.p)+'</div>'+
     '<div class="acc-chips" style="margin-top:8px"><button class="acc-chip'+(r===1?' on':'')+'" data-action="mock-rate" data-id="'+q.id+'" data-k="1">'+SVG.check+' J\'ai bien répondu</button><button class="acc-chip'+(r===0?' on':'')+'" data-action="mock-rate" data-id="'+q.id+'" data-k="0">À retravailler</button></div></div>';}).join('');
   return '<div class="panel mock"><span class="eyebrow">'+label+' · débriefing</span><h3 class="serif" style="font-size:24px;margin:8px 0 6px">Compare tes réponses aux pistes</h3><p class="tool-sub">Sois exigeant : as-tu donné un exemple concret, employé le bon vocabulaire, montré ta méthode ? Ton auto-évaluation met à jour ta banque de questions.</p>'+rows+
     '<div class="row"><button class="btn btn-pri" data-action="mock-start" data-k="'+m.kind+'">'+SVG.refresh+' Nouvel entretien blanc</button><button class="btn-sm" data-action="mock-stop">Revenir à l\'entraînement</button></div></div>';
@@ -6232,7 +6254,7 @@ function tpOral(){
   if(cur){
     stage='<div class="panel tp-oral-stage"><span class="eyebrow">'+escHtml(cur.k==='final'?'Entretien final':cur.k+' · entretien technique')+'</span>'+
       '<p class="serif" style="font-size:22px;line-height:1.35;margin:12px 0 14px">'+escHtml(cur.q)+'</p>'+
-      '<p style="color:var(--ink2);font-size:13px;margin:0 0 14px">Réponds à voix haute, comme devant le jury (1 à 2 minutes), puis compare avec les pistes.</p>'+
+      '<p style="color:var(--ink2);font-size:13px;margin:0 0 14px">Réponds à voix haute, comme devant le jury (1 à 2 minutes), puis compare avec les pistes.</p>'+recBlock(cur.id)+
       (ui.tpOral.revealed?'<div class="suj-cor-body" role="region" aria-label="Pistes de réponse">'+escHtml(cur.p)+'</div>'+
         '<div class="row" style="margin-top:14px"><button class="btn btn-pri" data-action="tp-oral-rate" data-k="1">'+SVG.check+' Je maîtrise</button><button class="btn btn-gh" data-action="tp-oral-rate" data-k="0">'+SVG.refresh+' À retravailler</button></div>'
        :'<div class="row" style="margin-top:0"><button class="btn btn-pri" data-action="tp-oral-reveal">'+SVG.loupe+' Voir les pistes de réponse</button><button class="btn btn-gh" data-action="tp-oral-next">Autre question</button></div>')+
@@ -11313,11 +11335,13 @@ document.addEventListener('click',function(e){
   else if(a==='tp-at-verify'){tpAtVerify();save();var _y8=window.scrollY;render();window.scrollTo(0,_y8);}
   else if(a==='tp-at-reveal'){var _ar=tpAtState(ui.tpAt||'ca3');var _els=document.querySelectorAll('#tpat-form .tpat-in');for(var _ei=0;_ei<_els.length;_ei++)_ar.ans[_els[_ei].dataset.f]=_els[_ei].value;var _ta9=document.getElementById('tpat-mail');if(_ta9)_ar.mail=_ta9.value;_ar.revealed=true;var _y9=window.scrollY;render();window.scrollTo(0,_y9);}
   else if(a==='mock-start'){oralMockStart(t.dataset.k==='final'?'final':'tech');render();focusMain();}
-  else if(a==='mock-next'){var _mk=ui.oralMock;if(_mk){if(_mk.i<_mk.ids.length-1)_mk.i++;else _mk.done=true;}render();}
-  else if(a==='mock-stop'){ui.oralMock=null;if(MOCK_TIMER){clearInterval(MOCK_TIMER);MOCK_TIMER=null;}render();}
+  else if(a==='rec-start'){recStart(t.dataset.id);}
+  else if(a==='rec-stop'){recStop();}
+  else if(a==='mock-next'){recStop();var _mk=ui.oralMock;if(_mk){if(_mk.i<_mk.ids.length-1)_mk.i++;else _mk.done=true;}render();}
+  else if(a==='mock-stop'){recStop();ui.oralMock=null;if(MOCK_TIMER){clearInterval(MOCK_TIMER);MOCK_TIMER=null;}render();}
   else if(a==='mock-rate'){var _mr=ui.oralMock;if(_mr){var _v=t.dataset.k==='1'?1:0;_mr.rate[t.dataset.id]=_v;state.tp.oral[t.dataset.id]=_v;save();var _yo=window.scrollY;render();window.scrollTo(0,_yo);}}
   else if(a==='tp-oral-kind'){ui.tpOralKind=t.dataset.k||'all';ui.tpOral=null;render();}
-  else if(a==='tp-oral-next'){tpOralPick();var _y4=window.scrollY;render();window.scrollTo(0,_y4);}
+  else if(a==='tp-oral-next'){recStop();tpOralPick();var _y4=window.scrollY;render();window.scrollTo(0,_y4);}
   else if(a==='tp-oral-reveal'){if(ui.tpOral){ui.tpOral.revealed=true;var _oq=null;ENTRETIEN_TP.forEach(function(q){if(q.id===ui.tpOral.id)_oq=q;});var _y5=window.scrollY;render();window.scrollTo(0,_y5);if(_oq)announce('Pistes : '+_oq.p);}}
   else if(a==='tp-oral-rate'){if(ui.tpOral){state.tp.oral[ui.tpOral.id]=t.dataset.k==='1'?1:0;save();tpOralPick();var _y6=window.scrollY;render();window.scrollTo(0,_y6);}}
   else if(a==='set-accent'){var _ac=t.dataset.k||'';try{if(_ac)localStorage.setItem('legl.accent',_ac);else localStorage.removeItem('legl.accent');}catch(e){}if(_ac)document.documentElement.setAttribute('data-accent',_ac);else document.documentElement.removeAttribute('data-accent');var _ya=window.scrollY;render();window.scrollTo(0,_ya);}
