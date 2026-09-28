@@ -4680,7 +4680,12 @@ var ACC_USE=[
   ['590','la baisse du cours des actions détenues en placement'],
   ['1688','les intérêts d\'emprunt courus mais pas encore payés à la clôture'],
   ['5112','les chèques reçus pas encore remis à la banque'],
-  ['44586','la TVA d\'une charge dont la facture n\'est pas encore arrivée']
+  ['44586','la TVA d\'une charge dont la facture n\'est pas encore arrivée'],
+  ['6257','un repas d\'affaires avec un client'],
+  ['6226','les honoraires de l\'expert-comptable ou de l\'avocat'],
+  ['44581','les acomptes de TVA versés au régime simplifié'],
+  ['44587','la TVA d\'une vente livrée mais pas encore facturée'],
+  ['7817','l\'annulation d\'une dépréciation de stock ou de créance devenue inutile']
 ];
 function accName(num){var l=pcLib(num);return l?l+' ('+num+')':num;}
 function accUses(){return ACC_USE.filter(function(u){return !!pcLib(u[0]);});}
@@ -6574,7 +6579,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 9 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 6 ambiances (Grand livre par défaut, Lorient…), recettes en un clic, police lecture facile, sombre selon l\'heure, coche et petit son de réussite. <b>Accueil</b> à la carte ou minimaliste. <b>Agenda</b> : import de l\'emploi du temps (.ics) ou jours de cours réguliers. Raccourcis sur l\'icône du téléphone. Bulletin de paie reconstitué dans l\'atelier paie. <b>Comptes</b> : plus aucune question de numéro à réciter, place aux situations (« quel compte pour… ? »), saisie par le nom du compte et plan comptable avec l\'utilité de chaque compte. Plan de formation réglable : ordre des CCP, périodes de stage, calendrier provisoire.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 12 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 6 ambiances (Grand livre par défaut, Lorient…), recettes en un clic, police lecture facile, sombre selon l\'heure, coche et petit son de réussite. <b>Accueil</b> à la carte ou minimaliste. <b>Agenda</b> : import de l\'emploi du temps (.ics) ou jours de cours réguliers. Raccourcis sur l\'icône du téléphone. Bulletin de paie reconstitué dans l\'atelier paie. <b>Comptes</b> : plus aucune question de numéro à réciter, place aux situations (« quel compte pour… ? »), saisie par le nom du compte et plan comptable avec l\'utilité de chaque compte. Plan de formation réglable : ordre des CCP, périodes de stage, calendrier provisoire.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -6848,7 +6853,12 @@ var CAB_ACCTS_EXTRA=[
   {num:'590',lib:'Dépréciations des valeurs mobilières de placement',cl:5,cat:'Bilan',sens:'C'},
   {num:'6866',lib:'Dotations aux dépréciations des éléments financiers',cl:6,cat:'Gestion',sens:'D'},
   {num:'7815',lib:'Reprises sur provisions d\'exploitation',cl:7,cat:'Gestion',sens:'C'},
-  {num:'7085',lib:'Ports et frais accessoires facturés',cl:7,cat:'Gestion',sens:'C'}
+  {num:'7085',lib:'Ports et frais accessoires facturés',cl:7,cat:'Gestion',sens:'C'},
+  {num:'6257',lib:'Réceptions',cl:6,cat:'Gestion',sens:'D'},
+  {num:'6226',lib:'Honoraires',cl:6,cat:'Gestion',sens:'D'},
+  {num:'44581',lib:'Acomptes, régime simplifié d\'imposition',cl:4,cat:'Bilan',sens:'D'},
+  {num:'44587',lib:'TVA sur factures à établir',cl:4,cat:'Bilan',sens:'C'},
+  {num:'7817',lib:'Reprises sur dépréciations des actifs circulants',cl:7,cat:'Gestion',sens:'C'}
 ];
 var CAB_DOSSIERS=[
 /* ------------------------------------------------------------------ CCP1 ------------------------------------------------------------------ */
@@ -7221,6 +7231,105 @@ var CAB_DOSSIERS=[
    consigne:'Enregistre la provision pour le litige.',
    sol:[{acc:'6815',side:'D',amt:3000},{acc:'151',side:'C',amt:3000}],
    e:'La provision réduit le résultat de 2026 et apparaît au passif. Elle sera reprise (7815) quand le litige sera réglé.'}
+ ]}
+,
+{id:'c10',ccp:'CCP1',client:'SARL Breizh Numérique',secteur:'Agence web, Vannes',periode:'Février 2027',duree:35,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Breizh Numérique : fournisseurs et notes de frais',corps:["Bonjour,","L'agence Breizh Numérique a acheté du matériel ce mois-ci et un salarié a déposé une note de frais. Il y a aussi un écart entre le relevé d'un fournisseur et notre compte.","Attention à bien distinguer charge et immobilisation, et à la TVA récupérable ou non sur les frais de déplacement.","Merci !"]},
+ steps:[
+  {type:'ecr',comp:1,titre:'Achat d\'un ordinateur',journal:'ACH',date:'04/02/27',piece:'LDLC-5512',
+   doc:{type:'facture',emetteur:{nom:'Ouest Informatique Pro',adr:'12 rue du Commerce, 56000 Vannes',siret:'512 334 870 00024'},dest:{nom:'SARL Breizh Numérique',adr:'5 place Gambetta, 56000 Vannes'},num:'OIP-5512',date:'04/02/2027',echeance:'06/03/2027',lignes:[['Ordinateur portable 16 pouces, 32 Go',1,1200]],remise:0,tva:20,cond:'Paiement à 30 jours.'},
+   consigne:'L\'ordinateur servira plusieurs années. Enregistre la facture.',
+   sol:[{acc:'2183',side:'D',amt:1200},{acc:'44562',side:'D',amt:240},{acc:'404',side:'C',amt:1440}],
+   e:'Un bien durable dont le prix dépasse 500 € HT s\'immobilise : Matériel de bureau et informatique (2183). Sa TVA va en TVA déductible sur immobilisations (44562) et la dette en Fournisseurs d\'immobilisations (404).'},
+  {type:'qcm',comp:1,titre:'Et la souris ?',
+   q:'Le même jour, l\'agence achète une souris à 25 € HT. Où l\'enregistres-tu ?',
+   o:['En immobilisation (2183), comme l\'ordinateur','En charge, en petit équipement ou fournitures (606)','En stock de marchandises (370)','Dans un compte d\'attente jusqu\'à la clôture'],c:1,
+   e:'Un petit matériel de faible valeur (en dessous de 500 € HT, tolérance admise) peut être passé directement en charge, même s\'il dure plusieurs années.'},
+  {type:'ecr',comp:1,titre:'Note de frais',journal:'OD',date:'15/02/27',piece:'NDF-02',
+   doc:{type:'table',titre:'Note de frais de Yann Le Gall, commercial',head:['Dépense','TTC'],rows:[['Déjeuner avec un client à Lorient (TVA 10 % : 5,45 €)','60,00 €'],['Billet de train Vannes – Rennes (TVA 10 %)','88,00 €'],['Total à rembourser','148,00 €']]},
+   consigne:'Enregistre la note de frais. Attention : la TVA sur le transport de personnes n\'est pas récupérable.',
+   sol:[{acc:'6257',side:'D',amt:54.55,alt:['625']},{acc:'44566',side:'D',amt:5.45},{acc:'625',side:'D',amt:88,alt:['6251']},{acc:'421',side:'C',amt:148}],
+   e:'Le repas d\'affaires est une réception (6257) : sa TVA est déductible. Le billet de train est un déplacement (625) : la TVA sur le transport de personnes est exclue du droit à déduction, on enregistre donc le TTC en charge. La dette envers le salarié va en 421.'},
+  {type:'ecr',comp:2,titre:'Rembourser le salarié',journal:'BQ',date:'20/02/27',piece:'NDF-02',
+   consigne:'La note de frais est remboursée par virement. Enregistre le paiement.',
+   sol:[{acc:'421',side:'D',amt:148},{acc:'512',side:'C',amt:148}],
+   e:'Le virement solde la dette envers le salarié. Une note de frais n\'est pas du salaire : elle n\'est pas soumise à cotisations.'},
+  {type:'calc',comp:1,titre:'Justifier un compte fournisseur',
+   doc:{type:'table',titre:'Papier Ouest : relevé du fournisseur et notre compte 401 au 28/02/2027',head:['Élément','Montant'],rows:[['Solde du relevé envoyé par le fournisseur (ce que nous lui devons)','3 240,00 €'],['Solde créditeur de notre compte fournisseur','2 520,00 €'],['Facture F-889 du 26/02, sur son relevé, introuvable chez nous','?']]},
+   consigne:'Calcule l\'écart entre les deux soldes.',
+   f:[{k:'ec',l:'Écart (€)',v:720}],
+   e:'3 240 − 2 520 = 720 €, soit exactement le montant de la facture F-889 : elle n\'a jamais été reçue ou a été égarée.'},
+  {type:'qcm',comp:1,titre:'Que faire de l\'écart ?',
+   q:'Comment traites-tu cette facture F-889 introuvable ?',
+   o:['Je l\'enregistre d\'après le relevé du fournisseur, sans pièce','Je demande un duplicata au fournisseur, je vérifie la livraison, puis je l\'enregistre','Je l\'ignore, c\'est au fournisseur de relancer','Je paie les 720 € tout de suite pour solder'],c:1,
+   e:'On ne saisit jamais sans pièce justificative. On demande un duplicata, on contrôle la réalité de la livraison, puis on enregistre. À la clôture, une facture attendue se traiterait en facture non parvenue.'},
+  {type:'ecr',comp:1,titre:'Enregistrer le duplicata',journal:'ACH',date:'28/02/27',piece:'F-889',
+   doc:{type:'facture',emetteur:{nom:'Papier Ouest',adr:'ZI de Kerlann, 56000 Vannes',siret:'438 772 901 00015'},dest:{nom:'SARL Breizh Numérique',adr:'5 place Gambetta, 56000 Vannes'},num:'F-889 (duplicata)',date:'26/02/2027',echeance:'28/03/2027',lignes:[['Ramettes de papier A4',40,6],['Cartouches d\'encre',12,30]],remise:0,tva:20,cond:'Paiement à 30 jours.'},
+   consigne:'Le duplicata est arrivé et la livraison est confirmée. Enregistre-le.',
+   sol:[{acc:'6064',side:'D',amt:600,alt:['606']},{acc:'44566',side:'D',amt:120},{acc:'401',side:'C',amt:720}],
+   e:'Papier et cartouches sont des fournitures administratives (6064). Le compte fournisseur est maintenant justifié : son solde égale celui du relevé.'}
+ ]},
+{id:'c11',ccp:'CCP2',client:'Crêperie du Port',secteur:'Restaurant et épicerie fine, Concarneau',periode:'Exercice 2026',duree:35,
+ brief:{de:'Karim Benali, expert-comptable',objet:'Crêperie du Port : la CA12 annuelle',corps:["Bonjour,","La Crêperie du Port est au régime simplifié de TVA : deux acomptes dans l'année, puis une déclaration annuelle CA12. Elle vend à trois taux différents.","Prépare la déclaration de 2026 à partir des chiffres ci-dessous et passe les écritures.","Bonne journée."]},
+ steps:[
+  {type:'calc',comp:0,titre:'TVA collectée de l\'année',
+   doc:{type:'table',titre:'Chiffre d\'affaires HT 2026 par taux',head:['Activité','HT'],rows:[['Restauration sur place (10 %)','180 000 €'],['Épicerie fine, produits alimentaires (5,5 %)','40 000 €'],['Boissons alcoolisées (20 %)','25 000 €']]},
+   consigne:'Calcule la TVA collectée par taux et au total.',
+   f:[{k:'t10',l:'TVA à 10 % (€)',v:18000},{k:'t55',l:'TVA à 5,5 % (€)',v:2200},{k:'t20',l:'TVA à 20 % (€)',v:5000},{k:'tot',l:'TVA collectée totale (€)',v:25200}],
+   e:'180 000 × 10 % = 18 000 ; 40 000 × 5,5 % = 2 200 ; 25 000 × 20 % = 5 000. Total : 25 200 €. Les boissons alcoolisées restent au taux normal, même servies au restaurant.'},
+  {type:'calc',comp:0,titre:'Les acomptes',
+   consigne:'La TVA due au titre de 2025 (hors TVA sur immobilisations) s\'élevait à 8 000 €. Calcule les acomptes de juillet (55 %) et de décembre (40 %) versés en 2026.',
+   f:[{k:'jul',l:'Acompte de juillet (€)',v:4400},{k:'dec',l:'Acompte de décembre (€)',v:3200},{k:'tot',l:'Total des acomptes (€)',v:7600}],
+   e:'8 000 × 55 % = 4 400 € et 8 000 × 40 % = 3 200 €, soit 7 600 € versés en cours d\'année.'},
+  {type:'ecr',comp:0,titre:'Payer l\'acompte de juillet',journal:'BQ',date:'15/07/26',piece:'ACPT-07',
+   consigne:'Enregistre le paiement de l\'acompte de juillet.',
+   sol:[{acc:'44581',side:'D',amt:4400},{acc:'512',side:'C',amt:4400}],
+   e:'Les acomptes versés sont une créance sur l\'État, suivie dans Acomptes, régime simplifié d\'imposition (44581), jusqu\'à la déclaration annuelle.'},
+  {type:'calc',comp:0,titre:'Le solde de la CA12',
+   consigne:'La TVA déductible de l\'année s\'élève à 12 500 € sur biens et services et 1 900 € sur immobilisations. Calcule la TVA nette de l\'année et le solde à payer avec la CA12.',
+   f:[{k:'ded',l:'TVA déductible totale (€)',v:14400},{k:'net',l:'TVA nette de l\'année (€)',v:10800},{k:'sol',l:'Solde à payer avec la CA12 (€)',v:3200}],
+   e:'Déductible : 12 500 + 1 900 = 14 400 €. TVA nette : 25 200 − 14 400 = 10 800 €. Solde : 10 800 − 7 600 d\'acomptes = 3 200 €.'},
+  {type:'ecr',comp:0,titre:'Liquidation annuelle',journal:'OD',date:'31/12/26',piece:'CA12-2026',
+   consigne:'Passe l\'écriture de liquidation de la TVA de l\'année.',
+   sol:[{acc:'44571',side:'D',amt:25200},{acc:'44566',side:'C',amt:12500},{acc:'44562',side:'C',amt:1900},{acc:'44581',side:'C',amt:7600},{acc:'44551',side:'C',amt:3200}],
+   e:'On solde la TVA collectée et les TVA déductibles comme en CA3, et on solde en plus les acomptes (44581). Reste la TVA à décaisser (44551), payée avec la CA12.'},
+  {type:'qcm',comp:0,titre:'Simplifié ou réel normal ?',
+   q:'Qu\'est-ce qui distingue le régime simplifié de TVA du réel normal ?',
+   o:['Au simplifié, on ne paie pas de TVA','Une déclaration annuelle CA12 avec deux acomptes, au lieu de douze déclarations CA3','Au simplifié, la TVA n\'est pas déductible','Aucune différence, seul le nom change'],c:1,
+   e:'Au régime simplifié, l\'entreprise verse deux acomptes (juillet et décembre) puis régularise une fois par an avec la CA12. Au réel normal, elle déclare chaque mois avec la CA3.'}
+ ]},
+{id:'c12',ccp:'CCP3',client:'SAS Terre & Bois',secteur:'Négoce de bois de chauffage, Pontivy',periode:'Clôture au 31/12/2026',duree:40,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Terre & Bois : stocks et régularisations',corps:["Bonjour,","Pour Terre & Bois, il faut valoriser le stock de granulés au coût unitaire moyen pondéré, tenir compte de l'inventaire physique, puis passer les régularisations de fin d'année : une sous-location encaissée d'avance, une livraison pas encore facturée, des honoraires à payer.","La dépréciation du stock de l'an dernier est aussi à reprendre. Merci !"]},
+ steps:[
+  {type:'calc',comp:1,titre:'Coût moyen pondéré',
+   doc:{type:'table',titre:'Fiche de stock : sacs de granulés 15 kg',head:['Mouvement','Quantité','Coût unitaire'],rows:[['Stock au 1er octobre','200','15,00 €'],['Entrée du 10 octobre','500','16,00 €'],['Entrée du 20 novembre','300','17,50 €'],['Sorties d\'octobre à décembre','700','?']]},
+   consigne:'Calcule le coût unitaire moyen pondéré (CUMP) de fin de période, la valeur des sorties et le stock final théorique.',
+   f:[{k:'cump',l:'CUMP (€)',v:16.25},{k:'sort',l:'Valeur des sorties (€)',v:11375},{k:'sf',l:'Stock final théorique (€)',v:4875}],
+   e:'(200 × 15 + 500 × 16 + 300 × 17,50) / 1 000 = 16 250 / 1 000 = 16,25 €. Sorties : 700 × 16,25 = 11 375 €. Stock : 300 sacs × 16,25 = 4 875 €.'},
+  {type:'calc',comp:1,titre:'L\'inventaire physique',
+   consigne:'Au comptage du 31 décembre, il reste 290 sacs au lieu des 300 prévus. Quelle valeur de stock retiens-tu au bilan ?',
+   f:[{k:'sf',l:'Stock final retenu (€)',v:4712.5}],
+   e:'On retient toujours l\'inventaire physique : 290 × 16,25 = 4 712,50 €. L\'écart de 10 sacs (162,50 €) s\'explique peut-être par de la casse ou une erreur de sortie : à signaler.'},
+  {type:'ecr',comp:1,titre:'Reprise de la dépréciation',journal:'OD',date:'31/12/26',piece:'INV-01',
+   consigne:'Les granulés dépréciés l\'an dernier (800 €) ont été vendus. Reprends la dépréciation.',
+   sol:[{acc:'397',side:'D',amt:800},{acc:'7817',side:'C',amt:800}],
+   e:'La dépréciation n\'a plus de raison d\'être : on l\'annule par une reprise, un produit (7817 Reprises sur dépréciations des actifs circulants).'},
+  {type:'ecr',comp:1,titre:'Produit constaté d\'avance',journal:'OD',date:'31/12/26',piece:'INV-02',
+   consigne:'Le 1er décembre, Terre & Bois a encaissé 2 400 € de loyer d\'un sous-locataire pour 3 mois (décembre à février), enregistrés en produits annexes. Rattache la bonne part à 2027.',
+   sol:[{acc:'708',side:'D',amt:1600},{acc:'487',side:'C',amt:1600}],
+   e:'Janvier et février concernent 2027 : 2 400 × 2/3 = 1 600 €. On diminue le produit (708) et on constate un produit constaté d\'avance (487) au passif.'},
+  {type:'ecr',comp:1,titre:'Livraison non facturée',journal:'OD',date:'31/12/26',piece:'INV-03',
+   consigne:'Du bois a été livré le 28 décembre à un client, pour 3 000 € HT (TVA 20 %). La facture partira le 5 janvier. Rattache la vente à 2026.',
+   sol:[{acc:'418',side:'D',amt:3600},{acc:'707',side:'C',amt:3000},{acc:'44587',side:'C',amt:600}],
+   e:'La vente est réalisée à la livraison : produit à recevoir en Clients, factures à établir (418). La TVA correspondante va en TVA sur factures à établir (44587).'},
+  {type:'ecr',comp:1,titre:'Honoraires à payer',journal:'OD',date:'31/12/26',piece:'INV-04',
+   consigne:'Les honoraires de l\'expert-comptable pour la clôture 2026 sont estimés à 1 800 € HT (TVA 20 %), facturés en mars. Enregistre la charge à payer.',
+   sol:[{acc:'6226',side:'D',amt:1800,alt:['622']},{acc:'44586',side:'D',amt:360},{acc:'408',side:'C',amt:2160}],
+   e:'La charge concerne 2026 : Honoraires (6226) au débit, TVA sur factures non parvenues (44586), et la dette en Fournisseurs, factures non parvenues (408).'},
+  {type:'qcm',comp:1,titre:'Le 1er janvier',
+   q:'Que fais-tu le 1er janvier 2027 des écritures de produits constatés d\'avance, factures à établir et factures non parvenues ?',
+   o:['Rien, elles restent définitivement','Je les extourne (écritures inverses) pour pouvoir enregistrer normalement les vraies factures','Je les supprime du journal de 2026','Je les transforme en écritures de banque'],c:1,
+   e:'Ces régularisations sont provisoires : on les extourne au 1er jour de l\'exercice suivant. Quand la vraie facture arrive, on la saisit normalement, sans double compte.'}
  ]}
 
 ];
@@ -10641,7 +10750,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 9 dossiers cabinet, 9 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 12 dossiers cabinet, 9 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
