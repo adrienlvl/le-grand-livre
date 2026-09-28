@@ -4900,6 +4900,17 @@ function viewExamResult(){
 
 /* ---- Glossaire ---- */
 var GLOSSAIRE=[
+  {term:"Budget de trésorerie",cat:'reg',def:"Prévision mois par mois des encaissements et décaissements, en TTC et à la date où l'argent bouge. Il montre à l'avance les mois où la banque risque de passer dans le rouge."},
+  {term:"Découvert bancaire",cat:'reg',def:"Solde négatif du compte bancaire, autorisé ou non par la banque. Il coûte des agios et se négocie à l'avance quand le budget de trésorerie prévoit un creux."},
+  {term:"Point mort",cat:'gest',def:"Date à laquelle le seuil de rentabilité est atteint dans l'année : seuil divisé par le chiffre d'affaires, multiplié par 360 jours (activité régulière)."},
+  {term:"Marge sur coût variable",cat:'gest',def:"Chiffre d'affaires moins charges variables. Rapportée au chiffre d'affaires, elle donne le taux de marge sur coût variable."},
+  {term:"Marge de sécurité",cat:'gest',def:"Chiffre d'affaires moins seuil de rentabilité : la baisse d'activité que l'entreprise peut encaisser avant de perdre de l'argent."},
+  {term:"Annuité constante",cat:'bilan',def:"Remboursement annuel identique d'un emprunt : capital × taux ÷ (1 − (1 + taux) puissance −n). Elle contient des intérêts (qui baissent) et du capital (qui augmente)."},
+  {term:"Tableau d'amortissement d'un emprunt",cat:'bilan',def:"Tableau fourni par la banque : pour chaque échéance, capital restant dû, intérêts, capital remboursé et annuité. Il sert à contrôler le compte d'emprunt à la clôture."},
+  {term:"Règle du dixième",cat:'soc',def:"Calcul de l'indemnité de congés payés : 10 % de la rémunération brute de la période de référence, au prorata des jours pris. Comparée au maintien de salaire, on garde la plus favorable."},
+  {term:"Maintien de salaire",cat:'soc',def:"Calcul de l'indemnité de congés payés égale au salaire que le salarié aurait perçu s'il avait travaillé. Comparée à la règle du dixième."},
+  {term:"Période de référence",cat:'soc',def:"Période pendant laquelle le salarié acquiert ses congés payés, en général du 1er juin au 31 mai : 2,5 jours ouvrables par mois, 30 jours pour une année complète."},
+  {term:"Autoliquidation",cat:'tva',def:"Mécanisme où le client, et non le fournisseur, déclare la TVA due puis la déduit sur la même déclaration : achats intracommunautaires, sous-traitance du bâtiment. Le fournisseur facture hors taxe."},
   {term:"Acompte",cat:'fac',def:"Somme versée avant la livraison. Reçu d'un client : dette en Clients, avances et acomptes reçus (4191), imputée ensuite sur la facture. Pour une vente de biens, la TVA n'est due qu'à la livraison."},
   {term:"Balance âgée",cat:'reg',def:"Tableau des créances clients classées selon l'ancienneté du retard (non échu, 1 à 30 jours, 31 à 60, plus de 60). Il sert à prioriser les relances."},
   {term:"Mise en demeure",cat:'reg',def:"Lettre recommandée avec accusé de réception qui fixe un dernier délai de paiement avant le recouvrement judiciaire (injonction de payer)."},
@@ -5778,6 +5789,12 @@ var ENTRETIEN_TP=[
   {id:'o37',k:'CCP2',q:"Comment rédiges-tu le commentaire d'un tableau de bord ?",p:"Court et factuel : je cite les chiffres clés et leur évolution, j'explique les écarts importants (cause probable), je distingue ce qui va bien et le point de vigilance, j'utilise le bon vocabulaire (taux de marge ou de marque) et je termine par une piste d'action. Le lecteur est un dirigeant : pas de jargon inutile."},
   {id:'o38',k:'CCP3',q:"Pourquoi extourne-t-on certaines écritures d'inventaire au début de l'exercice suivant ?",p:"Les charges à payer, produits à recevoir, charges et produits constatés d'avance sont des régularisations provisoires. En passant l'écriture inverse au 1er jour, on peut ensuite enregistrer la vraie facture ou le vrai paiement normalement, sans double compte : chaque exercice ne supporte que ce qui le concerne."},
   {id:'o39',k:'CCP3',q:"Comment enregistres-tu la cession d'une immobilisation ?",p:"Trois temps : dotation complémentaire jusqu'à la date de cession ; sortie de l'actif (amortissements au débit, valeur nette comptable en 675, immobilisation au crédit pour sa valeur d'origine) ; constatation du prix (créance ou banque au débit, 775 au crédit, TVA collectée si le bien la supporte). Le résultat de cession est la différence entre 775 et 675."},
+  {id:'o41',k:'CCP1',q:"Ton responsable te demande si l'entreprise pourra payer ses fournisseurs dans trois mois. Comment t'y prends-tu ?",p:"Je construis un budget de trésorerie mois par mois : encaissements clients en TTC selon leurs délais réels, décaissements fournisseurs, salaires, charges sociales, TVA à payer le mois suivant, échéances d'emprunt. Je pars du solde bancaire actuel et je calcule le solde de fin de chaque mois. Si un mois est négatif, je le signale tôt avec des pistes : relances, découvert autorisé, décalage d'un achat."},
+  {id:'o42',k:'CCP1',q:"Un salarié te remet une note de frais avec des tickets de caisse. Que contrôles-tu ?",p:"La présence d'un justificatif pour chaque dépense, le lien avec l'activité, le respect de la politique de l'entreprise (plafonds, autorisations), les calculs. Pour la TVA, je ne récupère que ce qui est déductible avec une facture en bonne et due forme : pas la TVA du transport de personnes ni de l'hébergement du salarié. Je rembourse le total TTC et j'enregistre les charges et la TVA récupérable."},
+  {id:'o43',k:'CCP2',q:"Un salarié conteste le montant de son indemnité de congés payés. Comment vérifies-tu ?",p:"Je reprends la période de référence et je recalcule les deux méthodes : le dixième de la rémunération brute (avec heures supplémentaires et primes liées au travail) au prorata des jours pris, et le maintien du salaire qu'il aurait perçu. On doit lui verser la plus favorable. Si j'ai fait une erreur, je la corrige sur le bulletin suivant et je lui explique le calcul."},
+  {id:'o44',k:'CCP2',q:"Comment expliques-tu le seuil de rentabilité à un gérant qui n'est pas comptable ?",p:"C'est le chiffre d'affaires à partir duquel l'entreprise ne perd plus d'argent : chaque vente rapporte une marge après les coûts variables, et il faut cumuler assez de marge pour payer les charges fixes (loyer, salaires fixes, assurances). Je lui donne la date approximative où ce niveau est atteint dans l'année et la marge de sécurité : de combien les ventes peuvent baisser avant la perte."},
+  {id:'o45',k:'CCP3',q:"L'entreprise a emprunté en cours d'année. Que fais-tu à la clôture ?",p:"Je vérifie que le capital restant dû au bilan correspond au tableau d'amortissement de la banque. Je comptabilise les intérêts courus entre la dernière échéance et la clôture : une charge d'intérêts de l'exercice, contre une dette d'intérêts courus, extournée au début de l'exercice suivant. Je rappelle que seuls les intérêts sont des charges, pas le capital remboursé."},
+  {id:'o46',k:'CCP3',q:"Pourquoi faut-il une variation de stock à la clôture ?",p:"Les achats sont comptabilisés en charges quand ils sont faits, mais une partie n'est pas encore vendue ou consommée à la clôture. On annule le stock initial et on constate le stock final issu de l'inventaire physique : ainsi la charge de l'exercice correspond à ce qui a réellement été consommé, et le stock apparaît à l'actif du bilan."},
   {id:'o40',k:'final',q:"Quel est ton projet professionnel après le titre ?",p:"Je présente un projet réaliste et argumenté : type de structure visée (cabinet, PME, collectivité), missions qui me motivent, ce que la formation et le stage m'ont confirmé, ce que je veux encore développer (paie, logiciels, facturation électronique), et le cas échéant une évolution possible (poursuite d'études, spécialisation)."},
   {id:'oef1',k:'CCP1',q:"La facturation électronique arrive dans les entreprises. Qu'est-ce que cela change dans ton travail ?",p:"Calendrier : réception obligatoire pour toutes au 1er septembre 2026, émission pour les PME au 1er septembre 2027. Factures structurées (Factur-X, UBL, CII) transmises par une plateforme agréée, nouvelles mentions (SIREN du client, nature de l'opération). Moins de saisie, plus de contrôle : rapprochement avec commandes et livraisons, gestion des rejets et des statuts, e-reporting pour les ventes aux particuliers."},
   {id:'oef2',k:'CCP1',q:"Un fournisseur t'envoie encore une facture en PDF par courriel après la date d'obligation. Que fais-tu ?",p:"Je vérifie si l'obligation d'émission s'applique déjà à lui (taille de l'entreprise, calendrier). Si oui, je lui demande poliment de passer par sa plateforme agréée, en lui rappelant l'annuaire. En attendant, je ne bloque pas le paiement d'une dette réelle sans en parler à mon responsable, et je trace l'échange."},
@@ -8694,7 +8711,7 @@ function toolGlossaire(){
       '<div class="gloss-list">'+items+'</div>';
   }).join('');
   return '<div style="margin-bottom:16px"><h2 class="tool-title">Glossaire comptable</h2>'+
-    '<p class="tool-sub">Définitions clés pour le BTS Comptabilité &amp; Gestion — '+GLOSSAIRE.length+' termes.</p></div>'+
+    '<p class="tool-sub">Définitions clés pour '+(isTP()?'le Titre Pro Comptable assistant':'le BTS Comptabilité &amp; Gestion')+' : '+GLOSSAIRE.length+' termes.</p></div>'+
     sections+
     '<div style="margin-top:28px;text-align:center">'+
       '<button class="btn btn-gh no-print" data-action="print-page" style="font-size:13px;padding:10px 18px">'+SVG.print+' Imprimer le glossaire</button>'+
@@ -10833,7 +10850,11 @@ function buildSearchIndex(){
     idx.push({type:'methodo',label:e.code+' — '+e.titre,sub:e.resume||'',action:function(){ui.tab='outils';ui.tool='methodo';render();}});
   });
   (typeof TP_CCP!=='undefined'?TP_CCP:[]).forEach(function(c){
+    idx.push({type:'fiche CCP',label:'Fiche récapitulative '+c.code,sub:c.titre+' · '+TP_FICHES[c.code].blocs.map(function(b){return b.h;}).join(', '),action:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='fiches';ui.tpFiche=c.code;render();}});
     c.comps.forEach(function(comp){idx.push({type:'titre pro',label:comp.t,sub:c.code+' — '+c.titre,action:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='grille';render();}});});
+  });
+  (typeof TP_AT!=='undefined'?TP_AT:[]).forEach(function(at){
+    idx.push({type:'atelier',label:'Atelier : '+at[1],sub:at[2]+' · cas chiffrés générés à l\'infini, corrigé détaillé',action:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='atelier';ui.tpAt=at[0];render();}});
   });
   (typeof ENTRETIEN_TP!=='undefined'?ENTRETIEN_TP:[]).forEach(function(q){
     idx.push({type:'entretien',label:q.q,sub:q.p,action:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='oral';ui.tpOralKind='all';ui.tpOral={id:q.id,revealed:false};render();}});
@@ -10849,10 +10870,15 @@ function searchQuery(q){
   var nq=normalizeStr(q);
   var idx=buildSearchIndex();
   var res=[];
-  idx.forEach(function(item){
-    if(normalizeStr(item.label).indexOf(nq)>=0||normalizeStr(item.sub).indexOf(nq)>=0)res.push(item);
+  /* Classement : titre qui commence par la recherche, puis titre qui la contient, puis description ; à égalité, pages et ateliers avant glossaire et cartes. */
+  var TW={nav:0,tool:0,atelier:0,'fiche CCP':0,module:0,'dossier cabinet':1,glossaire:1,methodo:1,'titre pro':1,entretien:2,sujet:2,annale:2,card:3};
+  idx.forEach(function(item,i){
+    var nl=normalizeStr(item.label),p0=nl.indexOf(nq),lv=p0===0?0:(p0>0?1:(normalizeStr(item.sub).indexOf(nq)>=0?2:-1));
+    if(lv===1&&nl.indexOf(': '+nq)>=0)lv=0;
+    if(lv>=0)res.push({it:item,s:lv*10+(TW[item.type]!=null?TW[item.type]:2),i:i});
   });
-  return res.slice(0,30);
+  res.sort(function(a,b){return a.s-b.s||a.i-b.i;});
+  return res.slice(0,30).map(function(r){return r.it;});
 }
 var SRCH_RES=[],SRCH_SEL=0;
 function renderSearchResults(q){
@@ -10865,7 +10891,7 @@ function renderSearchResults(q){
   el.innerHTML=res.map(function(item,i){
     return '<div class="srch-item'+(i===0?' sel':'')+'" id="srch-opt-'+i+'" role="option" aria-selected="'+(i===0?'true':'false')+'" data-srch-i="'+i+'">'+
       '<span class="srch-tag '+item.type+'">'+
-        ({nav:'Aller à',module:'Module',card:'Flashcard',glossaire:'Glossaire',sujet:'Sujet type',annale:'Annale',methodo:'Méthodo',tool:'Outil'}[item.type]||item.type)+
+        ({nav:'Aller à',module:'Module',card:'Flashcard',glossaire:'Glossaire',sujet:'Sujet type',annale:'Annale',methodo:'Méthodo',tool:'Outil',atelier:'Atelier'}[item.type]||item.type)+
       '</span>'+
       '<div class="srch-main">'+
         '<div class="srch-label">'+escHtml(item.label)+'</div>'+
