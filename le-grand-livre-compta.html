@@ -2202,6 +2202,27 @@ var MODULES=[
       {q:"Résultat fiscal 80 000 euros au taux de 25 %. L'IS est de…",o:["16 000 euros","20 000 euros","25 000 euros","12 000 euros"],c:1,e:"80 000 multiplié par 25 % égale 20 000 euros."},
       {q:"Quelle écriture pour le paiement de l'IS à l'État ?",o:["512 débité / 444 crédité","444 débité / 512 crédité","695 débité / 512 crédité","444 débité / 695 crédité"],c:1,e:"444 État, impôt sur les bénéfices au débit, 512 Banque au crédit."}
     ]},
+  {id:'efacture',num:'24',cat:'op',icon:'fac',title:'La facturation électronique',sub:'La réforme 2026-2027 qui change le quotidien des comptables',
+    cours:[
+      {h:"De quoi parle-t-on",p:"Entre entreprises assujetties à la TVA établies en France, les factures devront être électroniques : non plus un PDF envoyé par courriel, mais un fichier structuré, lisible par les logiciels, qui transite par une plateforme agréée. Un simple PDF, même envoyé par courriel, n'est pas une facture électronique au sens de la réforme."},
+      {h:"Le calendrier",p:"Au 1er septembre 2026, toutes les entreprises doivent être capables de recevoir des factures électroniques, et les grandes entreprises et ETI doivent en émettre. Au 1er septembre 2027, les PME et micro-entreprises doivent à leur tour les émettre. Ta formation se déroule donc en pleine mise en place : les cabinets et leurs clients s'y préparent."},
+      {h:"Les formats",p:"Trois formats sont admis : Factur-X (un PDF lisible qui embarque un fichier de données XML), UBL et CII (des fichiers de données purs). Le format doit permettre au logiciel du client d'intégrer la facture sans ressaisie."},
+      {h:"Les plateformes agréées",p:"Les factures circulent par des plateformes agréées par l'administration fiscale (anciennement appelées PDP). Chaque entreprise en choisit une, souvent proposée par son logiciel comptable. Un annuaire public indique, pour chaque SIREN, sur quelle plateforme lui adresser ses factures."},
+      {h:"Les nouvelles mentions",p:"En plus des mentions habituelles, la facture comporte le numéro SIREN du client, l'adresse de livraison si elle diffère de celle du client, la nature de l'opération (livraison de biens, prestation de services ou les deux) et, le cas échéant, l'option pour le paiement de la TVA d'après les débits."},
+      {h:"Le cycle de vie",p:"Chaque facture suit des statuts transmis par les plateformes : déposée, reçue, mise à disposition, refusée, approuvée, encaissée… Le statut « encaissée » est important pour les prestations de services, dont la TVA est due à l'encaissement."},
+      {h:"Le e-reporting",p:"Les opérations qui ne passent pas par une facture électronique entre entreprises françaises (ventes à des particuliers, opérations avec l'étranger) font l'objet d'une transmission de données à l'administration : c'est le e-reporting, avec le même calendrier."},
+      {h:"Ce qui change pour toi",p:"Moins de saisie, plus de contrôle : les factures arrivent déjà structurées dans le logiciel. Ton travail consiste à vérifier, rapprocher avec les commandes et les livraisons, traiter les rejets et les litiges, suivre les statuts et, à terme, contrôler la TVA préremplie par l'administration."}
+    ],
+    quiz:[
+      {q:"À partir du 1er septembre 2026, que doivent pouvoir faire toutes les entreprises ?",o:["Émettre des factures électroniques","Recevoir des factures électroniques","Supprimer les factures papier de leurs archives","Déclarer la TVA chaque semaine"],c:1,e:"Au 1er septembre 2026, toutes doivent pouvoir recevoir ; l'émission est obligatoire pour les grandes entreprises et ETI, puis pour les PME et micro-entreprises au 1er septembre 2027."},
+      {q:"Une PME doit émettre ses factures au format électronique à partir du…",o:["1er janvier 2026","1er septembre 2026","1er septembre 2027","1er janvier 2030"],c:2,e:"PME et micro-entreprises : obligation d'émission au 1er septembre 2027."},
+      {q:"Un PDF envoyé par courriel est-il une facture électronique au sens de la réforme ?",o:["Oui, s'il est signé","Oui, s'il est en couleur","Non, il faut un format structuré transmis par une plateforme agréée","Oui, depuis 2020"],c:2,e:"La réforme exige un format structuré (Factur-X, UBL ou CII) transmis par une plateforme agréée."},
+      {q:"Qu'est-ce que Factur-X ?",o:["Un logiciel de paie","Un PDF lisible qui contient aussi les données de la facture au format XML","Un impôt","Une plateforme publique"],c:1,e:"Factur-X est un format mixte : lisible par un humain (PDF) et exploitable par un logiciel (XML)."},
+      {q:"Quelle nouvelle mention devient obligatoire sur les factures ?",o:["Le numéro de téléphone du vendeur","Le SIREN du client","La photo du produit","Le nom du comptable"],c:1,e:"Le SIREN du client, l'adresse de livraison si elle diffère et la nature de l'opération s'ajoutent aux mentions habituelles."},
+      {q:"Par où transitent les factures électroniques ?",o:["Par courriel, en pièce jointe","Par des plateformes agréées par l'administration","Par courrier recommandé","Par la banque"],c:1,e:"Chaque entreprise passe par une plateforme agréée ; l'annuaire public indique où adresser les factures de chaque SIREN."},
+      {q:"Qu'est-ce que le e-reporting ?",o:["La transmission de données sur les opérations qui ne passent pas par une facture électronique entre entreprises françaises (particuliers, étranger)","L'envoi des bulletins de paie par courriel","La télédéclaration de l'impôt sur les sociétés","Un tableau de bord commercial"],c:0,e:"Le e-reporting couvre notamment les ventes aux particuliers et les opérations internationales."},
+      {q:"Pourquoi le statut « encaissée » est-il important ?",o:["Pour les prestations de services dont la TVA est due à l'encaissement","Pour calculer les amortissements","Pour la paie","Il n'a aucune utilité"],c:0,e:"Pour les services, la TVA est exigible à l'encaissement : le statut permet de la déclarer au bon moment."}
+    ]},
   {id:'budget',num:'23',cat:'gest',icon:'res',title:'La gestion budgétaire et la trésorerie',sub:'Prévoir, suivre et piloter les flux',
     cours:[
       {h:"Qu'est-ce que la gestion budgétaire",p:"C'est prévoir l'activité et les moyens de l'entreprise, puis comparer les réalisations aux prévisions. Elle aide à décider et à piloter, au-delà de la simple constatation comptable."},
@@ -2250,6 +2271,14 @@ var PERIOD_KINDS={
   autre:      {label:'Autre',       color:'#51607E'}
 };
 var CARDS=[
+  {id:'ef1',t:'fac',q:"Qui doit recevoir des factures électroniques au 1er septembre 2026 ?",a:"Toutes les entreprises assujetties à la TVA établies en France, quelle que soit leur taille."},
+  {id:'ef2',t:'fac',q:"Qui doit émettre des factures électroniques au 1er septembre 2026 ?",a:"Les grandes entreprises et les ETI. Les PME et micro-entreprises suivent au 1er septembre 2027."},
+  {id:'ef3',t:'fac',q:"Les trois formats de facture électronique admis ?",a:"Factur-X (PDF + données XML), UBL et CII."},
+  {id:'ef4',t:'fac',q:"Par quoi transitent les factures électroniques ?",a:"Par une plateforme agréée par l'administration, choisie par chaque entreprise. Un annuaire public indique la plateforme de chaque SIREN."},
+  {id:'ef5',t:'fac',q:"Les nouvelles mentions obligatoires sur les factures ?",a:"SIREN du client, adresse de livraison si elle diffère, nature de l'opération (biens, services ou les deux), option pour la TVA d'après les débits le cas échéant."},
+  {id:'ef6',t:'fac',q:"Qu'est-ce que le e-reporting ?",a:"La transmission à l'administration des données des opérations hors facture électronique entre entreprises françaises : ventes aux particuliers, opérations internationales."},
+  {id:'ef7',t:'fac',q:"Un PDF envoyé par courriel est-il une facture électronique ?",a:"Non : il faut un format structuré (Factur-X, UBL, CII) transmis par une plateforme agréée."},
+  {id:'ef8',t:'fac',q:"Que change la facture électronique pour l'assistant comptable ?",a:"Moins de saisie, plus de contrôle : vérifier, rapprocher avec commandes et livraisons, traiter rejets et litiges, suivre les statuts de cycle de vie."},
   {id:'c1',t:'pd',q:"La règle d'or de la partie double ?",a:"Total des débits = total des crédits. Toujours."},
   {id:'c2',t:'pd',q:"Compte en T : débit et crédit, c'est où ?",a:"Débit à gauche, crédit à droite."},
   {id:'c3',t:'pd',q:"Un compte d'actif augmente\u2026",a:"au débit."},
@@ -3632,6 +3661,9 @@ function memo(id){
   if(id==='is')return '<p class="memo-cap">Du résultat comptable à l\'impôt.</p>'+
     '<div class="tbox"><div class="tbox-h"><div>Résultat fiscal</div><div>Impôt</div></div><div class="tbox-b"><div>Résultat comptable<br>+ réintégrations − déductions</div><div><strong>× 25 %</strong> (15 % pour les PME)<br>= <strong>IS</strong></div></div></div>'+
     '<p class="memo-cap" style="margin-top:14px">Écriture : 695 Impôts sur les bénéfices / 444 État. Paiement : 444 / 512.</p>';
+  if(id==='efacture')return '<p class="memo-cap">La réforme en un coup d\'œil : qui, quand, comment.</p>'+
+    '<div class="tbox"><div class="tbox-h"><div>1er septembre 2026</div><div>1er septembre 2027</div></div><div class="tbox-b"><div>Toutes les entreprises <strong>reçoivent</strong><br>Grandes entreprises et ETI <strong>émettent</strong></div><div>PME et micro-entreprises <strong>émettent</strong><br>e-reporting pour toutes</div></div></div>'+
+    '<p class="memo-cap" style="margin-top:14px">Formats : <b>Factur-X</b>, UBL, CII · Transport : <b>plateforme agréée</b> · Nouvelles mentions : <b>SIREN du client</b>, adresse de livraison, nature de l\'opération, option TVA sur les débits.</p>';
   if(id==='budget')return '<p class="memo-cap">Prévoir les flux, puis comparer au réel.</p>'+
     '<div class="tbox"><div class="tbox-h"><div>Budget de trésorerie</div><div>Contrôle</div></div><div class="tbox-b"><div>Encaissements − décaissements<br>= <strong>solde de trésorerie</strong></div><div>Réel vs prévu<br>= <strong>écart</strong> (favorable ou défavorable)</div></div></div>'+
     '<p class="memo-cap" style="margin-top:14px">La trésorerie suit les règlements, pas les factures : attention aux décalages.</p>';
@@ -5538,7 +5570,7 @@ function cursusShort(){return isTP()?'Titre Pro CA':'BTS CG';}
 function applyCursusTitle(){try{document.title=isTP()?'Le Grand Livre — Prépa Titre Pro Comptable assistant':'Le Grand Livre — Prépa BTS CG';}catch(e){}}
 var TP_CCP=[
   {code:'CCP1',titre:'Assurer les opérations comptables au quotidien',msp:120,et:15,
-   mods:['ecriture','facture','reglements','rapprochement','budget'],themes:['ecr','fac','reg','rappro'],
+   mods:['ecriture','facture','efacture','reglements','rapprochement','budget'],themes:['ecr','fac','reg','rappro'],
    comps:[
     {t:"Assurer la gestion administrative et comptable des clients",et:true,mods:['facture','ecriture','tva','rapprochement'],exos:['vente','vente_cpt','reglt_client'],
      crit:["Les conditions de fond et de forme des documents émis sont respectées.","Les conditions contractuelles des ventes sont respectées.","Les enregistrements comptables dans les journaux sont exacts.","Les comptes clients sont justifiés et suivis.","Le traitement des demandes de renseignements est approprié."],
@@ -5618,6 +5650,8 @@ var TP_CONSEILS={
       "Joins la liste de tes titres, diplômes et attestations de formation, et signe la déclaration sur l'honneur."]
 };
 var ENTRETIEN_TP=[
+  {id:'oef1',k:'CCP1',q:"La facturation électronique arrive dans les entreprises. Qu'est-ce que cela change dans ton travail ?",p:"Calendrier : réception obligatoire pour toutes au 1er septembre 2026, émission pour les PME au 1er septembre 2027. Factures structurées (Factur-X, UBL, CII) transmises par une plateforme agréée, nouvelles mentions (SIREN du client, nature de l'opération). Moins de saisie, plus de contrôle : rapprochement avec commandes et livraisons, gestion des rejets et des statuts, e-reporting pour les ventes aux particuliers."},
+  {id:'oef2',k:'CCP1',q:"Un fournisseur t'envoie encore une facture en PDF par courriel après la date d'obligation. Que fais-tu ?",p:"Je vérifie si l'obligation d'émission s'applique déjà à lui (taille de l'entreprise, calendrier). Si oui, je lui demande poliment de passer par sa plateforme agréée, en lui rappelant l'annuaire. En attendant, je ne bloque pas le paiement d'une dette réelle sans en parler à mon responsable, et je trace l'échange."},
   {id:'o1',k:'CCP1',q:"Comment t'assures-tu qu'une facture de vente est conforme avant de l'envoyer ?",p:"Rapprochement avec le bon de commande et le bon de livraison ; contrôle des calculs (réductions, TVA) ; mentions obligatoires : numéro unique et chronologique, date, identité et SIREN des parties, désignation, quantités, prix unitaire HT, réductions, taux et montant de TVA, date d'échéance, taux des pénalités de retard et indemnité forfaitaire de 40 euros pour frais de recouvrement."},
   {id:'o2',k:'CCP1',q:"Un client conteste une facture. Comment traites-tu sa demande ?",p:"J'écoute et je reformule, je vérifie les pièces (commande, livraison, conditions générales de vente), je réponds par écrit de façon courtoise et argumentée ; si l'erreur est avérée, j'établis un avoir et je le comptabilise (709 ou 7xx, TVA collectée au débit, 411 au crédit) ; j'informe mon responsable et je garde une trace."},
   {id:'o3',k:'CCP1',q:"Comment justifies-tu le solde d'un compte client ?",p:"Je lettre les factures avec leurs règlements et avoirs ; le solde doit correspondre exactement aux pièces non lettrées ; j'utilise la balance âgée pour repérer les retards et je peux rapprocher le compte du relevé du client pour expliquer les écarts."},
@@ -6099,7 +6133,7 @@ var FORM_PHASES=[
   {k:'fond',n:'Les fondations',s:'Bases',w:8,d:'Partie double, plan comptable, journal et balance, bilan et compte de résultat. Le socle sur lequel tout le reste s\'appuie.',
     mods:['partie-double','pcg','organisation','bilan','resultat'],at:[],msp:null,ccp:''},
   {k:'ccp1',n:'CCP1 · Le quotidien comptable',s:'CCP1',w:30,d:'Factures clients et fournisseurs, TVA, règlements, banque et rapprochement, suivi de trésorerie.',
-    mods:['tva','ecriture','facture','reglements','rapprochement','budget'],at:['ba','rap'],msp:'CCP1',ccp:'CCP1'},
+    mods:['tva','ecriture','facture','efacture','reglements','rapprochement','budget'],at:['ba','rap'],msp:'CCP1',ccp:'CCP1'},
   {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
     mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','paie','tdb'],msp:'CCP2',ccp:'CCP2'},
   {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
