@@ -1461,6 +1461,19 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .bil-h b{flex:1;font-size:15px}
 .bil-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--accent)}
 @media print{.bil .tool-sub{color:#333!important}.bil-ccp,.bil-kpis div{background:#fff!important;border-color:#bbb!important}}
+.fch-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.fch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+.fch-b{border:1px solid var(--edge);border-radius:12px;padding:12px 14px;background:var(--card);break-inside:avoid}
+.fch-b h3{font-family:'Fraunces',serif;font-size:15px;margin:0 0 6px;color:var(--accent)}
+.fch-b ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.5}
+.fch-b li+li{margin-top:3px}
+.fch-t{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.35}
+.fch-t th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);padding:3px 4px;border-bottom:1px solid var(--edge)}
+.fch-t td{padding:4px;border-bottom:1px solid var(--edge);vertical-align:top}
+.fch-t td:first-child{font-weight:600}
+.fch-m{background:var(--paper)}
+.fch-r{border-style:dashed}
+@media print{body:has(.fch) .page-head,body:has(.fch) .tool-section.fch~*{display:none!important}body:has(.fch) .panel:has(.fch),body:has(.fch) .tools-layout{border:0!important;padding:0!important;background:#fff!important}.fch-grid{display:block;columns:2;column-gap:6px}.fch-b{margin:0 0 6px;padding:6px 8px;background:#fff!important;border-color:#bbb!important;border-radius:6px}.fch-b h3{font-size:11pt;margin-bottom:3px;color:#000!important}.fch-b ul{font-size:8pt;line-height:1.25;padding-left:14px}.fch-b li+li{margin-top:1px}.fch-t{font-size:7.5pt}.fch-t td{padding:2px 3px}.fch-t th{font-size:7pt}.fch .tool-sub{font-size:8.5pt;color:#333!important}.fch-head{margin-bottom:6px}.fch .tool-title{font-size:15pt}.fch .epr-code{background:#fff!important;color:#000!important;border:1px solid #000}}
 .mock-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mock-time{font-size:26px;font-weight:700;color:var(--accent)}
 .mock-q{font-size:clamp(20px,2.6vw,26px);line-height:1.35;margin:16px 0 10px}
@@ -1489,7 +1502,7 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 @media print{
   #app{padding-left:0!important}
   .topbar,.navbtn,.back,.btn,.btn-sm,.btn-gh,.btn-pri,.chips,.stepper,#search-overlay,#shortcuts-overlay,.tnav,.botnav,.focus-fab,.focus-panel,.nudge,#onb-back,.confetti{display:none!important}
-  body{background:#fff!important;background-image:none!important;color:#000}
+  body{background:#fff!important;background-image:none!important;color:#000;min-height:0!important}
   .wrap{padding:0!important;max-width:100%!important}
   .card,.mcard,.panel,.ag-event-item,.gloss-item,.suj-q,.lrow,.aide-card,.ann-doss{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid;page-break-inside:avoid}
   h1,h2,h3,h4,.tool-title,.ann-doss-h,.eyebrow{break-after:avoid;page-break-after:avoid}
@@ -5033,7 +5046,7 @@ var GLOSSAIRE=[
 ];
 
 /* ---- Outils ---- */
-var APP_VERSION='2.0.0';
+var APP_VERSION='2.1.0';
 var ACCENTS=[['','Selon l\'ambiance'],['ocean','Océan'],['emeraude','Émeraude'],['sapin','Sapin'],['indigo','Indigo'],['violet','Violet'],['rose','Rose'],['bordeaux','Bordeaux'],['ambre','Ambre']];
 /* Apparence : chaque option est stockée dans localStorage (legl.<clé>) et posée en attribut data-<clé> sur <html>. */
 var AMBIANCES=[
@@ -5113,6 +5126,7 @@ var NAV_ITEMS=[
   {label:'Agenda',sub:'Calendrier, périodes, notes, compétences, carnet',go:function(){ui.tab='agenda';ui.agendaSub='today';}},
   {label:'Dossiers cabinet',sub:'Clients fictifs à traiter de bout en bout, par CCP : pièces, écritures, calculs, courriels',go:function(){navTerrain('cabinet');}},
   {label:'Mon bilan de progression',sub:'Bilan imprimable par CCP pour le formateur ou le tuteur de stage',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='bilan';}},
+  {label:'Fiches récapitulatives par CCP',sub:'Une page par CCP à imprimer : écritures types, calculs clés, méthode le jour J',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='fiches';}},
   {label:'Plan de formation',sub:'De la rentrée à la session du titre : étapes, rythme, objectifs de la semaine',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='plan';}},
   {label:'Apparence',sub:'Ambiance, couleurs, taille du texte, police, densité',go:function(){ui.tab='outils';ui.tool='apparence';}},
   {label:'Espace Titre Pro Comptable assistant',sub:'Référentiel, session d\'examen, 3 CCP et 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='ref';}},
@@ -5783,7 +5797,7 @@ var TP_CCP=[
    ]}
 ];
 var TP_CRIT_LEVELS=['À travailler','En cours','Acquis'];
-var TP_TABS=[['plan','Plan de formation'],['bilan','Mon bilan'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
+var TP_TABS=[['plan','Plan de formation'],['bilan','Mon bilan'],['fiches','Fiches CCP'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
 var TP_DP_FIELDS=[
   ['desc',"1. Décris les tâches ou opérations que tu as effectuées, et dans quelles conditions"],
   ['moyens',"2. Précise les moyens utilisés (logiciels, documents, procédures)"],
@@ -5886,6 +5900,55 @@ function tpPratique(code){
   return {n:sc.length,pct:sc.length?Math.round(sc.reduce(function(a,b){return a+b;},0)/sc.length):0};
 }
 /* Bilan imprimable, à montrer au formateur ou au tuteur de stage. */
+/* Fiches récapitulatives d'une page par CCP : l'essentiel à relire les dernières semaines */
+var TP_FICHES={
+  CCP1:{sous:'Clients, fournisseurs, trésorerie',duree:'Mise en situation de 2 h, puis entretien technique',blocs:[
+    {h:'Facture en cascade',l:['Prix brut − remise − rabais − ristourne = <b>net commercial</b> (chaque réduction se calcule sur le montant précédent)','Net commercial − escompte = <b>net financier</b>','+ frais de port (soumis à TVA) = base HT, puis TVA et TTC','Avoir : mêmes mentions qu\'une facture, il annule tout ou partie d\'une vente']},
+    {h:'Écritures du quotidien',t:[['Vente','Client (TTC)','Ventes (HT) et TVA collectée'],['Achat','Achats (HT) et TVA déductible','Fournisseur (TTC)'],['Règlement client','Banque','Client'],['Règlement fournisseur','Fournisseur','Banque'],['Escompte accordé','Escompte accordé (charge financière) et TVA collectée','Client']]},
+    {h:'Suivi des tiers',l:['<b>Lettrage</b> : rapprocher une facture et son règlement quand ils se soldent exactement ; le lettrage partiel attend le solde','<b>Balance âgée</b> : classer les créances par ancienneté, relancer d\'abord les plus anciennes','Délais légaux : 60 jours date de facture ou 45 jours fin de mois ; pénalités de retard et indemnité forfaitaire de 40 €']},
+    {h:'Rapprochement bancaire',l:['Partir des deux soldes, compte 512 et relevé, en sens inverse (débiteur chez l\'un, créditeur chez l\'autre)','Pointer ce qui figure des deux côtés','Ce qui est sur le relevé et pas en compta (frais, agios, prélèvements, virements reçus) : <b>on l\'enregistre</b>','Ce qui est en compta et pas sur le relevé (chèques non encaissés) : décalage normal, on attend']},
+    {h:'Trésorerie et notes de frais',l:['Budget de trésorerie : encaissements et décaissements <b>TTC</b>, à la date où l\'argent bouge ; la TVA à payer est décalée d\'un mois','Note de frais : TVA récupérable sur les repas et les fournitures avec facture au nom de l\'entreprise ; pas sur le train ni l\'hébergement du salarié']},
+    {h:'Facturation électronique',l:['Réception obligatoire pour toutes les entreprises depuis le 1<sup>er</sup> septembre 2026','Émission : grandes entreprises et ETI en septembre 2026, PME et micro-entreprises en septembre 2027','Passage par une plateforme agréée ; formats Factur-X, UBL ou CII ; le PDF simple ne suffit plus']}
+  ]},
+  CCP2:{sous:'TVA, paie, tableaux de bord',duree:'Mise en situation de 1 h 30, puis entretien technique',blocs:[
+    {h:'TVA : ce qui compte',l:['Taux : 20 % normal, 10 % intermédiaire, 5,5 % réduit, 2,1 % particulier','Exigibilité : biens à la livraison ; services à l\'encaissement, sauf option pour les débits','TVA à décaisser = collectée − déductible (biens et services, immobilisations) − crédit antérieur','Régime réel normal : CA3 mensuelle ; réel simplifié : CA12 annuelle et deux acomptes (55 % en juillet, 40 % en décembre)']},
+    {h:'Liquider la TVA',t:[['Solder la TVA collectée du mois','TVA collectée',''],['Solder la TVA déductible du mois','','TVA déductible (biens et services, immobilisations)'],['Différence si la collectée est plus forte','','TVA à décaisser'],['Différence si la déductible est plus forte','Crédit de TVA à reporter',''],['Paiement le mois suivant','TVA à décaisser','Banque']]},
+    {h:'TVA dans l\'Union européenne',l:['Achat intracommunautaire : <b>autoliquidation</b>, la même TVA est due et déductible, rien à décaisser si la déduction est totale','Vente à un assujetti d\'un autre pays : exonérée, numéros de TVA des deux parties et mention obligatoire sur la facture']},
+    {h:'Paie : du brut au net',l:['Salaire de base + heures supplémentaires (+25 % de la 36<sup>e</sup> à la 43<sup>e</sup>, +50 % au-delà) + primes = <b>brut</b>','Brut − cotisations salariales = net ; − prélèvement à la source = <b>net payé</b>','Congés payés : comparer la règle du dixième et le maintien de salaire, retenir le plus favorable au salarié']},
+    {h:'Écritures de paie',t:[['Salaire','Rémunérations du personnel (brut)','Personnel, rémunérations dues (net) ; organismes sociaux (part salariale) ; État, prélèvement à la source'],['Charges patronales','Charges sociales','Organismes sociaux'],['Versement du net','Personnel, rémunérations dues','Banque']]},
+    {h:'Tableau de bord',l:['Marge commerciale = ventes de marchandises − coût d\'achat des marchandises vendues','Taux de marge = marge ÷ coût d\'achat ; taux de marque = marge ÷ prix de vente HT','Seuil de rentabilité = charges fixes ÷ taux de marge sur coût variable ; point mort = seuil ÷ CA × 360 jours','Écart = réel − prévu ; un indicateur se commente : cause probable et action proposée']}
+  ]},
+  CCP3:{sous:'Travaux de fin d\'exercice',duree:'Mise en situation de 1 h 30, puis entretien technique',blocs:[
+    {h:'Amortissements',l:['Base = coût d\'acquisition HT (prix + frais accessoires)','Linéaire : base × taux × durée d\'usage de l\'année (prorata en jours sur 360 la première année)','Dégressif : taux linéaire × 1,25 (3 et 4 ans), × 1,75 (5 et 6 ans), × 2,25 (plus de 6 ans) ; passage au linéaire dès qu\'il donne plus','VNC = base − cumul des amortissements']},
+    {h:'Cession d\'immobilisation',t:[['Dotation complémentaire jusqu\'à la cession','Dotations aux amortissements','Amortissements'],['Sortie du bien','Amortissements (cumul) ; valeur comptable des éléments cédés (VNC)','Immobilisation (valeur d\'origine)'],['Prix de cession','Créance sur cession ou banque','Produits des cessions d\'éléments d\'actif']]},
+    {h:'Stocks, créances, dépréciations',l:['Variation de stock = stock initial − stock final : on annule le stock initial, on constate le stock final','Créance douteuse : virer au compte clients douteux (TTC) ; dépréciation sur le <b>HT</b> du montant jugé irrécouvrable','Créance irrécouvrable : perte sur le HT, TVA récupérée, reprise de la dépréciation','Provision pour risque : litige, garantie ; elle se reprend quand le risque disparaît']},
+    {h:'Régularisations (rattacher à l\'exercice)',t:[['Charge payée d\'avance','Charges constatées d\'avance','Compte de charge'],['Produit encaissé d\'avance','Compte de produit','Produits constatés d\'avance'],['Facture non parvenue','Charge et TVA déductible à régulariser','Fournisseurs, factures non parvenues'],['Facture à établir','Clients, factures à établir','Produit et TVA collectée à régulariser'],['Intérêts courus','Charges d\'intérêts','Intérêts courus sur emprunts']]},
+    {h:'Emprunts',l:['Annuité constante = capital × i ÷ (1 − (1 + i)<sup>−n</sup>)','Intérêts = capital restant dû × taux ; amortissement = annuité − intérêts','Échéance : emprunts (part de capital) et charges d\'intérêts au débit, banque au crédit']},
+    {h:'Affectation du résultat',l:['Imputer d\'abord un report à nouveau déficitaire','Réserve légale : 5 % du bénéfice, jusqu\'à ce qu\'elle atteigne 10 % du capital','Puis réserves statutaires, dividendes, autres réserves ; le reste en report à nouveau','Impôt sur les sociétés : 15 % jusqu\'à 42 500 € de bénéfice pour les PME éligibles, 25 % au delà']}
+  ]}
+};
+var TP_FICHE_METHODE=['Lire tout le dossier avant d\'écrire : repérer les annexes et les questions','Commencer par ce que tu maîtrises, garder 10 minutes pour relire','Poser chaque calcul (formule, puis chiffres) : un résultat faux avec une méthode juste rapporte des points','Vérifier l\'équilibre débit crédit de chaque écriture et les libellés','À l\'entretien technique : expliquer ce que tu as fait et pourquoi, avec les mots du métier'];
+function tpFicheToRevise(code){
+  var out=[],c=TP_CCP.filter(function(x){return x.code===code;})[0];
+  MODULES.forEach(function(m){if(c.mods.indexOf(m.id)>=0&&!state.passed[m.id])out.push('Cours : '+m.title);});
+  TP_AT.forEach(function(a){if(a[2]!==code)return;var s=state.tp.at&&state.tp.at[a[0]];if(!s||s.best<100)out.push('Atelier : '+a[1]);});
+  CAB_DOSSIERS.forEach(function(d){if(d.ccp!==code)return;var s=state.tp.cab&&state.tp.cab[d.id];if(!s||!s.done)out.push('Dossier cabinet : '+d.client);});
+  return out;
+}
+function tpFiches(){
+  var code=ui.tpFiche||'CCP1',f=TP_FICHES[code],c=TP_CCP.filter(function(x){return x.code===code;})[0];
+  var chips=TP_CCP.map(function(x){var on=x.code===code;return '<button class="chip'+(on?' on':'')+'" aria-pressed="'+(on?'true':'false')+'" data-action="tp-fiche" data-k="'+x.code+'">'+x.code+'</button>';}).join('');
+  var blocs=f.blocs.map(function(b){
+    var inner=b.t?'<table class="fch-t"><thead><tr><th>Opération</th><th>Débit</th><th>Crédit</th></tr></thead><tbody>'+b.t.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>';}).join('')+'</tbody></table>':'<ul>'+b.l.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
+    return '<section class="fch-b"><h3>'+b.h+'</h3>'+inner+'</section>';}).join('');
+  var rev=tpFicheToRevise(code),revH=rev.length?'<ul>'+rev.slice(0,6).map(function(x){return '<li>'+escHtml(x)+'</li>';}).join('')+(rev.length>6?'<li>et '+(rev.length-6)+' autre'+(rev.length-6>1?'s':'')+'</li>':'')+'</ul>':'<p>Tout est validé pour ce CCP : entretiens et mises en situation chronométrées pour finir.</p>';
+  return '<div class="tool-section fch">'+
+    '<div class="row no-print" style="margin:0 0 12px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px"><div class="chips" style="margin:0">'+chips+'</div><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer la fiche</button></div>'+
+    '<div class="fch-head"><span class="epr-code">'+code+'</span><div><h2 class="tool-title" style="margin:0">'+escHtml(c.titre)+'</h2><p class="tool-sub" style="margin:2px 0 0">'+f.sous+' · '+f.duree+'. Les numéros de compte sont fournis à l\'examen : retiens à quoi sert chaque compte.</p></div></div>'+
+    '<div class="fch-grid">'+blocs+
+    '<section class="fch-b fch-m"><h3>Le jour de l\'épreuve</h3><ul>'+TP_FICHE_METHODE.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></section>'+
+    '<section class="fch-b fch-r"><h3>À revoir pour moi</h3>'+revH+'</section></div></div>';
+}
 function tpBilanView(){
   var now=new Date(),cr=tpCritTotals(),dp=tpDpStatus(),or=tpOralStats();
   var ccps=TP_CCP.map(function(c0,ci){return {code:c0.code,titre:c0.titre,mods:c0.mods,themes:c0.themes,tpIndex:ci};}).map(function(e){var r=readinessOf(e),c=TP_CCP[e.tpIndex];
@@ -6559,6 +6622,7 @@ function toolTitrePro(){
   else if(tab==='atelier')body=tpAteliers();
   else if(tab==='plan')body=tpPlan();
   else if(tab==='bilan')body=tpBilanView();
+  else if(tab==='fiches')body=tpFiches();
   else body=tpRef();
   var sw=isTP()?'':'<div class="epr-note" style="margin-bottom:14px">'+SVG.warn+'<span>Ton cursus actuel est le BTS CG. Pour adapter tout le tableau de bord au titre professionnel, <a data-action="set-cursus" data-k="tp" style="color:var(--debit);text-decoration:underline;cursor:pointer">passe en mode Titre Pro</a>.</span></div>';
   return sw+tpSubNav()+body;
@@ -6753,7 +6817,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>12 dossiers cabinet</b>, <b>12 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Fiches récapitulatives</b> d\'une page par CCP, à imprimer pour les dernières semaines. Ateliers <b>lettrage</b>, <b>note de frais</b> et <b>TVA intracommunautaire</b>, cartes filtrables par CCP. <b>Plan de formation</b> réglable (dates, ordre des CCP, stages) et <b>bilan</b> imprimable. <b>12 dossiers cabinet</b>, <b>12 ateliers</b>, mises en situation <b>série B</b>, <b>examen blanc par CCP</b>, <b>entretien blanc</b> chronométré. Module <b>facturation électronique</b>, cartes de paie, glossaire enrichi, <b>tes propres flashcards</b>. Outils <b>échéance et pénalités</b> et <b>tableau d\'emprunt</b>. Comptes travaillés par l\'utilité, QCM sans indice de position. <b>Apparence</b> : 6 ambiances, recettes, lecture facile, accueil à la carte. <b>Agenda</b> : import d\'emploi du temps, carnet relié au dossier pro.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -10540,6 +10604,7 @@ document.addEventListener('click',function(e){
   else if(a==='annale-quit'){var _anq=ui.annale;if(_anq&&!_anq.done&&!confirm('Quitter l\'annale en cours ? Le minuteur et ton auto-évaluation seront perdus.'))return;clearAnnaleTimer();ui.annale=null;render();}
   else if(a==='annale-check'){if(ui.annale){var _box=t.querySelector('input'),_k=t.dataset.q;if(_box&&_box.checked)ui.annale.scored[_k]=parseFloat(t.dataset.pts);else delete ui.annale.scored[_k];var _tot=0;Object.keys(ui.annale.scored).forEach(function(kk){_tot+=ui.annale.scored[kk];});var _se=document.getElementById('ann-score');if(_se)_se.textContent=_tot;}return;}
   else if(a==='set-cursus'){var _cu=t.dataset.k==='bts'?'bts':'tp';try{localStorage.setItem('legl.cursus',_cu);}catch(e){}applyCursusTitle();_srchIdx=null;render();announce(_cu==='tp'?'Cursus : Titre professionnel Comptable assistant.':'Cursus : BTS Comptabilité et Gestion.');}
+  else if(a==='tp-fiche'){ui.tpFiche=t.dataset.k||'CCP1';render();}
   else if(a==='tp-tab'){ui.tpTab=t.dataset.k||'ref';render();}
   else if(a==='tp-go'){ui.tab='outils';ui.tool='tpca';ui.tpTab=t.dataset.k||'ref';render();focusMain();}
   else if(a==='tp-go-erp'){navTerrain('erp');render();focusMain();}
@@ -10989,7 +11054,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : plan de formation, 12 dossiers cabinet, 12 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : fiches récapitulatives par CCP à imprimer, ateliers lettrage, note de frais et TVA intracommunautaire, plan de formation, 12 dossiers cabinet, 12 ateliers, module facturation électronique, entretien blanc chronométré, tes propres flashcards, 6 ambiances dont Lorient. '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
