@@ -1444,6 +1444,22 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .edt-days label{display:flex;gap:5px;align-items:center;cursor:pointer}
 .edt-count{font-size:12.5px!important}
 .edt-count a{color:var(--credit);text-decoration:underline;cursor:pointer}
+.my-panel summary{cursor:pointer;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.my-panel{margin-top:22px}
+.my-list{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.my-card{display:flex;align-items:center;gap:10px;border:1px solid var(--edge);border-radius:10px;padding:8px 10px;background:var(--card)}
+.my-card>div{flex:1;display:flex;flex-direction:column;min-width:0}
+.my-card b{font-size:13.5px}.my-card span{font-size:13px;color:var(--ink2)}
+.my-meta{font-family:'JetBrains Mono',monospace;font-size:11px!important;white-space:nowrap}
+.bil-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.bil-kpis div{border:1px solid var(--edge);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;background:var(--card)}
+.bil-kpis b{font-family:'Fraunces',serif;font-size:22px}
+.bil-kpis span{font-size:12px;color:var(--ink2)}
+.bil-ccp{border:1px solid var(--edge);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--card);break-inside:avoid}
+.bil-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bil-h b{flex:1;font-size:15px}
+.bil-pct{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;color:var(--accent)}
+@media print{.bil .tool-sub{color:#333!important}.bil-ccp,.bil-kpis div{background:#fff!important;border-color:#bbb!important}}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -2213,7 +2229,7 @@ function passFor(m){return Math.ceil(m.quiz.length*0.7);}
 var EXO_ACCOUNTS=['','411 Clients','401 Fournisseurs','607 Achats de marchandises','707 Ventes de marchandises','44566 TVA déductible','44571 TVA collectée','512 Banque','530 Caisse'];
 var EXO_SOL=[{acc:'411 Clients',side:'d',amt:2400},{acc:'707 Ventes de marchandises',side:'c',amt:2000},{acc:'44571 TVA collectée',side:'c',amt:400}];
 
-var THEMES={all:'Tout',pd:'Partie double',pcg:'Plan comptable',org:'Organisation',bil:'Bilan & résultat',tva:'TVA',ecr:'Écritures',fac:'Factures & escompte',reg:'Règlements',amo:'Amortissements',dep:'Dépréciations',prov:'Provisions',regul:'Régularisations',stk:'Stocks',rappro:'Rapprochement et lettrage',fisc:'Fiscalité (déclaration TVA)',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information"};
+var THEMES={all:'Tout',perso:'Mes cartes',pd:'Partie double',pcg:'Plan comptable',org:'Organisation',bil:'Bilan & résultat',tva:'TVA',ecr:'Écritures',fac:'Factures & escompte',reg:'Règlements',amo:'Amortissements',dep:'Dépréciations',prov:'Provisions',regul:'Régularisations',stk:'Stocks',rappro:'Rapprochement et lettrage',fisc:'Fiscalité (déclaration TVA)',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information"};
 /* Pastilles de catégories (agenda). Les hex sont VOLONTAIREMENT fixes et
    indépendants du thème clair/sombre : ce sont des identifiants visuels de
    données (petites pastilles de couleur), jamais du texte lisible sur fond
@@ -3499,7 +3515,7 @@ function importState(file){
         if(typeof o.settings.stages==='string'&&o.settings.stages.length<400)localStorage.setItem('legl.stages',o.settings.stages);
         if(o.settings.formConfirmed==='1')localStorage.setItem('legl.formConfirmed','1');
       }catch(e){}}
-      normalizeState();
+      normalizeState();mergeMyCards();
       save();render();
       var _nMod=Object.keys(state.passed).length,_nMast=masteredCount();
       alert('Progression importée avec succès.\n'+_nMod+' module'+(_nMod>1?'s':'')+' validé'+(_nMod>1?'s':'')+' · '+_nMast+' carte'+(_nMast>1?'s':'')+' maîtrisée'+(_nMast>1?'s':'')+' · '+(state.points||0)+' points.');
@@ -3884,13 +3900,13 @@ function epreuveReadinessPanel(){
     var cls=pct>=70?' hi':(pct<40?' lo':'');
     return '<div class="epr-ready"><div class="epr-ready-h"><span class="epr-code">'+e.code+'</span><span class="epr-ready-t">'+escHtml(e.titre)+'</span><span class="epr-ready-pct">'+pct+' %</span></div>'+
       '<div class="epr-ready-track"><div class="epr-ready-fill'+cls+'" style="width:'+pct+'%"></div></div>'+
-      '<div class="epr-ready-sub">Modules '+mV+'/'+mT+' &middot; Cartes '+cM+'/'+cT+(_r.crit!==null?' &middot; Critères '+_r.crit+' %':'')+'</div>'+
+      '<div class="epr-ready-sub">Modules '+mV+'/'+mT+' &middot; Cartes '+cM+'/'+cT+(_r.crit!==null?' &middot; Critères '+_r.crit+' %':'')+(_r.prat&&_r.prat.n?' &middot; Pratique '+_r.prat.pct+' %':'')+'</div>'+
       (cT?'<div style="margin-top:8px"><button class="btn-sm" data-action="revise-epreuve" data-code="'+e.code+'">'+SVG.cards+' Réviser '+e.code+'</button></div>':'')+
     '</div>';
   }).join('');
   if(isTP())return '<div class="panel" style="margin-top:24px"><span class="eyebrow">Préparation par CCP &middot; Titre Pro Comptable assistant</span>'+
     '<div class="epr-ready-grid">'+rows+'</div>'+
-    '<p style="color:var(--ink2);font-size:12px;margin:14px 0 0;line-height:1.5">Estimation indicative : moyenne des cours validés, des cartes maîtrisées et de ta grille d\'auto-évaluation des critères officiels, pour chaque certificat de compétences professionnelles. Complète avec les mises en situation chronométrées. <a data-action="tp-go" data-k="grille" style="color:var(--debit);text-decoration:underline;cursor:pointer">Ouvrir la grille</a></p></div>';
+    '<p style="color:var(--ink2);font-size:12px;margin:14px 0 0;line-height:1.5">Estimation indicative : moyenne des cours validés, des cartes maîtrisées, de ta grille d\'auto-évaluation et de ta pratique (ateliers réussis, meilleurs scores des dossiers cabinet et des mises en situation) pour chaque certificat de compétences professionnelles. <a data-action="tp-go" data-k="grille" style="color:var(--debit);text-decoration:underline;cursor:pointer">Ouvrir la grille</a></p></div>';
   return '<div class="panel" style="margin-top:24px"><span class="eyebrow">Préparation par épreuve</span>'+
     '<div class="epr-ready-grid">'+rows+'</div>'+
     '<p style="color:var(--ink2);font-size:12px;margin:14px 0 0;line-height:1.5">Estimation indicative : moyenne des cours validés et des cartes maîtrisées rattachés à chaque épreuve professionnelle (E4 comptable/fiscal/social, E5 gestion & analyse, E6 système d\'information). Complète avec les examens blancs et les sujets types.</p></div>';
@@ -4179,6 +4195,7 @@ function viewAccueil(){
     (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
       return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','7 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
+    act('','data-action="quick-start"',SVG.exam,'Quiz éclair · 3 min','5 questions sur ton étape en cours du plan')+
   '</div></section>';
   var head='<div class="dash-head">'+hero+examCard.replace('class="panel"','class="panel dash-count"')+'</div>';
   /* Accueil minimaliste : une seule chose à faire, en grand. */
@@ -4317,6 +4334,32 @@ function viewFiche(){
     '<div class="row no-print" style="margin-bottom:18px"><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer / PDF</button><button class="btn btn-gh" data-action="dl-fiche">'+SVG.dl+' Version .txt</button></div>'+
     '<div class="fiche-doc"><div class="fiche-title"><h1>'+escHtml(title)+'</h1><p class="fiche-sub">'+cards.length+' notion'+(cards.length>1?'s':'')+' &middot; Le Grand Livre &mdash; '+escHtml(cursusLabel())+'</p></div>'+sections+glossHtml+'</div>';
 }
+/* ==== Mes cartes : flashcards personnelles tirées des notes de cours (stockées dans state.tp.mycards) ==== */
+function myCards(){if(!state.tp.mycards||!Array.isArray(state.tp.mycards))state.tp.mycards=[];return state.tp.mycards;}
+function mergeMyCards(){for(var i=CARDS.length-1;i>=0;i--){if(CARDS[i].t==='perso')CARDS.splice(i,1);}myCards().forEach(function(c){CARDS.push({id:c.id,t:'perso',q:escHtml(c.q),a:escHtml(c.a)});});}
+function parseMyCardLines(txt){
+  var out=[];String(txt||'').split(/\n+/).forEach(function(l){l=l.trim();if(!l)return;var q,a,m;
+    if((m=/^(.+?)\s*(?:\||::|=>|→)\s*(.+)$/.exec(l))){q=m[1];a=m[2];}
+    else if((m=/^(.+?\?)\s*(.+)$/.exec(l))){q=m[1];a=m[2];}
+    else if((m=/^(.+?)\s:\s(.+)$/.exec(l))){q=m[1]+' ?';a=m[2];}
+    if(q&&a&&q.length<=300&&a.length<=600)out.push({q:q.trim(),a:a.trim()});});
+  return out;}
+function myCardsPanel(){
+  var list=myCards().slice().reverse();
+  var items=list.slice(0,40).map(function(c){var st=state.cards[c.id];return '<div class="my-card"><div><b>'+escHtml(c.q)+'</b><span>'+escHtml(c.a)+'</span></div><span class="my-meta">'+(st?'boîte '+st.box:'nouvelle')+'</span><button class="btn-sm" data-action="mycard-del" data-id="'+escHtml(c.id)+'" aria-label="Supprimer cette carte">×</button></div>';}).join('');
+  return '<details class="panel my-panel"'+(ui.myOpen||!list.length?' open':'')+'><summary><span class="eyebrow">Mes cartes</span> <b>'+list.length+' carte'+(list.length>1?'s':'')+' à moi</b><span class="tool-sub" style="margin:0"> · tes notes de cours deviennent des flashcards</span></summary>'+
+    '<p class="tool-sub" style="margin:10px 0 8px">Après un cours, écris ce que tu as retenu, <b>une carte par ligne</b> : une question suivie de sa réponse. Exemples :<br><span class="mono" style="font-size:12px">Qui déclare la TVA en CA12 ? Les entreprises au régime simplifié<br>Délai de conservation des pièces | 10 ans</span></p>'+
+    '<textarea id="my-bulk" class="ag-textarea cab-ta" rows="4" placeholder="Question ? Réponse&#10;Question | Réponse"></textarea>'+
+    '<div class="row" style="margin-top:8px"><button class="btn btn-pri" data-action="mycard-add">'+SVG.check+' Créer les cartes</button>'+(list.length?'<button class="btn-sm" data-action="cfilter" data-k="perso">'+SVG.cards+' Voir uniquement mes cartes</button>':'')+'</div>'+
+    (items?'<div class="my-list">'+items+'</div>'+(list.length>40?'<p class="tool-sub">Les 40 plus récentes sont affichées.</p>':''):'')+'</details>';
+}
+/* Quiz éclair : 5 questions sur l'étape en cours du plan de formation, environ 3 minutes. */
+function startQuick(){
+  var mods=[];try{var tl=formTimeline(),ph=tl.phases[Math.max(0,tl.before?0:tl.cur)];mods=ph?ph.p.mods:[];for(var i=0;i<=(tl.before?0:tl.cur);i++){mods=mods.concat(tl.phases[i]?tl.phases[i].p.mods:[]);}}catch(e){}
+  var pool=[];MODULES.forEach(function(m){if(!isTP()||mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pool.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});
+  if(pool.length<10)pool=pool.concat(examPool('all'));
+  clearExamTimer();ui.tab='exam';ui.examTimed=false;ui.exam={items:shuffle(pool).slice(0,5),i:0,answers:[],done:false,quick:true};
+}
 function viewCards(){
   if(ui.session)return viewSession();
   if(ui.ficheOpen)return viewFiche();
@@ -4334,7 +4377,7 @@ function viewCards(){
     '<div class="row" style="margin-top:10px"><button class="btn btn-gh" data-action="fiche-open">'+SVG.book+' Fiche de révision '+(f==='all'?'complète':'du thème')+' (aperçu imprimable)</button>'+
     '<button class="btn btn-gh" data-action="dl-fiche">'+SVG.dl+' Version .txt</button></div>'+
     (due===0?'<p class="foot" style="text-align:left;margin-top:22px">'+SVG.check+' Rien d\'urgent à réviser dans ce thème. Tu peux quand même réviser tout le paquet.</p>':'')+
-    forecastPanel(f)+leitnerPanel(f);
+    myCardsPanel()+forecastPanel(f)+leitnerPanel(f);
 }
 /* Mémo du plan comptable : les numéros ne sont pas à réciter, on les consulte (logiciel, mémo papier, autorisé en mise en situation). */
 function pcgMemo(){
@@ -4913,6 +4956,7 @@ var NAV_ITEMS=[
   {label:'Excel comptable',sub:'Terrain — formules et fonctions',go:function(){navTerrain('excel');}},
   {label:'Agenda',sub:'Calendrier, périodes, notes, compétences, carnet',go:function(){ui.tab='agenda';ui.agendaSub='today';}},
   {label:'Dossiers cabinet',sub:'Clients fictifs à traiter de bout en bout, par CCP : pièces, écritures, calculs, courriels',go:function(){navTerrain('cabinet');}},
+  {label:'Mon bilan de progression',sub:'Bilan imprimable par CCP pour le formateur ou le tuteur de stage',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='bilan';}},
   {label:'Plan de formation',sub:'De la rentrée à la session du titre : étapes, rythme, objectifs de la semaine',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='plan';}},
   {label:'Apparence',sub:'Ambiance, couleurs, taille du texte, police, densité',go:function(){ui.tab='outils';ui.tool='apparence';}},
   {label:'Espace Titre Pro Comptable assistant',sub:'Référentiel, session d\'examen, 3 CCP et 9 compétences',go:function(){ui.tab='outils';ui.tool='tpca';ui.tpTab='ref';}},
@@ -5527,7 +5571,7 @@ var TP_CCP=[
    ]}
 ];
 var TP_CRIT_LEVELS=['À travailler','En cours','Acquis'];
-var TP_TABS=[['plan','Plan de formation'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
+var TP_TABS=[['plan','Plan de formation'],['bilan','Mon bilan'],['ref','Référentiel & épreuves'],['grille','Auto-évaluation'],['dp','Dossier professionnel'],['oral','Entretiens'],['atelier','Ateliers pratiques'],['msp','Mises en situation']];
 var TP_DP_FIELDS=[
   ['desc',"1. Décris les tâches ou opérations que tu as effectuées, et dans quelles conditions"],
   ['moyens',"2. Précise les moyens utilisés (logiciels, documents, procédures)"],
@@ -5613,6 +5657,32 @@ function tpDpFilled(e){return !!(e&&String(e.desc||'').trim().length>=40&&String
 function tpDpStatus(){var done=0;TP_CCP.forEach(function(c){if(tpDpEx(c.code).some(function(x){return tpDpFilled(x.e);}))done++;});return {done:done,total:TP_CCP.length};}
 function tpOralStats(){var ok=0,todo=0;ENTRETIEN_TP.forEach(function(q){var v=state.tp&&state.tp.oral?state.tp.oral[q.id]:null;if(v===1)ok++;else if(v===0)todo++;});return {ok:ok,todo:todo,total:ENTRETIEN_TP.length};}
 /* Liste des « épreuves » suivies selon le cursus : CCP du titre pro ou épreuves professionnelles du BTS. */
+/* Pratique d'un CCP : ateliers réussis sans faute, meilleur score des dossiers cabinet et de la mise en situation. */
+function tpPratique(code){
+  var sc=[];
+  TP_AT.forEach(function(a){if(a[2]===code){var s=state.tp.at&&state.tp.at[a[0]];sc.push(s?(s.ok>0?100:s.best||0):0);}});
+  if(typeof CAB_DOSSIERS!=='undefined')CAB_DOSSIERS.forEach(function(d){if(d.ccp===code){var c=state.tp.cab&&state.tp.cab[d.id];sc.push(c&&c.done?c.best||0:0);}});
+  var m=state.tp.msp&&state.tp.msp[code];sc.push(m?m.best||0:0);
+  return {n:sc.length,pct:sc.length?Math.round(sc.reduce(function(a,b){return a+b;},0)/sc.length):0};
+}
+/* Bilan imprimable, à montrer au formateur ou au tuteur de stage. */
+function tpBilanView(){
+  var now=new Date(),cr=tpCritTotals(),dp=tpDpStatus(),or=tpOralStats();
+  var ccps=curReady().map(function(e){var r=readinessOf(e),c=TP_CCP[e.tpIndex];
+    var crits=[];c.comps.forEach(function(comp,cj){var n=0,a=0;comp.crit.forEach(function(x,ck){n++;if(tpCritLevel(tpCritKey(e.tpIndex,cj,ck))===2)a++;});crits.push('<tr><td>'+escHtml(comp.t)+'</td><td class="n">'+a+' / '+n+'</td></tr>');});
+    var ats=TP_AT.filter(function(a){return a[2]===e.code;}).map(function(a){var s=state.tp.at&&state.tp.at[a[0]];return '<tr><td>Atelier : '+escHtml(a[1])+'</td><td class="n">'+(s?s.n+' cas · meilleur '+s.best+' %':'pas encore')+'</td></tr>';}).join('');
+    var cabs=CAB_DOSSIERS.filter(function(d){return d.ccp===e.code;}).map(function(d){var c=state.tp.cab&&state.tp.cab[d.id];return '<tr><td>Dossier cabinet : '+escHtml(d.client)+'</td><td class="n">'+(c&&c.done?'meilleur '+c.best+' %':'pas encore')+'</td></tr>';}).join('');
+    var m=state.tp.msp&&state.tp.msp[e.code];
+    return '<div class="bil-ccp"><div class="bil-h"><span class="epr-code">'+e.code+'</span><b>'+escHtml(e.titre)+'</b><span class="bil-pct">'+r.pct+' %</span></div>'+
+      '<table class="cf-tbl"><tbody><tr><td>Modules de cours validés</td><td class="n">'+r.mV+' / '+r.mT+'</td></tr><tr><td>Flashcards maîtrisées</td><td class="n">'+r.cM+' / '+r.cT+'</td></tr>'+crits.join('')+ats+cabs+
+      '<tr><td>Mise en situation chronométrée</td><td class="n">'+(m?m.n+' fois · meilleur '+m.best+' %':'pas encore')+'</td></tr></tbody></table></div>';}).join('');
+  var days=Object.keys(state.activity||{}).length,last30=0;Object.keys(state.activity||{}).forEach(function(d){if((now-isoToDate(d))/DAY<=30)last30++;});
+  return '<div class="tool-section bil"><div class="print-only">Le Grand Livre · bilan de progression</div><h2 class="tool-title">Bilan de progression</h2>'+
+    '<p class="tool-sub">Titre professionnel Comptable assistant (RNCP37121) · établi le '+frDateLong(now)+'. À imprimer ou enregistrer en PDF pour ton formateur ou ton tuteur de stage.</p>'+
+    '<div class="row no-print" style="margin:0 0 14px"><button class="btn btn-pri" data-action="print-page">'+SVG.print+' Imprimer ou enregistrer en PDF</button><button class="btn-sm" data-action="dl-bilan">'+SVG.dl+' Version texte</button></div>'+
+    '<div class="bil-kpis"><div><b>'+Object.keys(state.passed).length+' / '+MODULES.length+'</b><span>modules validés</span></div><div><b>'+masteredCount()+'</b><span>flashcards maîtrisées</span></div><div><b>'+cr.acquis+' / '+cr.total+'</b><span>critères acquis</span></div><div><b>'+dp.done+' / '+dp.total+'</b><span>CCP illustrés au dossier pro</span></div><div><b>'+or.ok+' / '+or.total+'</b><span>questions d\'entretien maîtrisées</span></div><div><b>'+last30+'</b><span>jours de travail sur 30 jours</span></div></div>'+
+    ccps+'<p class="tool-sub" style="margin-top:12px">Indicateurs issus de l\'application Le Grand Livre (auto-évaluation et exercices corrigés). Ils complètent les évaluations en cours de formation, ils ne les remplacent pas.</p></div>';
+}
 function curReady(){
   if(!isTP())return EPREUVE_READY;
   return TP_CCP.map(function(c,ci){return {code:c.code,titre:c.titre,mods:c.mods,themes:c.themes,tpIndex:ci};});
@@ -5622,9 +5692,9 @@ function readinessOf(e){
   var mV=mods.filter(function(m){return state.passed[m.id];}).length,mT=mods.length;
   var _cm=epreuveCardMastery(e.themes),cM=_cm.mastered,cT=_cm.total;
   var parts=[];if(mT)parts.push(mV/mT);if(cT)parts.push(cM/cT);
-  var crit=null;if(typeof e.tpIndex==='number'){crit=tpCcpCritPct(e.tpIndex);parts.push(crit/100);}
+  var crit=null,prat=null;if(typeof e.tpIndex==='number'){crit=tpCcpCritPct(e.tpIndex);parts.push(crit/100);prat=tpPratique(e.code);if(prat.n)parts.push(prat.pct/100);}
   var pct=parts.length?Math.round(parts.reduce(function(a,b){return a+b;},0)/parts.length*100):0;
-  return {pct:pct,mV:mV,mT:mT,cM:cM,cT:cT,crit:crit};
+  return {pct:pct,mV:mV,mT:mT,cM:cM,cT:cT,crit:crit,prat:prat};
 }
 function tpSubNav(){return '<div class="tools-nav" style="margin-bottom:16px" role="tablist" aria-label="Rubriques du titre professionnel">'+TP_TABS.map(function(t){var on=(ui.tpTab||'ref')===t[0];return '<button class="tnav'+(on?' on':'')+'" role="tab" aria-selected="'+(on?'true':'false')+'" data-action="tp-tab" data-k="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div>';}
 function tpDashboardCard(){
@@ -6160,6 +6230,7 @@ function toolTitrePro(){
   else if(tab==='msp')body=tpMsp();
   else if(tab==='atelier')body=tpAteliers();
   else if(tab==='plan')body=tpPlan();
+  else if(tab==='bilan')body=tpBilanView();
   else body=tpRef();
   var sw=isTP()?'':'<div class="epr-note" style="margin-bottom:14px">'+SVG.warn+'<span>Ton cursus actuel est le BTS CG. Pour adapter tout le tableau de bord au titre professionnel, <a data-action="set-cursus" data-k="tp" style="color:var(--debit);text-decoration:underline;cursor:pointer">passe en mode Titre Pro</a>.</span></div>';
   return sw+tpSubNav()+body;
@@ -9797,7 +9868,7 @@ document.addEventListener('click',function(e){
   else if(a==='exo-verify'){exoVerify();}
   else if(a==='exo-reset'){render();}
   else if(a==='je-clear'){ui.jecritures=null;render();}
-  else if(a==='reset'){if(confirm('Réinitialiser toute ta progression (modules et flashcards) ?')){var _agBak=state.agenda||defaultAgenda();var _skBak=state.skills||{};var _jBak=state.journal||[];var _exBak=state.exams||[];var _erpBak=state.erp||{entries:[]};state={passed:{},cards:{},points:0,streak:{last:0,count:0},themeHistory:{},sim:{},agenda:_agBak,train:{history:[]},notes:{evals:[]},activity:{},skills:_skBak,journal:_jBak,exams:_exBak,erp:_erpBak};save();ui.quiz=null;route={name:'home'};ui.tab='parcours';render();}}
+  else if(a==='reset'){if(confirm('Réinitialiser les modules validés, les flashcards et les points ?\n\nTon agenda, ton suivi Titre Pro (grille, dossier professionnel, ateliers, dossiers cabinet) et tes cartes personnelles sont conservés.')){var _agBak=state.agenda||defaultAgenda();var _skBak=state.skills||{};var _jBak=state.journal||[];var _exBak=state.exams||[];var _erpBak=state.erp||{entries:[]};var _tpBak=state.tp||{crit:{},dp:{},oral:{}};state={passed:{},cards:{},points:0,streak:{last:0,count:0},themeHistory:{},sim:{},agenda:_agBak,train:{history:[]},notes:{evals:[]},activity:{},skills:_skBak,journal:_jBak,exams:_exBak,erp:_erpBak,tp:_tpBak};normalizeState();mergeMyCards();save();ui.quiz=null;route={name:'home'};ui.tab='parcours';render();}}
   else if(a==='export-state'){exportState();}
   else if(a==='app-recover'){try{clearExamTimer();}catch(e){}ui.session=null;ui.quiz=null;ui.exam=null;ui.dayplan=null;ui.annale=null;ui.trainExo=null;ui.trainErrExo=null;ui.trainChronoState=null;ui.trainMissionState=null;ui.missionRun=null;ui.commQuizState=null;ui.xlQuizState=null;ui.tab='accueil';route={name:'home'};render();}
   else if(a==='goto-deck'){ui.tab='cards';ui.session=null;ui.cardsFilter=t.dataset.deck||'all';render();}
@@ -9816,6 +9887,9 @@ document.addEventListener('click',function(e){
   else if(a==='ecat'){ui.examCat=t.dataset.k;render();}
   else if(a==='elen'){ui.examLen=t.dataset.k==='all'?'all':parseInt(t.dataset.k,10);render();}
   else if(a==='emode'){ui.examTimed=(t.dataset.k==='chrono');render();}
+  else if(a==='mycard-add'){var _ta=document.getElementById('my-bulk'),_new=parseMyCardLines(_ta?_ta.value:'');if(!_new.length){alert('Écris une carte par ligne : une question terminée par « ? » suivie de la réponse, ou « question | réponse ».');return;}var _mc=myCards(),_b=Date.now();_new.forEach(function(c,i){if(_mc.length<800)_mc.push({id:'u'+_b.toString(36)+i,q:c.q,a:c.a,d:todayStr()});});mergeMyCards();save();ui.myOpen=true;render();announce(_new.length+' carte'+(_new.length>1?'s':'')+' créée'+(_new.length>1?'s':'')+'.');}
+  else if(a==='mycard-del'){var _id=t.dataset.id;state.tp.mycards=myCards().filter(function(c){return c.id!==_id;});delete state.cards[_id];mergeMyCards();save();ui.myOpen=true;var _yq=window.scrollY;render();window.scrollTo(0,_yq);}
+  else if(a==='quick-start'){startQuick();render();focusMain();}
   else if(a==='exam-start'||a==='exam-retry'){clearExamTimer();startExam();if(ui.examTimed){ui.exam.dur=ui.exam.items.length*90;ui.exam.deadline=Date.now()+ui.exam.dur*1000;startExamTimer();}render();}
   else if(a==='exam-pick'){ui.exam.answers[ui.exam.i]=parseInt(t.dataset.i,10);render();}
   else if(a==='exam-next'){var ex=ui.exam;if(ex.i+1<ex.items.length)ex.i++;else{ex.done=true;if(ex.deadline){ex.usedSec=ex.dur-Math.max(0,Math.round((ex.deadline-Date.now())/1000));}clearExamTimer();recordExam(ex);var _cok=ex.items.filter(function(it,idx){return ex.answers[idx]===it.c;}).length;if(ex.items.length&&_cok/ex.items.length>=0.7)celebrate();}render();}
@@ -10334,7 +10408,7 @@ document.addEventListener('keydown',function(e){
     if(vb){e.preventDefault();vb.click();}
   }
 });
-load();applyCursusTitle();render();if(!showOnboarding())showNudge();setInterval(focusTick,1000);
+load();mergeMyCards();applyCursusTitle();render();if(!showOnboarding())showNudge();setInterval(focusTick,1000);
 /* Thème « selon l'heure » : vérifié chaque minute. */
 setInterval(function(){if(appGet('mode')!=='heure')return;var th=hourTheme();if(document.documentElement.getAttribute('data-theme')!==th){document.documentElement.setAttribute('data-theme',th);render();}},60000);
 /* Raccourcis (appui long sur l'icône du téléphone, ou lien avec ancre) : #session, #cabinet, #cartes, #plan, #agenda. */
