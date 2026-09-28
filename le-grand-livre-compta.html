@@ -1657,7 +1657,7 @@ function pcLib(num){num=(num||'').trim();for(var i=0;i<PLAN_COMPTABLE.length;i++
 function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function r2(n){return Math.round(n*100)/100;}
 
-var CATS={fond:'Les fondamentaux',synth:'Documents de synthèse',tva:'La TVA',op:'Opérations courantes',inv:"Travaux d'inventaire",fisc:'Fiscalité',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information"};
+var CATS={ccp1:'CCP1 · Quotidien',ccp2:'CCP2 · Périodique',ccp3:'CCP3 · Fin d\'exercice',fond:'Les fondamentaux',synth:'Documents de synthèse',tva:'La TVA',op:'Opérations courantes',inv:"Travaux d'inventaire",fisc:'Fiscalité',soc:'Paie & social',gest:'Analyse & gestion',si:"Système d'information"};
 var CAT_ORDER=['fond','synth','tva','op','inv','fisc','soc','gest','si'];
 
 var MODULES=[
@@ -3986,7 +3986,7 @@ function epreuveReadinessPanel(){
     return '<div class="epr-ready"><div class="epr-ready-h"><span class="epr-code">'+e.code+'</span><span class="epr-ready-t">'+escHtml(e.titre)+'</span><span class="epr-ready-pct">'+pct+' %</span></div>'+
       '<div class="epr-ready-track"><div class="epr-ready-fill'+cls+'" style="width:'+pct+'%"></div></div>'+
       '<div class="epr-ready-sub">Modules '+mV+'/'+mT+' &middot; Cartes '+cM+'/'+cT+(_r.crit!==null?' &middot; Critères '+_r.crit+' %':'')+(_r.prat&&_r.prat.n?' &middot; Pratique '+_r.prat.pct+' %':'')+'</div>'+
-      (cT?'<div style="margin-top:8px"><button class="btn-sm" data-action="revise-epreuve" data-code="'+e.code+'">'+SVG.cards+' Réviser '+e.code+'</button></div>':'')+
+      (cT?'<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn-sm" data-action="revise-epreuve" data-code="'+e.code+'">'+SVG.cards+' Réviser '+e.code+'</button>'+(typeof e.tpIndex==='number'?'<button class="btn-sm" data-action="goto-exam-cat" data-cat="ccp'+(e.tpIndex+1)+'">'+SVG.exam+' Examen '+e.code+'</button>':'')+'</div>':'')+
     '</div>';
   }).join('');
   if(isTP())return '<div class="panel" style="margin-top:24px"><span class="eyebrow">Préparation par CCP &middot; Titre Pro Comptable assistant</span>'+
@@ -4647,7 +4647,9 @@ var EXAM_EXTRA=[
 {q:"Emprunt de 60 000 euros à 4 % obtenu le 1er octobre. Les intérêts courus au 31 décembre s'élèvent à…",o:["2 400","600","200","1 200"],c:1,e:"60 000 x 4 % x 3/12 = 600, comptabilisés 661 / 1688.",cat:"inv",mod:"Travaux d'inventaire"},
 {q:"Capital 50 000, réserve légale existante 4 200, bénéfice 30 000. La dotation à la réserve légale est de…",o:["1 500","800","3 000","5 000"],c:1,e:"5 % x 30 000 = 1 500, mais le plafond de 10 % du capital (5 000) limite la dotation à 5 000 − 4 200 = 800.",cat:"synth",mod:"Documents de synthèse"}
 ];
-function examPool(cat){var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
+/* Examen par CCP (Titre Pro) : modules du CCP et catégories de questions associées. */
+var CCP_EXAM={ccp1:{i:0,cats:['op','tva']},ccp2:{i:1,cats:['fisc','soc','gest']},ccp3:{i:2,cats:['inv','synth']}};
+function examPool(cat){if(CCP_EXAM[cat]){var ce=CCP_EXAM[cat],mods=TP_CCP[ce.i].mods,pp=[];MODULES.forEach(function(m){if(mods.indexOf(m.id)>=0)m.quiz.forEach(function(q){pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});});EXAM_EXTRA.forEach(function(q){if(ce.cats.indexOf(q.cat)>=0)pp.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return pp;}var p=[];MODULES.forEach(function(m){if(cat==='all'||m.cat===cat){m.quiz.forEach(function(q){p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:m.title});});}});EXAM_EXTRA.forEach(function(q){if(cat==='all'||q.cat===cat)p.push({q:q.q,o:q.o,c:q.c,e:q.e,mod:q.mod});});return p;}
 
 /* ---- Générateur procédural de questions d'examen (réponses calculées => toujours justes) ---- */
 function grnd(min,max,step){step=step||1;var k=Math.floor((max-min)/step);if(k<0)k=0;return min+step*Math.floor(Math.random()*(k+1));}
@@ -4769,7 +4771,7 @@ function genBFR(){var ac=grnd(80000,300000,5000),pc=grnd(40000,ac-10000,5000),b=
 function genAutofinancement(){var caf=grnd(20000,120000,5000),div=grnd(5000,caf-5000,5000),a=caf-div;return gnumQ('CAF de l\'exercice '+gfmt(caf)+', dividendes distribués '+gfmt(div)+'. L\'autofinancement est de…',a,[caf+div,div,caf,Math.round(a/2)],'Autofinancement = CAF moins dividendes distribués = '+gfmt(caf)+' moins '+gfmt(div)+' = '+gfmt(a)+'.','gest','Analyse & gestion');}
 function genPrimeEmission(){var nb=grnd(100,2000,100),nom=gpick([10,20,50,100]),pr=gpick([5,10,15,20,30]),pe=pr*nb;return gnumQ(nb+' actions de nominal '+nom+' euros émises à '+(nom+pr)+' euros. La prime d\'émission totale est de…',pe,[nb*(nom+pr),nb*nom,pr,pe*2],'Prime d\'émission = (prix d\'émission moins nominal) x nombre d\'actions = ('+(nom+pr)+' moins '+nom+') x '+nb+' = '+gfmt(pe)+'.','synth','Documents de synthèse');}
 var GEN_MAP={tva:[genTva,genTtc,genHt,genDecaisser],op:[genNetCom,genNetFin,genRemiseCascade,genResteAPayer,genCAMV,genEscompteEffet],inv:[genAnnuite,genVnc,genVariation,genDegressif,genDepreciationStock,genDepreciationCreance],fond:[genCompteSituation,genCompteSituation,genCompteUsage,genCompteNature,genCompteSens,genCompteBilanGestion],synth:[genResultat,genTotalBilan,genCapPropres,genMargeCom,genSeuilRent,genResultatNet,genPrimeEmission],soc:[genSalaireNet,genCoutEmployeur,genCotisSalariales],gest:[genValeurAjoutee,genCoutRevient,genResultatAnalytique,genEBE,genCoutProduction,genSoldeTresorerie,genEcartQuantite,genEcartCout,genEcartTotal,genFRNG,genBFR,genAutofinancement],fisc:[genFiscDecaisser,genIS]};
-function examGenerate(cat,n){var cats=cat==='all'?['fond','tva','op','inv','synth','soc','gest','fisc']:[cat];var use=cats.filter(function(c){return (GEN_MAP[c]||[]).length;});if(!use.length)return [];var out=[],guard=0;while(out.length<n&&guard<n*4+20){guard++;var c=gpick(use);var list=GEN_MAP[c];var q=list[Math.floor(Math.random()*list.length)]();if(q&&q.o&&q.o.length===4&&q.c>=0)out.push(q);}return out;}
+function examGenerate(cat,n){var cats=cat==='all'?['fond','tva','op','inv','synth','soc','gest','fisc']:(CCP_EXAM[cat]?CCP_EXAM[cat].cats:[cat]);var use=cats.filter(function(c){return (GEN_MAP[c]||[]).length;});if(!use.length)return [];var out=[],guard=0;while(out.length<n&&guard<n*4+20){guard++;var c=gpick(use);var list=GEN_MAP[c];var q=list[Math.floor(Math.random()*list.length)]();if(q&&q.o&&q.o.length===4&&q.c>=0)out.push(q);}return out;}
 
 /* ---- Session du jour : cartes dues puis questions ---- */
 function weakestExamCat(){
@@ -4892,11 +4894,11 @@ function viewDayplan(){
 }
 function viewExam(){
   if(ui.exam)return ui.exam.done?viewExamResult():viewExamRun();
-  var catList={all:'Toutes les catégories',adaptive:'Adaptatif'};CAT_ORDER.forEach(function(c){catList[c]=CATS[c];});
+  var catList={all:'Toutes les catégories',adaptive:'Adaptatif'};if(isTP()){catList.ccp1='CCP1 · Quotidien';catList.ccp2='CCP2 · Périodique';catList.ccp3='CCP3 · Fin d\'exercice';}CAT_ORDER.forEach(function(c){catList[c]=CATS[c];});
   var lenList={'10':'10 questions','20':'20 questions','all':'Long (50 q.)'};
   var isAdaptive=ui.examCat==='adaptive';
   var avail=examPool(ui.examCat).length;
-  var hasGen=isAdaptive||(ui.examCat==='all')||['fond','tva','op','inv','synth','soc','gest','fisc'].indexOf(ui.examCat)>=0;
+  var hasGen=isAdaptive||(ui.examCat==='all')||['fond','tva','op','inv','synth','soc','gest','fisc','ccp1','ccp2','ccp3'].indexOf(ui.examCat)>=0;
   var availTxt=isAdaptive?'Questions générées à la volée, pondérées selon tes résultats — banque de plus de 1 000 questions':(hasGen?(avail+' questions rédigées, complétées par des variantes chiffrées générées à chaque tirage — banque de plus de 1 000 questions'):(avail+' questions disponibles dans ce périmètre'));
   var adaptiveInfo='';
   if(isAdaptive){
@@ -10575,7 +10577,7 @@ function recordExam(ex){
   var n=ex.items.length,pct=n?Math.round(sc/n*100):0;
   state.exams.push({date:todayStr(),cat:ui.examCat,n:n,score:sc,pct:pct,timed:!!ex.deadline,secondes:(typeof ex.usedSec==='number'?ex.usedSec:0)});
   if(state.exams.length>20)state.exams=state.exams.slice(-20);
-  logSession('exam','Examen blanc'+(ui.examCat==='adaptive'?' — Adaptatif':(ui.examCat&&ui.examCat!=='all'?' — '+(CATS[ui.examCat]||ui.examCat):'')),{n:sc,d:n});
+  logSession('exam','Examen blanc'+(ui.examCat==='adaptive'?' — Adaptatif':(ui.examCat&&ui.examCat!=='all'?' — '+(CATS[ui.examCat]||(CCP_EXAM[ui.examCat]?ui.examCat.toUpperCase():ui.examCat)):'')),{n:sc,d:n});
   save();
 }
 function examStatsHTML(){
