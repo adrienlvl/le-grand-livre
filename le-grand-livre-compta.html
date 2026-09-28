@@ -4129,6 +4129,17 @@ function prioritesPanel(){
   h.filter(function(e){return e&&stat[e.type];}).slice(-80).forEach(function(e){stat[e.type].a++;if(!e.ok)stat[e.type].f++;});
   var att=TRAIN_TYPES.filter(function(t){return stat[t].a>0;});
   if(att.length){var we=att.map(function(t){return {t:t,rate:(stat[t].a-stat[t].f)/stat[t].a};}).sort(function(a,b){return a.rate-b.rate;})[0];if(we.rate<1)items.push({ic:SVG.check,label:'Écriture — '+(TRAIN_TYPE_LABELS[we.t]||we.t),sub:Math.round(we.rate*100)+' % de réussite',act:'goto-exo-type',data:'data-type="'+we.t+'"',cta:'S\'exercer'});}
+  if(isTP()){
+    // 4) Titre Pro : atelier tenté mais pas encore réussi sans faute
+    var atw=TP_AT.map(function(a){var st=state.tp.at&&state.tp.at[a[0]];return st&&st.n>0&&!(st.ok>0)?{k:a[0],n:a[1],best:st.best||0}:null;}).filter(Boolean).sort(function(a,b){return a.best-b.best;})[0];
+    if(atw)items.push({ic:SVG.check,label:'Atelier — '+atw.n,sub:'meilleur score '+atw.best+' %, vise le sans-faute',act:'plan-at',data:'data-k="'+atw.k+'"',cta:'Reprendre'});
+    // 5) Dossier cabinet commencé mais pas terminé
+    var cdw=null;CAB_DOSSIERS.forEach(function(d){var c=state.tp.cab&&state.tp.cab[d.id];if(!cdw&&c&&!c.done&&c.r&&Object.keys(c.r).length)cdw={d:d,n:Object.keys(c.r).length};});
+    if(cdw)items.push({ic:SVG.book,label:'Dossier cabinet — '+cdw.d.client,sub:cdw.n+' étape'+(cdw.n>1?'s':'')+' sur '+cdw.d.steps.length+' traitée'+(cdw.n>1?'s':''),act:'cab-open',data:'data-id="'+cdw.d.id+'"',cta:'Terminer'});
+    // 6) Dossier professionnel, à partir de la moitié de la formation
+    try{var _tl=formTimeline(),_dp=tpDpStatus();if(!_tl.before&&_tl.pct>=40&&_dp.done<_dp.total)items.push({ic:SVG.list,label:'Dossier professionnel',sub:_dp.done+' / '+_dp.total+' activités types illustrées',act:'tp-go',data:'data-k="dp"',cta:'Compléter'});}catch(e){}
+  }
+  items=items.slice(0,5);
   if(!items.length)return '';
   var rows=items.map(function(it){return '<div class="prio-row"><span class="prio-ic">'+it.ic+'</span><div class="prio-main"><div class="prio-label">'+escHtml(it.label)+'</div><div class="prio-sub">'+escHtml(it.sub)+'</div></div><button class="btn-sm" data-action="'+it.act+'" '+it.data+'>'+it.cta+'</button></div>';}).join('');
   return '<div class="panel" style="margin-top:24px"><span class="eyebrow">Tes priorités &middot; ce qui te fera le plus progresser</span><div class="prio-list">'+rows+'</div></div>';
@@ -4160,7 +4171,11 @@ function revisionPlanPanel(){
       tasks.push([SVG.cards,rem>0?('Répétition espacée : environ '+perDay+' cartes (tes cartes dues d\'abord).'):'Entretien : rejoue tes cartes dues.']);
       if(studyList.length){var m=studyList[i%studyList.length];tasks.push([SVG.book,(state.passed[m.id]?'Réviser':'Étudier')+' le module <b>'+escHtml(m.title)+'</b>'+(state.passed[m.id]?' (déjà validé)':' : Cours, Mémo, Quiz')+'.']);}
       var f=i%3;
-      if(f===0&&trows.length){var w=trows[i%trows.length];tasks.push([SVG.refresh,'Renforcer ton thème le moins maîtrisé : <b>'+escHtml(w.label)+'</b> ('+w.pct+' %).']);}
+      if(isTP()&&i%5===1){var _pend=TP_AT.filter(function(a){var st=state.tp.at&&state.tp.at[a[0]];return !(st&&st.ok>0);});var _at=_pend.length?_pend[Math.floor(i/5)%_pend.length]:null;if(_at){tasks.push([SVG.check,'Atelier pratique : <b>'+escHtml(_at[1])+'</b> ('+_at[2]+'), jusqu\'au sans-faute.']);f=-1;}}
+      else if(isTP()&&i%5===3){var _cd=CAB_DOSSIERS.filter(function(d){var c=state.tp.cab&&state.tp.cab[d.id];return !(c&&c.done);})[0];if(_cd){tasks.push([SVG.book,'Dossier cabinet : <b>'+escHtml(_cd.client)+'</b> ('+_cd.ccp+', environ '+_cd.duree+' min).']);f=-1;}}
+      else if(isTP()&&i%5===4){var _oq=ENTRETIEN_TP.filter(function(q){return state.tp.oral[q.id]!==1;})[i%7];if(_oq){tasks.push([SVG.star,'Entretien : réponds à voix haute à « '+escHtml(_oq.q)+' »']);f=-1;}}
+      if(f===-1){}
+      else if(f===0&&trows.length){var w=trows[i%trows.length];tasks.push([SVG.refresh,'Renforcer ton thème le moins maîtrisé : <b>'+escHtml(w.label)+'</b> ('+w.pct+' %).']);}
       else if(f===1&&typeof SUJETS!=='undefined'&&SUJETS.length){var s=SUJETS[i%SUJETS.length];tasks.push([SVG.list,'Sujet type au brouillon : <b>'+escHtml(s.titre)+'</b>, puis comparer au corrigé.']);}
       else{tasks.push([SVG.exam,'Examen blanc chronométré (20 questions) pour te mettre en conditions.']);}
     }
