@@ -11249,7 +11249,7 @@ document.addEventListener('keydown',function(e){
     if(vb){e.preventDefault();vb.click();}
   }
 });
-/* Les bonnes réponses étaient souvent en B : on mélange l'ordre des options à chaque ouverture de l'app. */
+window.__G=TP_AT_GEN;/* Les bonnes réponses étaient souvent en B : on mélange l'ordre des options à chaque ouverture de l'app. */
 (function(){function mix(q){var k=q&&(Array.isArray(q.o)?'o':(Array.isArray(q.opts)?'opts':null));if(!k||q.keep||typeof q.c!=='number')return;var good=q[k][q.c],o=shuffle(q[k]);q[k]=o;q.c=o.indexOf(good);}
   MODULES.forEach(function(m){m.quiz.forEach(mix);});EXAM_EXTRA.forEach(mix);MISSIONS.forEach(function(m){m.questions.forEach(mix);});
   CAB_DOSSIERS.forEach(function(d){d.steps.forEach(function(st){if(st.type==='qcm')mix(st);});});
