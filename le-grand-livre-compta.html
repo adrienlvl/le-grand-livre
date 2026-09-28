@@ -4605,7 +4605,14 @@ var ACC_USE=[
   ['707','les marchandises vendues en l\'état'],
   ['709','une remise accordée à un client après la facture'],
   ['765','la réduction obtenue d\'un fournisseur pour paiement comptant (escompte)'],
-  ['775','le prix de vente d\'une immobilisation cédée']
+  ['775','le prix de vente d\'une immobilisation cédée'],
+  ['4191','l\'acompte versé par un client avant la livraison'],
+  ['6241','les frais de transport facturés sur un achat'],
+  ['503','des actions achetées pour placer la trésorerie à court terme'],
+  ['590','la baisse du cours des actions détenues en placement'],
+  ['1688','les intérêts d\'emprunt courus mais pas encore payés à la clôture'],
+  ['5112','les chèques reçus pas encore remis à la banque'],
+  ['44586','la TVA d\'une charge dont la facture n\'est pas encore arrivée']
 ];
 function accName(num){var l=pcLib(num);return l?l+' ('+num+')':num;}
 function accUses(){return ACC_USE.filter(function(u){return !!pcLib(u[0]);});}
@@ -6425,7 +6432,7 @@ function toolAide(){
       [['on','Activé'],['off','Désactivé']].map(function(c){var on=(focusModeOn()?'on':'off')===c[0];return '<button class="acc-chip'+(on?' on':'')+'" data-action="set-focusmode" data-k="'+c[0]+'" aria-pressed="'+(on?'true':'false')+'">'+c[1]+'</button>';}).join('')+
     '</div><p class="tool-sub" style="margin:8px 0 0">Pendant une session de cartes, la session du jour, un examen ou une annale, la navigation disparaît pour laisser toute la place au travail.</p></div>'+
     '<div class="aide-grid">'+
-      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 6 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 6 ambiances (Grand livre par défaut, Lorient…), recettes en un clic, police lecture facile, sombre selon l\'heure, coche et petit son de réussite. <b>Accueil</b> à la carte ou minimaliste. <b>Agenda</b> : import de l\'emploi du temps (.ics) ou jours de cours réguliers. Raccourcis sur l\'icône du téléphone. Bulletin de paie reconstitué dans l\'atelier paie. <b>Comptes</b> : plus aucune question de numéro à réciter, place aux situations (« quel compte pour… ? »), saisie par le nom du compte et plan comptable avec l\'utilité de chaque compte. Plan de formation réglable : ordre des CCP, périodes de stage, calendrier provisoire.</p></div>'+
+      '<div class="aide-card"><h3>'+SVG.star+' Nouveautés de la version '+APP_VERSION+'</h3><p><b>Plan de formation</b> de la rentrée à la session du titre, avec les objectifs de la semaine. <b>Dossiers cabinet</b> : 9 clients à traiter de bout en bout (pièces, écritures, calculs, courriels). <b>Apparence</b> : 6 ambiances (Grand livre par défaut, Lorient…), recettes en un clic, police lecture facile, sombre selon l\'heure, coche et petit son de réussite. <b>Accueil</b> à la carte ou minimaliste. <b>Agenda</b> : import de l\'emploi du temps (.ics) ou jours de cours réguliers. Raccourcis sur l\'icône du téléphone. Bulletin de paie reconstitué dans l\'atelier paie. <b>Comptes</b> : plus aucune question de numéro à réciter, place aux situations (« quel compte pour… ? »), saisie par le nom du compte et plan comptable avec l\'utilité de chaque compte. Plan de formation réglable : ordre des CCP, périodes de stage, calendrier provisoire.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.book+' Comment ça marche</h3><p><b>Parcours</b> : '+MODULES.length+' modules en 3 étapes (cours, mémo visuel, quiz, validé à 70 %). <b>Flashcards</b> en répétition espacée. <b>Examen blanc</b> à banque quasi illimitée. <b>Terrain</b> pour t\'entraîner à saisir des écritures notées. <b>Agenda</b> pour planifier tes révisions et suivre tes compétences.</p></div>'+
       '<div class="aide-card"><h3>'+SVG.loupe+' Raccourcis clavier</h3>'+kbd+'</div>'+
       '<div class="aide-card"><h3>'+SVG.dl+' Sauvegarde</h3><p>Toute ta progression est stockée sur cet appareil. Pense à l\'exporter régulièrement (écran <b>Parcours</b>, « Exporter ma progression ») : le fichier contient tout, réglages compris, et se réimporte sur un autre poste.</p>'+(function(){try{var h=JSON.parse(localStorage.getItem('legl.exportHistory')||'[]');if(Array.isArray(h)&&h.length){return '<div class="aide-hist"><b>Dernières sauvegardes</b>'+h.slice(0,5).map(function(ts){var d=new Date(ts);return '<div>'+localDateStr(d)+' à '+pad2(d.getHours())+':'+pad2(d.getMinutes())+'</div>';}).join('')+'</div>';}}catch(e){}return '';})()+'</div>'+
@@ -6694,7 +6701,11 @@ var CAB_ACCTS_EXTRA=[
   {num:'6815',lib:'Dotations aux provisions d\'exploitation',cl:6,cat:'Gestion',sens:'D'},
   {num:'68173',lib:'Dotations aux dépréciations des stocks',cl:6,cat:'Gestion',sens:'D'},
   {num:'68174',lib:'Dotations aux dépréciations des créances',cl:6,cat:'Gestion',sens:'D'},
-  {num:'6241',lib:'Transports sur achats',cl:6,cat:'Gestion',sens:'D'}
+  {num:'6241',lib:'Transports sur achats',cl:6,cat:'Gestion',sens:'D'},
+  {num:'503',lib:'Actions (valeurs mobilières de placement)',cl:5,cat:'Bilan',sens:'D'},
+  {num:'590',lib:'Dépréciations des valeurs mobilières de placement',cl:5,cat:'Bilan',sens:'C'},
+  {num:'6866',lib:'Dotations aux dépréciations des éléments financiers',cl:6,cat:'Gestion',sens:'D'},
+  {num:'7815',lib:'Reprises sur provisions d\'exploitation',cl:7,cat:'Gestion',sens:'C'}
 ];
 var CAB_DOSSIERS=[
 /* ------------------------------------------------------------------ CCP1 ------------------------------------------------------------------ */
@@ -6938,7 +6949,137 @@ var CAB_DOSSIERS=[
    consigne:'Passe l\'écriture d\'affectation décidée par l\'assemblée.',
    sol:[{acc:'120',side:'D',amt:42000},{acc:'1061',side:'C',amt:1500},{acc:'1068',side:'C',amt:15500},{acc:'457',side:'C',amt:25000}],
    e:'Le compte de résultat (120) est soldé. Les réserves augmentent les capitaux propres, les dividendes deviennent une dette envers les associés (457) jusqu\'à leur paiement.'}
+ ]},
+{id:'c7',ccp:'CCP1',client:'SARL Voiles & Gréement',secteur:'Accastillage et équipement nautique, Lorient',periode:'Juin 2027',duree:40,
+ brief:{de:'Claire Lemaire, cheffe de mission',objet:'Voiles & Gréement : acomptes, escompte et caisse',corps:["Bonjour,","Nouveau client pour toi : une boutique d'accastillage sur le port de Lorient. Juin est leur gros mois, avec des commandes de clubs de voile payées en partie à l'avance.","Tu enregistres l'achat du mois, puis tout le cycle d'une commande avec acompte, une facture avec escompte et une vente au comptoir en espèces. Attention au traitement de l'acompte et de la TVA.","Bonne saisie !"]},
+ steps:[
+  {type:'ecr',comp:1,titre:'Achat avec frais de port',journal:'ACH',date:'02/06/27',piece:'NAV-7741',
+   doc:{type:'facture',emetteur:{nom:'Nautic Ouest Distribution',adr:'ZA de Kerpont, 56850 Caudan',siret:'531 208 447 00035'},dest:{nom:'SARL Voiles & Gréement',adr:'Quai des Indes, 56100 Lorient'},num:'NAV-7741',date:'02/06/2027',echeance:'02/07/2027',lignes:[['Gilet de sauvetage 150 N',20,45],['Frais de port',1,40]],remise:0,tva:20,cond:'Paiement à 30 jours.'},
+   consigne:'Enregistre la facture en séparant les marchandises et le transport.',
+   sol:[{acc:'607',side:'D',amt:900},{acc:'6241',side:'D',amt:40,alt:['607']},{acc:'44566',side:'D',amt:188},{acc:'401',side:'C',amt:1128}],
+   e:'Les frais de port facturés par le fournisseur font partie du coût d\'achat : on peut les isoler en Transports sur achats (6241) ou les ajouter aux achats (607). La TVA porte sur le tout : 940 × 20 % = 188 €.'},
+  {type:'ecr',comp:0,titre:'Acompte reçu d\'un club',journal:'BQ',date:'05/06/27',piece:'RB-06',
+   doc:{type:'mail',de:'Trésorier, Club nautique de Larmor',a:'SARL Voiles & Gréement',objet:'Commande de 10 combinaisons',corps:['Bonjour,','Suite à votre devis, nous commandons 10 combinaisons néoprène à 150 € HT l\'unité, livrables le 20 juin. Nous vous avons viré ce jour l\'acompte de 30 % prévu, soit 540 €.','Cordialement.']},
+   consigne:'L\'acompte de 540 € arrive sur le compte bancaire. Enregistre-le (la livraison n\'a pas encore eu lieu).',
+   sol:[{acc:'512',side:'D',amt:540},{acc:'4191',side:'C',amt:540}],
+   e:'Avant la livraison, l\'argent reçu n\'est pas une vente : c\'est une dette envers le client, en Clients, avances et acomptes reçus (4191). Pour une vente de marchandises, la TVA n\'est due qu\'à la livraison : pas de TVA sur cet acompte.'},
+  {type:'ecr',comp:0,titre:'Facture de livraison',journal:'VTE',date:'20/06/27',piece:'FV-2027-212',
+   doc:{type:'facture',emetteur:{nom:'SARL Voiles & Gréement',adr:'Quai des Indes, 56100 Lorient',siret:'893 441 205 00017'},dest:{nom:'Club nautique de Larmor',adr:'Boulevard de Toulhars, 56260 Larmor-Plage'},num:'FV-2027-212',date:'20/06/2027',echeance:'20/07/2027',ref:'Acompte reçu le 05/06/2027 : 540,00 €. Reste à payer : 1 260,00 €.',lignes:[['Combinaison néoprène 4/3 mm',10,150]],remise:0,tva:20,cond:'Solde à régler à 30 jours.'},
+   consigne:'Les combinaisons sont livrées. Enregistre la facture pour son montant total.',
+   sol:[{acc:'411',side:'D',amt:1800},{acc:'707',side:'C',amt:1500},{acc:'44571',side:'C',amt:300}],
+   e:'La facture s\'enregistre pour la totalité de la vente (1 800 € TTC), même si une partie a déjà été payée. L\'acompte est soldé par une écriture séparée.'},
+  {type:'ecr',comp:0,titre:'Imputation de l\'acompte',journal:'OD',date:'20/06/27',piece:'FV-2027-212',
+   consigne:'Impute l\'acompte sur la créance du club.',
+   sol:[{acc:'4191',side:'D',amt:540},{acc:'411',side:'C',amt:540}],
+   e:'On solde l\'avance reçue (débit de 4191) en diminuant ce que le client doit (crédit de 411). Il reste 1 260 € à encaisser.'},
+  {type:'ecr',comp:2,titre:'Encaissement du solde',journal:'BQ',date:'15/07/27',piece:'RB-07',
+   consigne:'Le club règle le solde par chèque, remis en banque le 15 juillet. Enregistre l\'encaissement.',
+   sol:[{acc:'512',side:'D',amt:1260,alt:['5112']},{acc:'411',side:'C',amt:1260}],
+   e:'1 800 − 540 = 1 260 €. Le compte du club est soldé : facture, acompte et règlement se lettrent ensemble.'},
+  {type:'calc',comp:0,titre:'Facture avec escompte',
+   doc:{type:'table',titre:'Commande du Chantier naval de Keroman',head:['Élément','Valeur'],rows:[['Winch électrique, prix HT','2 400,00 €'],['Escompte pour paiement sous 8 jours','2 %'],['Taux de TVA','20 %']]},
+   consigne:'Le client paiera sous 8 jours : l\'escompte figure directement sur la facture. Calcule l\'escompte, le net financier et le TTC.',
+   f:[{k:'esc',l:'Escompte (€)',v:48},{k:'nf',l:'Net financier HT (€)',v:2352},{k:'ttc',l:'Net à payer TTC (€)',v:2822.4}],
+   e:'Escompte : 2 400 × 2 % = 48 €. Net financier : 2 352 €. La TVA se calcule après escompte : 2 352 × 20 % = 470,40 €, soit 2 822,40 € TTC.'},
+  {type:'ecr',comp:0,titre:'Enregistrer la facture escomptée',journal:'VTE',date:'22/06/27',piece:'FV-2027-215',
+   consigne:'Enregistre cette facture chez le vendeur.',
+   sol:[{acc:'411',side:'D',amt:2822.4},{acc:'665',side:'D',amt:48},{acc:'707',side:'C',amt:2400},{acc:'44571',side:'C',amt:470.4}],
+   e:'Chez le vendeur, l\'escompte accordé est une charge financière (665). La vente reste à 2 400 € au crédit de 707 et la TVA collectée porte sur le net financier.'},
+  {type:'ecr',comp:2,titre:'Vente au comptoir en espèces',journal:'BQ',date:'24/06/27',piece:'TK-0612',
+   doc:{type:'table',titre:'Ticket de caisse n° 0612',head:['Article','TTC'],rows:[['Bout de mouillage 12 mm (10 m)','54,00 €'],['Dont TVA 20 %','9,00 €']]},
+   consigne:'Un plaisancier paie 54 € en espèces. Enregistre la vente.',
+   sol:[{acc:'530',side:'D',amt:54},{acc:'707',side:'C',amt:45},{acc:'44571',side:'C',amt:9}],
+   e:'54 / 1,2 = 45 € HT et 9 € de TVA. L\'argent entre en Caisse (530), dont le solde ne peut jamais devenir créditeur.'},
+  {type:'qcm',comp:2,titre:'Plafond des espèces',
+   q:'Le Chantier naval de Keroman propose de payer une autre facture de 1 800 € en espèces. Que réponds-tu ?',
+   o:['Aucun problème, les espèces sont toujours acceptées','C\'est impossible : entre professionnels, le paiement en espèces est limité à 1 000 €','C\'est possible si on fait un reçu','Seulement si la facture est en TTC'],c:1,
+   e:'Entre professionnels, le paiement en espèces est plafonné à 1 000 € TTC par opération. Au-delà, il faut un chèque, un virement ou une carte.'}
+ ]},
+{id:'c8',ccp:'CCP2',client:'SAS Kerlann Distribution',secteur:'Grossiste en produits de la mer, 12 salariés',periode:'Avril 2027',duree:35,
+ brief:{de:'Karim Benali, expert-comptable',objet:'Kerlann : tableau de bord du trimestre et dossiers RH',corps:["Bonjour,","Mme Kerlann veut un tableau de bord du premier trimestre pour son rendez-vous avec la banque : chiffre d'affaires comparé à l'an dernier, marge, délai de paiement des clients. Prépare les calculs et un court commentaire.","Elle a aussi des questions sur une embauche et un départ : réponds-lui.","Merci."]},
+ steps:[
+  {type:'calc',comp:2,titre:'Évolution du chiffre d\'affaires',
+   doc:{type:'table',titre:'Chiffre d\'affaires HT (en €)',head:['Mois','2027','2026'],rows:[['Janvier','42 000','40 000'],['Février','38 500','41 000'],['Mars','51 200','45 000']]},
+   consigne:'Calcule le total du trimestre pour chaque année et l\'évolution en pourcentage (arrondie au centième).',
+   f:[{k:'n',l:'Total 2027 (€)',v:131700},{k:'n1',l:'Total 2026 (€)',v:126000},{k:'ev',l:'Évolution (%)',v:4.52,tol:0.011}],
+   e:'131 700 et 126 000 €. Évolution : (131 700 − 126 000) / 126 000 × 100 = 4,52 %. Février est le seul mois en recul.'},
+  {type:'calc',comp:2,titre:'Marge commerciale',
+   doc:{type:'table',titre:'Données du trimestre',head:['Élément','Montant'],rows:[['Ventes de marchandises HT','131 700 €'],['Coût d\'achat des marchandises vendues','79 020 €']]},
+   consigne:'Calcule la marge commerciale, le taux de marge (sur le coût d\'achat) et le taux de marque (sur le prix de vente), en %.',
+   f:[{k:'m',l:'Marge commerciale (€)',v:52680},{k:'tm',l:'Taux de marge (%)',v:66.67,tol:0.011},{k:'tq',l:'Taux de marque (%)',v:40,tol:0.011}],
+   e:'Marge : 131 700 − 79 020 = 52 680 €. Taux de marge : 52 680 / 79 020 = 66,67 %. Taux de marque : 52 680 / 131 700 = 40 %. Le taux de marge se calcule sur le coût, le taux de marque sur le prix de vente.'},
+  {type:'calc',comp:2,titre:'Délai de paiement des clients',
+   consigne:'Au 31 mars, les créances clients s\'élèvent à 36 000 € TTC. Le chiffre d\'affaires TTC du trimestre est de 158 040 €. Calcule le délai moyen de paiement des clients en jours (trimestre de 90 jours, arrondi au dixième).',
+   f:[{k:'dso',l:'Délai moyen (jours)',v:20.5,tol:0.06}],
+   e:'36 000 / 158 040 × 90 = 20,5 jours. Les clients paient en moyenne en 3 semaines environ, bien sous le plafond légal de 60 jours.'},
+  {type:'qcm',comp:2,titre:'Choisir le graphique',
+   q:'Pour montrer à la banque le chiffre d\'affaires de chaque mois en 2027 et en 2026, côte à côte, quel graphique choisis-tu ?',
+   o:['Un graphique en secteurs','Un histogramme groupé (deux barres par mois)','Un nuage de points','Une jauge'],c:1,
+   e:'Pour comparer deux séries mois par mois, l\'histogramme groupé est le plus lisible. Le secteur montre une répartition, pas une évolution.'},
+  {type:'redac',comp:2,titre:'Commenter le tableau de bord',
+   consigne:'Rédige en 4 ou 5 phrases le commentaire qui accompagnera le tableau de bord pour Mme Kerlann.',
+   crit:['Les chiffres clés sont cités (CA, évolution, marge ou taux de marque, délai clients)','Les points positifs et le point de vigilance (février) sont identifiés','Le vocabulaire est juste (taux de marge et taux de marque non confondus)','Le texte est court, clair, sans jargon inutile','Une piste ou une conclusion est proposée'],
+   modele:['Au premier trimestre 2027, le chiffre d\'affaires atteint 131 700 € HT, en hausse de 4,52 % par rapport à 2026.','Seul février recule (38 500 € contre 41 000 €), probablement lié à la météo et aux jours fériés ; mars compense largement avec + 13,8 %.','La marge commerciale s\'élève à 52 680 €, soit un taux de marque de 40 % : sur 100 € vendus, 40 € restent pour couvrir les charges.','Les clients paient en moyenne en 20,5 jours, ce qui préserve la trésorerie.','Ces résultats solides appuient la demande de financement ; il faudra surveiller les achats si les prix de la marée augmentent.']},
+  {type:'qcm',comp:1,titre:'Une embauche',
+   q:'Kerlann embauche un préparateur le 2 mai. Quelle formalité doit être faite avant sa prise de poste ?',
+   o:['La DSN d\'avril','La déclaration préalable à l\'embauche (DPAE) auprès de l\'URSSAF','Le solde de tout compte','Rien, tout se fait avec la première paie'],c:1,
+   e:'La DPAE se fait avant l\'embauche, au plus tôt 8 jours avant, auprès de l\'URSSAF. Le salarié apparaîtra ensuite dans la DSN du mois.'},
+  {type:'qcm',comp:1,titre:'Un départ',
+   q:'Un salarié démissionne. Quels documents lui remettre à la fin du contrat ?',
+   o:['Seulement son dernier bulletin de paie','Le certificat de travail, le reçu pour solde de tout compte et l\'attestation France Travail','Une lettre de recommandation','Le registre du personnel'],c:1,
+   e:'À la fin de tout contrat, l\'employeur remet le certificat de travail, le reçu pour solde de tout compte et l\'attestation destinée à France Travail, avec le dernier bulletin.'},
+  {type:'qcm',comp:1,titre:'Archiver la paie',
+   q:'Combien de temps l\'employeur doit-il conserver le double des bulletins de paie ?',
+   o:['1 an','5 ans','10 ans','Jusqu\'au départ du salarié'],c:1,
+   e:'L\'employeur conserve le double des bulletins 5 ans (sur papier ou sous forme électronique). Le salarié, lui, garde les siens sans limite de durée.'}
+ ]},
+{id:'c9',ccp:'CCP3',client:'SARL Atlantique Menuiserie',secteur:'Menuiserie aluminium, Hennebont',periode:'Clôture au 31/12/2026',duree:40,
+ brief:{de:'Karim Benali, expert-comptable',objet:'Atlantique Menuiserie : emprunt, placements et litige',corps:["Bonjour,","Pour la clôture 2026 d'Atlantique Menuiserie, trois sujets : l'emprunt souscrit en juillet pour le nouvel atelier, les actions achetées en octobre avec la trésorerie disponible, et le litige avec un client.","Prépare le tableau de l'emprunt, les intérêts courus, la dépréciation des titres et la provision. Je valide ensuite.","Merci !"]},
+ steps:[
+  {type:'ecr',comp:2,titre:'Réception de l\'emprunt',journal:'BQ',date:'01/07/26',piece:'EMP-01',
+   doc:{type:'table',titre:'Contrat de prêt, Banque Populaire Atlantique',head:['Élément','Valeur'],rows:[['Montant emprunté','60 000,00 €'],['Date de déblocage','01/07/2026'],['Taux d\'intérêt annuel','4 %'],['Durée','5 ans, remboursement du capital par cinquièmes'],['Échéances','annuelles, le 30 juin']]},
+   consigne:'Les fonds sont versés sur le compte bancaire. Enregistre l\'emprunt.',
+   sol:[{acc:'512',side:'D',amt:60000},{acc:'164',side:'C',amt:60000}],
+   e:'L\'argent reçu augmente la banque. En face, une dette à long terme en Emprunts auprès des établissements de crédit (164).'},
+  {type:'calc',comp:2,titre:'La première échéance',
+   consigne:'Calcule la première échéance du 30 juin 2027 : capital remboursé, intérêts de l\'année et montant total payé.',
+   f:[{k:'cap',l:'Capital remboursé (€)',v:12000},{k:'int',l:'Intérêts (€)',v:2400},{k:'ech',l:'Échéance totale (€)',v:14400}],
+   e:'Capital : 60 000 / 5 = 12 000 €. Intérêts sur le capital restant dû : 60 000 × 4 % = 2 400 €. Échéance : 14 400 €. Les suivantes baissent, car les intérêts portent sur un capital de plus en plus faible.'},
+  {type:'calc',comp:2,titre:'Intérêts courus',
+   consigne:'Au 31 décembre 2026, quelle part des intérêts de la première échéance concerne l\'exercice 2026 ?',
+   f:[{k:'ic',l:'Intérêts courus au 31/12/2026 (€)',v:1200}],
+   e:'Du 1er juillet au 31 décembre : 6 mois. 2 400 × 6/12 = 1 200 €.'},
+  {type:'ecr',comp:2,titre:'Constater les intérêts courus',journal:'OD',date:'31/12/26',piece:'INV-06',
+   consigne:'Enregistre les intérêts courus à la clôture.',
+   sol:[{acc:'661',side:'D',amt:1200},{acc:'1688',side:'C',amt:1200}],
+   e:'La charge de 2026 est constatée même si elle sera payée en juin 2027 : Charges d\'intérêts (661) au débit, Intérêts courus sur emprunts (1688) au crédit.'},
+  {type:'ecr',comp:2,titre:'Payer l\'échéance',journal:'BQ',date:'30/06/27',piece:'EMP-02',
+   consigne:'Le 1er janvier, l\'écriture des intérêts courus a été extournée. Enregistre maintenant le paiement de l\'échéance du 30 juin 2027.',
+   sol:[{acc:'164',side:'D',amt:12000},{acc:'661',side:'D',amt:2400},{acc:'512',side:'C',amt:14400}],
+   e:'Grâce à l\'extourne du 1er janvier, on passe l\'échéance normalement : le capital diminue la dette (164), les intérêts sont une charge (661). Sur 2027, la charge nette d\'intérêts ne sera que de 1 200 €.'},
+  {type:'ecr',comp:0,titre:'Achat d\'actions',journal:'BQ',date:'15/10/26',piece:'AVIS-3321',
+   doc:{type:'table',titre:'Avis d\'opéré, achat de titres',head:['Élément','Montant'],rows:[['100 actions Crédit Maritime à 48,00 €','4 800,00 €'],['Frais de courtage','12,00 €'],['Total débité','4 812,00 €']]},
+   consigne:'L\'entreprise place sa trésorerie en actions qu\'elle compte revendre dans l\'année. Enregistre l\'achat (frais en charges).',
+   sol:[{acc:'503',side:'D',amt:4800},{acc:'627',side:'D',amt:12},{acc:'512',side:'C',amt:4812}],
+   e:'Des titres achetés pour être revendus à court terme sont des valeurs mobilières de placement : Actions (503). Les frais d\'achat peuvent être passés en charges (627, services bancaires).'},
+  {type:'calc',comp:0,titre:'Évaluer les titres',
+   consigne:'Au 31 décembre, l\'action Crédit Maritime cote 44 €. Calcule la dépréciation à constater sur les 100 actions.',
+   f:[{k:'dep',l:'Dépréciation (€)',v:400}],
+   e:'(48 − 44) × 100 = 400 €. Une moins-value latente se constate par une dépréciation ; une plus-value latente ne se comptabilise jamais (principe de prudence).'},
+  {type:'ecr',comp:0,titre:'Déprécier les titres',journal:'OD',date:'31/12/26',piece:'INV-07',
+   consigne:'Enregistre la dépréciation des actions.',
+   sol:[{acc:'6866',side:'D',amt:400},{acc:'590',side:'C',amt:400}],
+   e:'C\'est une charge financière : Dotations aux dépréciations des éléments financiers (6866), et Dépréciations des valeurs mobilières de placement (590) en diminution des titres à l\'actif.'},
+  {type:'qcm',comp:1,titre:'Le litige client',
+   q:'Un client réclame 5 000 € de dommages pour des fenêtres mal posées. L\'avocat estime probable une condamnation à 3 000 €. Que fais-tu à la clôture ?',
+   o:['Rien tant que le jugement n\'est pas rendu','Une provision pour risques de 3 000 €','Une provision pour risques de 5 000 €','Une dépréciation du compte client de 5 000 €'],c:1,
+   e:'Le risque est probable et estimable : on provisionne le montant le plus probable, 3 000 € (Dotations aux provisions 6815 au débit, Provisions pour risques 151 au crédit).'},
+  {type:'ecr',comp:1,titre:'Passer la provision',journal:'OD',date:'31/12/26',piece:'INV-08',
+   consigne:'Enregistre la provision pour le litige.',
+   sol:[{acc:'6815',side:'D',amt:3000},{acc:'151',side:'C',amt:3000}],
+   e:'La provision réduit le résultat de 2026 et apparaît au passif. Elle sera reprise (7815) quand le litige sera réglé.'}
  ]}
+
 ];
 (function(){var have={};PLAN_COMPTABLE.forEach(function(p){have[p.num]=1;});CAB_ACCTS_EXTRA.forEach(function(p){if(!have[p.num])PLAN_COMPTABLE.push(p);});PLAN_COMPTABLE.sort(function(a,b){return String(a.num).localeCompare(String(b.num),undefined,{numeric:true});});})();
 function cabById(id){for(var i=0;i<CAB_DOSSIERS.length;i++){if(CAB_DOSSIERS[i].id===id)return CAB_DOSSIERS[i];}return null;}
@@ -10350,7 +10491,7 @@ function buildNudge(){
 function showNudge(){
   if(ui.nudgeShown)return;
   var msg=buildNudge(),_news=false;
-  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : ton plan de formation, 6 dossiers cabinet guidés, 6 ambiances dont Lorient, un accueil à ta façon et l\'import de ton emploi du temps (bouton palette et Agenda). '+msg;_news=true;}}}catch(e){}
+  try{if(localStorage.getItem('legl.seenVersion')!==APP_VERSION){localStorage.setItem('legl.seenVersion',APP_VERSION);if(isTP()){msg='Nouveau dans la version '+APP_VERSION+' : ton plan de formation, 9 dossiers cabinet guidés, 6 ambiances dont Lorient, un accueil à ta façon et l\'import de ton emploi du temps (bouton palette et Agenda). '+msg;_news=true;}}}catch(e){}
   if(!msg)return;
   var old=document.getElementById('nudge');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');
