@@ -8361,6 +8361,9 @@ function cabPrintHTML(d,corr){
     '<div class="cab-print"><div class="print-only">Le Grand Livre · '+escHtml(CAB_CABINET)+'</div><h2 class="tool-title">'+escHtml(d.client)+' · '+(corr?'corrigé':'énoncé')+'</h2><p class="tool-sub">'+d.ccp+' · '+escHtml(d.secteur)+' · '+escHtml(d.periode)+' · environ '+d.duree+' min</p>'+
     cabDocHTML({type:'mail',de:d.brief.de,a:'Toi',objet:d.brief.objet,corps:d.brief.corps})+steps+'</div>';
 }
+/* Cours lié à une étape : donné par le générateur, sinon déduit du titre et de la consigne (dossiers fixes). */
+var CAB_MOD_MAP={'c1':['facture','facture','facture','facture','reglements','reglements','rapprochement','decla-tva','facture'],'c2':['reglements','reglements','reglements','rapprochement','rapprochement','rapprochement','budget','reglements'],'c3':['decla-tva','decla-tva','decla-tva','decla-tva','decla-tva','decla-tva','decla-tva'],'c4':['paie','paie','paie','paie','paie','paie','paie','paie'],'c5':['amortissements','amortissements','amortissements','amortissements','amortissements','amortissements','amortissements'],'c6':['stocks','stocks','stocks','depreciations','depreciations','regularisations','regularisations','financement','resultat','resultat'],'c7':['facture','tva','facture','facture','reglements','facture','facture','reglements','reglements'],'c8':['analyse','couts','reglements','analyse','analyse','paie','paie','paie'],'c9':['financement','financement','financement','financement','financement','depreciations','depreciations','depreciations','provisions','provisions'],'c10':['amortissements','amortissements','tva','reglements','reglements','rapprochement','facture'],'c11':['decla-tva','decla-tva','decla-tva','decla-tva','decla-tva','decla-tva'],'c12':['stocks','stocks','depreciations','regularisations','regularisations','regularisations','regularisations'],'c13':['decla-tva','decla-tva','decla-tva','decla-tva','paie','paie','analyse','analyse'],'c14':['financement','financement','financement','depreciations','depreciations','depreciations','depreciations','depreciations']};
+function cabStepMod(st,d,i){if(st.mod)return st.mod;var m=d&&CAB_MOD_MAP[d.id];return m&&m[i]?m[i]:null;}
 function cabBrief(d){return '<details class="cab-brief"'+(cabState(d.id).i===0&&!Object.keys(cabState(d.id).r).length?' open':'')+'><summary>'+SVG.book+' Courriel de mission : '+escHtml(d.brief.objet)+'</summary>'+cabDocHTML({type:'mail',de:d.brief.de,a:'Toi',objet:d.brief.objet,corps:d.brief.corps})+'</details>';}
 function cabStepHTML(d,cs){
   var i=cs.i,st=d.steps[i],r=cs.r[i],done=!!(r&&r.v),run=ui.cab;
@@ -8396,7 +8399,7 @@ function cabStepHTML(d,cs){
         (done?'':'<div class="row" style="margin-top:10px"><button class="btn btn-pri" data-action="cab-redac-done">'+SVG.check+' Valider mon auto-évaluation</button></div>');
     }
   }
-  if(done&&st.mod){var _mi=modIdx(st.mod);if(_mi>=0)body+='<div class="row" style="margin:8px 0 0"><button class="btn-sm" data-action="open" data-mi="'+_mi+'">'+SVG.book+' Revoir le cours : '+escHtml(MODULES[_mi].title)+'</button></div>';}
+  var _sm=done?cabStepMod(st,d,i):null;if(_sm){var _mi=modIdx(_sm);if(_mi>=0)body+='<div class="row" style="margin:8px 0 0"><button class="btn-sm" data-action="open" data-mi="'+_mi+'">'+SVG.book+' Revoir le cours : '+escHtml(MODULES[_mi].title)+'</button></div>';}
   return (i===0?cabBrief(d):'')+'<div class="panel cab-panel">'+head+body+nav+'</div>';
 }
 function cabBilanHTML(d){
