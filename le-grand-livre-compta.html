@@ -1467,6 +1467,7 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 .dp-from{margin-top:14px;border-top:1px dashed var(--edge);padding-top:10px;display:flex;flex-direction:column;gap:6px}
 .dp-jr{display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:13px;border:1px solid var(--edge);border-radius:9px;padding:7px 10px;background:var(--paper)}
 .dp-jr .btn-sm{flex-shrink:0}
+.tpat-ecr td.mono{white-space:nowrap}
 /* Réglages d'apparence : cartes d'ambiance avec mini-aperçu */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:10px}
 .amb-card{text-align:left;border:2px solid var(--edge);border-radius:14px;padding:10px;background:var(--card);color:var(--ink);display:flex;flex-direction:column;gap:8px}
@@ -5074,7 +5075,7 @@ function appSet(k,v){
 }
 var TEXTSIZES=[['','Normale'],['lg','Grande'],['xl','Très grande']];
 /* Groupes d'outils (navigation latérale de l'écran Outils). Chaque id doit exister dans TOOL_ITEMS. */
-var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','echeance','amortissement','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['apparence','aide']]];
+var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','echeance','amortissement','emprunt','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['apparence','aide']]];
 var TOOL_ITEMS=[
   {id:'tpca',label:'Titre Pro CA'},
   {id:'plan',label:'Plan comptable'},
@@ -5085,6 +5086,7 @@ var TOOL_ITEMS=[
   {id:'amortissement',label:'Plan d\'amortissement'},
   {id:'rapprochement',label:'Rapprochement bancaire'},
   {id:'echeance',label:'Échéance et pénalités'},
+  {id:'emprunt',label:'Tableau d\'emprunt'},
   {id:'glossaire',label:'Glossaire'},
   {id:'sujets',label:'Sujets types'},
   {id:'annales',label:'Annales blanches'},
@@ -5132,6 +5134,7 @@ function viewOutils(){
   else if(ui.tool==='amortissement')body=toolAmortissement();
   else if(ui.tool==='rapprochement')body=toolRapprochement();
   else if(ui.tool==='echeance')body=toolEcheance();
+  else if(ui.tool==='emprunt')body=toolEmprunt();
   else if(ui.tool==='glossaire')body=toolGlossaire();
   else if(ui.tool==='sujets')body=toolSujets();
   else if(ui.tool==='annales')body=toolAnnales();
@@ -6898,6 +6901,29 @@ function toolEcheance(){
       '<div class="fg"><span class="fl">Total réclamable (+ 40 € d\'indemnité)</span><div class="fc2 hi" id="ech-tot">—</div></div>'+
     '</div>'+
     '<p class="tool-sub" id="ech-note" style="margin-top:10px"></p></div>';
+}
+/* Tableau d'emprunt : annuités constantes ou amortissement constant du capital. */
+function empTable(C,t,n,mode){
+  var i=t/100,rows=[],cap=C,a=mode==='const'?(i?C*i/(1-Math.pow(1+i,-n)):C/n):0;
+  for(var k=1;k<=n;k++){var it=r2(cap*i),am=mode==='const'?(k===n?r2(cap):r2(a-it)):(k===n?r2(cap):r2(C/n)),an=r2(it+am);rows.push({k:k,deb:r2(cap),int:it,am:am,an:an,fin:r2(cap-am)});cap=r2(cap-am);}
+  return rows;
+}
+function toolEmprunt(){
+  var C=ui.empC||30000,t=ui.empT!=null?ui.empT:4,n=ui.empN||5,mode=ui.empM||'const';
+  var rows=empTable(C,t,n,mode),tot={int:0,an:0};rows.forEach(function(r){tot.int=r2(tot.int+r.int);tot.an=r2(tot.an+r.an);});
+  var body=rows.map(function(r){return '<tr><td>'+r.k+'</td><td class="mono">'+fmt2(r.deb)+'</td><td class="mono">'+fmt2(r.int)+'</td><td class="mono">'+fmt2(r.am)+'</td><td class="mono"><b>'+fmt2(r.an)+'</b></td><td class="mono">'+fmt2(r.fin)+'</td></tr>';}).join('');
+  var r1=rows[0];
+  return '<div class="tool-section"><h2 class="tool-title">Tableau d\'emprunt</h2>'+
+    '<p class="tool-sub">Chaque échéance = intérêts (calculés sur le capital restant dû) + remboursement du capital. Les intérêts sont une charge (661) ; le capital remboursé diminue la dette (164).</p>'+
+    '<div class="fr"><div class="fg"><span class="fl">Montant emprunté (€)</span><input class="fi" type="number" id="emp-c" value="'+C+'" min="0"></div>'+
+      '<div class="fg" style="max-width:150px"><span class="fl">Taux annuel (%)</span><input class="fi" type="number" id="emp-t" value="'+t+'" step="0.01" min="0"></div>'+
+      '<div class="fg" style="max-width:130px"><span class="fl">Durée (années)</span><input class="fi" type="number" id="emp-n" value="'+n+'" min="1" max="30"></div>'+
+      '<div class="fg"><span class="fl">Mode de remboursement</span><select class="fs" id="emp-m"><option value="const"'+(mode==='const'?' selected':'')+'>Annuités constantes</option><option value="amort"'+(mode==='amort'?' selected':'')+'>Amortissement constant du capital</option></select></div></div>'+
+    '<div class="row" style="margin-top:6px"><button class="btn btn-pri" data-action="emp-calc">'+SVG.refresh+' Calculer</button></div>'+
+    '<div style="overflow-x:auto;margin-top:14px"><table class="tpat-ecr"><thead><tr><th>Année</th><th>Capital début</th><th>Intérêts</th><th>Capital remboursé</th><th>Annuité</th><th>Capital fin</th></tr></thead><tbody>'+body+
+    '<tr><td colspan="2"><b>Total</b></td><td class="mono"><b>'+fmt2(tot.int)+'</b></td><td class="mono"><b>'+fmt2(C)+'</b></td><td class="mono"><b>'+fmt2(tot.an)+'</b></td><td></td></tr></tbody></table></div>'+
+    '<h3 class="tpat-h">Écriture de la première échéance</h3>'+tpAtEcr([['Emprunts auprès des établissements de crédit (164)',r1.am,0],['Charges d\'intérêts (661)',r1.int,0],['Banque (512)',0,r1.an]])+
+    (mode==='const'?'<p class="tool-sub">Annuité constante = C × i / (1 − (1 + i)<sup>−n</sup>). Les intérêts baissent chaque année et la part de capital augmente.</p>':'<p class="tool-sub">Le capital est remboursé par parts égales (C / n) : les annuités diminuent avec les intérêts.</p>')+'</div>';
 }
 function toolTva(){
   return '<div class="tool-section"><h2 class="tool-title">Calculateur TVA</h2>'+
@@ -10507,6 +10533,7 @@ document.addEventListener('click',function(e){
   else if(a==='dash-reset'){try{localStorage.removeItem('legl.dash');}catch(e){}var _yd=window.scrollY;render();window.scrollTo(0,_yd);}
   else if(a==='dash-move'){var _l=dashLayout(),_id=t.dataset.k,_d=parseInt(t.dataset.d,10),_z=DASH_BLOCKS[_id].z,_same=_l.order.filter(function(x){return DASH_BLOCKS[x].z===_z;}),_ix=_same.indexOf(_id),_sw=_same[_ix+_d];if(_sw){var _a1=_l.order.indexOf(_id),_a2=_l.order.indexOf(_sw);_l.order[_a1]=_sw;_l.order[_a2]=_id;dashSave(_l);}var _ym=window.scrollY;render();window.scrollTo(0,_ym);}
   else if(a==='dash-toggle'){var _l2=dashLayout(),_k=t.dataset.k,_h=_l2.hide.indexOf(_k);if(_h>=0)_l2.hide.splice(_h,1);else _l2.hide.push(_k);dashSave(_l2);var _yt=window.scrollY;render();window.scrollTo(0,_yt);}
+  else if(a==='emp-calc'){var _g=function(id){var el=document.getElementById(id);return el?el.value:'';};var _c=parseFloat(_g('emp-c')),_t=parseFloat(_g('emp-t')),_n=parseInt(_g('emp-n'),10);if(_c>0&&_t>=0&&_n>=1&&_n<=30){ui.empC=_c;ui.empT=_t;ui.empN=_n;ui.empM=_g('emp-m')==='amort'?'amort':'const';}var _ye=window.scrollY;render();window.scrollTo(0,_ye);}
   else if(a==='app-recipe'){var _rc=null;APP_RECIPES.forEach(function(r){if(r.k===t.dataset.k)_rc=r;});if(_rc){Object.keys(_rc.set).forEach(function(k){appSet(k,_rc.set[k]);});if(!_rc.set.mode&&appGet('mode')==='dark')appSet('mode','');var _yr=window.scrollY;render();window.scrollTo(0,_yr);announce('Recette « '+_rc.n+' » appliquée.');}}
   else if(a==='app-fx-test'){successFx(true);}
   else if(a==='app-reset'){['ambiance','corners','density','titles','ruled','mode','textsize','font','fx','dashmode'].forEach(function(k){appSet(k,'');});try{localStorage.removeItem('legl.accent');}catch(e){}document.documentElement.removeAttribute('data-accent');render();announce('Apparence d\'origine rétablie.');}
