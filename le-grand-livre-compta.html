@@ -5074,7 +5074,7 @@ function appSet(k,v){
 }
 var TEXTSIZES=[['','Normale'],['lg','Grande'],['xl','Très grande']];
 /* Groupes d'outils (navigation latérale de l'écran Outils). Chaque id doit exister dans TOOL_ITEMS. */
-var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','amortissement','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['apparence','aide']]];
+var TOOL_GROUPS=[['Titre Pro',['tpca']],['S\'entraîner',['sujets','annales','ecritures']],['Calculer',['tva','facture','echeance','amortissement','rapprochement']],['Consulter',['plan','antiseche','glossaire','methodo']],['Réglages',['apparence','aide']]];
 var TOOL_ITEMS=[
   {id:'tpca',label:'Titre Pro CA'},
   {id:'plan',label:'Plan comptable'},
@@ -5084,6 +5084,7 @@ var TOOL_ITEMS=[
   {id:'facture',label:'Calculateur facture'},
   {id:'amortissement',label:'Plan d\'amortissement'},
   {id:'rapprochement',label:'Rapprochement bancaire'},
+  {id:'echeance',label:'Échéance et pénalités'},
   {id:'glossaire',label:'Glossaire'},
   {id:'sujets',label:'Sujets types'},
   {id:'annales',label:'Annales blanches'},
@@ -5130,6 +5131,7 @@ function viewOutils(){
   else if(ui.tool==='facture')body=toolFacture();
   else if(ui.tool==='amortissement')body=toolAmortissement();
   else if(ui.tool==='rapprochement')body=toolRapprochement();
+  else if(ui.tool==='echeance')body=toolEcheance();
   else if(ui.tool==='glossaire')body=toolGlossaire();
   else if(ui.tool==='sujets')body=toolSujets();
   else if(ui.tool==='annales')body=toolAnnales();
@@ -5137,7 +5139,7 @@ function viewOutils(){
   else if(ui.tool==='aide')body=toolAide();
   else if(ui.tool==='apparence')body=toolApparence();
   else if(ui.tool==='tpca')body=toolTitrePro();
-  var _calc=['tva','facture','amortissement','rapprochement','ecritures'].indexOf(ui.tool)>=0;
+  var _calc=['tva','facture','echeance','amortissement','rapprochement','ecritures'].indexOf(ui.tool)>=0;
   return '<div class="page-head"><h1>'+(ui.tool==='tpca'?'Titre Pro Comptable assistant':'Outils')+'</h1><p>Outils &middot; '+escHtml(cursusLabel())+(_calc?' &middot; champs <b>encadrés pleins</b> à saisir, <b>en pointillés</b> calculés':'')+'</p></div>'+
     (ui.tool==='tpca'&&isTP()?body:'<div class="tools-layout"><nav class="tools-side" aria-label="Outils">'+nav+'</nav><div class="tools-main">'+body+'</div></div>');
 }
@@ -6865,6 +6867,38 @@ function toolEcritures(){
     '<div class="row" style="margin-top:14px"><button class="btn btn-gh" data-action="je-clear">'+SVG.refresh+' Effacer tout</button></div></div>';
 }
 
+/* Calculateur d'échéance et de pénalités de retard (conditions de paiement usuelles entre professionnels). */
+var ECH_CONDS=[['0','Comptant (à réception)'],['30','30 jours date de facture'],['45','45 jours date de facture'],['60','60 jours date de facture'],['30fm','30 jours fin de mois'],['45fm','45 jours fin de mois']];
+function echCompute(fd,cond,pd,amt,rate){
+  var d=isoToDate(fd),due;
+  if(/fm$/.test(cond)){var n=parseInt(cond,10);var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);due=new Date(x.getFullYear(),x.getMonth()+1,0);}
+  else{due=new Date(d.getFullYear(),d.getMonth(),d.getDate()+parseInt(cond,10));}
+  var out={due:due,late:0,pen:0,tot:0};
+  if(pd){var p=isoToDate(pd);out.late=Math.max(0,Math.round((p-due)/DAY));}
+  if(out.late>0&&amt>0){out.pen=r2(amt*rate/100*out.late/365);out.tot=r2(out.pen+40);}
+  return out;
+}
+function toolEcheance(){
+  var today=todayStr();
+  return '<div class="tool-section"><h2 class="tool-title">Échéance et pénalités de retard</h2>'+
+    '<p class="tool-sub">Date d\'échéance selon les conditions de paiement, jours de retard et montant réclamable à un client professionnel. Pour « 45 jours fin de mois », l\'outil ajoute 45 jours puis va en fin de mois (la méthode inverse est aussi admise si le contrat la prévoit). Plafond légal : 60 jours après la facture, ou 45 jours fin de mois.</p>'+
+    '<div class="fr">'+
+      '<div class="fg"><span class="fl">Date de la facture</span><input class="fi" type="date" id="ech-fd" value="'+today+'"></div>'+
+      '<div class="fg"><span class="fl">Conditions de paiement</span><select class="fs" id="ech-cond">'+ECH_CONDS.map(function(c){return '<option value="'+c[0]+'"'+(c[0]==='30fm'?' selected':'')+'>'+c[1]+'</option>';}).join('')+'</select></div>'+
+      '<div class="fg"><span class="fl">Échéance</span><div class="fc2 hi" id="ech-due">—</div></div>'+
+    '</div><hr class="hdiv">'+
+    '<div class="fr">'+
+      '<div class="fg"><span class="fl">Date du paiement (ou aujourd\'hui)</span><input class="fi" type="date" id="ech-pd" value="'+today+'"></div>'+
+      '<div class="fg"><span class="fl">Montant TTC dû (€)</span><input class="fi" type="number" id="ech-amt" placeholder="1 200" min="0"></div>'+
+      '<div class="fg" style="max-width:170px"><span class="fl">Taux annuel des pénalités (%)</span><input class="fi" type="number" id="ech-rate" value="12" min="0" step="0.01"></div>'+
+    '</div>'+
+    '<div class="fr">'+
+      '<div class="fg"><span class="fl">Jours de retard</span><div class="fc2" id="ech-late">—</div></div>'+
+      '<div class="fg"><span class="fl">Pénalités de retard</span><div class="fc2" id="ech-pen">—</div></div>'+
+      '<div class="fg"><span class="fl">Total réclamable (+ 40 € d\'indemnité)</span><div class="fc2 hi" id="ech-tot">—</div></div>'+
+    '</div>'+
+    '<p class="tool-sub" id="ech-note" style="margin-top:10px"></p></div>';
+}
 function toolTva(){
   return '<div class="tool-section"><h2 class="tool-title">Calculateur TVA</h2>'+
     '<p class="tool-sub">Taux disponibles : 20 %, 10 %, 5,5 %, 2,1 %.</p>'+
@@ -10011,6 +10045,10 @@ function bindTools(){
     if(dec>=0){el.textContent=fmt(dec);el.className='fc2 hi';}
     else{el.textContent='Crédit de TVA à reporter : '+fmt(-dec);el.className='fc2 al';}
   };
+  var echUpd=function(){var fd=(document.getElementById('ech-fd')||{}).value;if(!fd||!/^\d{4}-\d{2}-\d{2}$/.test(fd))return;var r=echCompute(fd,document.getElementById('ech-cond').value,document.getElementById('ech-pd').value,parseFloat(document.getElementById('ech-amt').value)||0,parseFloat(document.getElementById('ech-rate').value)||0);
+    var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};set('ech-due',frDateLong(r.due));set('ech-late',r.late?r.late+' jour'+(r.late>1?'s':''):'aucun');set('ech-pen',r.pen?fmt2(r.pen):'—');set('ech-tot',r.tot?fmt2(r.tot):'—');
+    set('ech-note',r.late?'Calcul : montant × taux × '+r.late+' / 365, plus 40 € d\'indemnité forfaitaire pour frais de recouvrement.':'Pas de retard à cette date.');};
+  ['ech-fd','ech-cond','ech-pd','ech-amt','ech-rate'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',echUpd);el.addEventListener('change',echUpd);}});echUpd();
   ['t-ht','t-taux1'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',updT1);el.addEventListener('change',updT1);}});
   ['t-ttc','t-taux2'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',updT2);el.addEventListener('change',updT2);}});
   ['t-coll','t-ded1','t-ded2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',updT3);});
