@@ -530,6 +530,7 @@ svg{display:block}
 .tpat-ecr th{color:var(--ink2);font-weight:600;font-size:12px}
 .tpat-chart{width:100%;max-width:560px;height:auto;display:block;margin:6px 0 12px}
 .tpat-long .tpat-row{grid-template-columns:1fr;gap:6px}.tpat-long select.tpat-in{width:100%;font-family:inherit;white-space:normal}.tpat-long .tpat-mark{font-size:13px}
+.at-grp{margin-bottom:10px}.at-grp-h{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin:0 0 6px}.at-grp-h span:nth-child(2){flex:1;min-width:0}.at-grp-n{font-size:12px}.at-grp .chips{margin:0}
 .tpat-mail{margin-top:10px;display:flex;flex-direction:column;gap:6px;font-size:14px}.tpat-mail textarea{width:100%;min-height:180px;font:inherit;line-height:1.5}
 .tpat-model{border:1px solid var(--edge);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px;background:var(--paper);font-size:14px;line-height:1.55}
 .tpat-self{background:var(--debit-s);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
@@ -6656,9 +6657,10 @@ function tpTdbChart(s){
 }
 function tpAteliers(){
   var cur=ui.tpAt||'ca3';
-  var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
+  var chipsH=TP_CCP.map(function(c){var list=TP_AT.filter(function(a){return a[2]===c.code;}),nd=list.filter(function(a){var s=state.tp.at&&state.tp.at[a[0]];return s&&s.ok>0;}).length;
+    return '<div class="at-grp"><div class="at-grp-h"><span class="epr-code">'+c.code+'</span><span>'+escHtml(c.titre)+'</span><span class="mono at-grp-n">'+nd+' / '+list.length+'</span></div><div class="chips">'+list.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" aria-pressed="'+(cur===a[0]?'true':'false')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div></div>';}).join('');
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
-    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, écrits professionnels, rapprochement bancaire, budget de trésorerie (CCP1) ; exigibilité et déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, valeurs mobilières de placement, travaux d\'inventaire, ajustement des dépréciations, provisions pour risques, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
+    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, classés par CCP. Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute. Un cas réussi sans ouvrir le corrigé enregistre ton temps.</p></div>'+
     '<div class="row" style="margin:14px 0 0;align-items:center"><button class="btn-sm" data-action="tp-at-rand">'+SVG.refresh+' Un atelier au hasard</button><span class="tool-sub" style="margin:0">de préférence dans le CCP en cours, parmi ceux pas encore réussis sans faute</span></div>'+
     '<div style="margin-top:10px">'+chipsH+'</div>'+tpAtBody(cur);
 }
