@@ -3520,7 +3520,7 @@ function exportState(){
       var fm=localStorage.getItem('legl.focusMode');if(fm)settings.focusMode=fm;
       var npd=localStorage.getItem('legl.newPerDay');if(npd)settings.newPerDay=npd;
       var cu=localStorage.getItem('legl.cursus');if(cu)settings.cursus=cu;
-      ['ambiance','corners','density','titles','ruled','font','fx','dashmode','dash','formStart','formEnd','ccpOrder','stages','formConfirmed','seenVersion'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v)settings[k]=v;});
+      ['ambiance','corners','density','titles','ruled','font','fx','dashmode','dash','formStart','formEnd','ccpOrder','stages','formConfirmed','seenVersion','edtRecur'].forEach(function(k){var v=localStorage.getItem('legl.'+k);if(v)settings[k]=v;});
     }catch(e){}
     var payload={app:'legrandlivre',version:1,exportedAt:todayStr(),state:state,settings:settings};
     var data=JSON.stringify(payload,null,2);
@@ -3571,6 +3571,7 @@ function importState(file){
         if(typeof o.settings.ccpOrder==='string'&&/^[123]{3}$/.test(o.settings.ccpOrder))localStorage.setItem('legl.ccpOrder',o.settings.ccpOrder);
         if(typeof o.settings.stages==='string'&&o.settings.stages.length<400)localStorage.setItem('legl.stages',o.settings.stages);
         if(o.settings.formConfirmed==='1')localStorage.setItem('legl.formConfirmed','1');
+        ['dash','edtRecur'].forEach(function(k){var v=o.settings[k];if(typeof v==='string'&&v.length<2000){try{JSON.parse(v);localStorage.setItem('legl.'+k,v);}catch(e){}}});
       }catch(e){}}
       normalizeState();mergeMyCards();
       save();render();
