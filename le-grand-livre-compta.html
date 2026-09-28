@@ -9381,11 +9381,29 @@ var XL_TASKS=[
   {cell:'G2',t:'Affiche « À relancer » si le TTC de la ligne 2 dépasse 1 500 €, sinon laisse la cellule vide ("").',sol:'=SI(F2>1500;"À relancer";"")',fn:['SI']},
   {cell:'D16',t:'Calcule l\'écart entre la plus grosse et la plus petite facture HT.',sol:'=MAX(D2:D11)-MIN(D2:D11)',fn:['MAX','MIN']}
 ];
+var XL_TASKS2=[
+  {cell:'B14',t:'Calcule le chiffre d\'affaires total de l\'année N.',sol:'=SOMME(B2:B13)',fn:['SOMME']},
+  {cell:'D2',t:'Calcule la variation de janvier par rapport à N-1, en pourcentage arrondi à une décimale (par exemple 5,3).',sol:'=ARRONDI((B2-C2)/C2*100;1)',fn:['ARRONDI']},
+  {cell:'E2',t:'Calcule le cumul du CA depuis janvier, avec une formule qu\'on pourrait recopier vers le bas (début de plage figé).',sol:'=SOMME($B$2:B2)',fn:['SOMME'],needRef:'$B$2'},
+  {cell:'F2',t:'Calcule la part de janvier dans le CA de l\'année (une proportion, par exemple 0,08), avec le total figé.',sol:'=B2/$B$14',needRef:'$B$14'},
+  {cell:'G2',t:'Affiche « Oui » si le CA de janvier atteint l\'objectif mensuel en H2, sinon « Non ».',sol:'=SI(B2>=$H$2;"Oui";"Non")',fn:['SI']},
+  {cell:'B15',t:'Trouve le meilleur CA mensuel de l\'année.',sol:'=MAX(B2:B13)',fn:['MAX']},
+  {cell:'B16',t:'Compte les mois où l\'objectif (H2) est atteint, en utilisant la cellule H2 dans le critère.',sol:'=NB.SI(B2:B13;">="&H2)',fn:['NB.SI'],needRef:'H2'},
+  {cell:'D14',t:'Calcule la variation annuelle du CA (total N par rapport au total N-1, qui est en C14), en % arrondi à une décimale.',sol:'=ARRONDI((B14-C14)/C14*100;1)',fn:['ARRONDI']}
+];
+var XL_SHEETS=[{titre:'Journal des ventes',tasks:XL_TASKS,money:function(c,r,k){return r>0&&c>=3&&c<=5&&k!=='D14';}},{titre:'Tableau de bord mensuel',tasks:XL_TASKS2,money:function(c,r,k){return r>0&&(c===1||c===2||c===4)&&r<16&&k!=='B16';}}];
+function xlTasks(){return XL_SHEETS[(ui.xl&&ui.xl.s)||0].tasks;}
+function xlNew2(){var d={},rnd=function(a,b){return a+Math.floor(Math.random()*(b-a+1));},M=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  ['Mois','CA N','CA N-1','Variation %','Cumul N','Part du CA','Objectif ?','Objectif mensuel'].forEach(function(x,i){d[xlColName(i)+'1']=x;});
+  var obj=rnd(10,20)*1000;d.H2=obj;var t1=0;
+  for(var r=2;r<=13;r++){d['A'+r]=M[r-2];var n1=rnd(8,24)*1000+rnd(0,9)*100;d['C'+r]=n1;t1+=n1;d['B'+r]=Math.round(n1*(0.85+Math.random()*0.35)/10)*10;}
+  d.C14=t1;d.A14='Total';d.A15='Meilleur mois';d.A16='Mois à l\'objectif';
+  ui.xl={s:1,d:d,f:{},i:0,res:{},sel:XL_TASKS2[0].cell,msg:null};}
 function xlNew(){var d={},rnd=function(a,b){return a+Math.floor(Math.random()*(b-a+1));};
   ['Date','Client','Compte','HT','TVA','TTC','Remarque','Taux TVA'].forEach(function(h,i){d[xlColName(i)+'1']=h;});d.H2=0.2;
   for(var r=2;r<=11;r++){d['A'+r]=String(rnd(1,28)).padStart(2,'0')+'/03';d['B'+r]=XL_CLI[rnd(0,XL_CLI.length-1)];d['C'+r]=Math.random()<0.5?706:707;d['D'+r]=r===2?rnd(10,19)*100+rnd(0,99)/100*100/100:rnd(3,25)*100+[0,0,50,20][rnd(0,3)];d['D'+r]=Math.round(d['D'+r]*100)/100;if(r>2){d['E'+r]=Math.round(d['D'+r]*20)/100;d['F'+r]=Math.round((d['D'+r]+d['E'+r])*100)/100;}}
   d.C12='Total HT';d.C13='Total 706';d.C14='Nb > 1 000 €';d.C15='Moyenne HT';d.C16='Écart max-min';
-  ui.xl={d:d,f:{},i:0,res:{},sel:XL_TASKS[0].cell,msg:null};}
+  ui.xl={s:0,d:d,f:{},i:0,res:{},sel:XL_TASKS[0].cell,msg:null};}
 function xlGet(c,r,seen){var k=xlColName(c)+(r+1);seen=seen||{};if(ui.xl.f[k]){if(seen[k])throw '#REF! (référence circulaire)';seen[k]=1;var x=xlEval(ui.xl.f[k].replace(/^=/,''),function(cc,rr){return xlGet(cc,rr,seen);});delete seen[k];return x.v;}var v=ui.xl.d[k];return v===undefined?'':v;}
 function xlShow(v,money){if(typeof v==='number')return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:money?2:0,maximumFractionDigits:2}).format(v).replace(/ /g,' ');if(typeof v==='boolean')return v?'VRAI':'FAUX';return String(v);}
 function xlCheck(task,formula){
@@ -9394,21 +9412,22 @@ function xlCheck(task,formula){
   try{var cc=/^([A-Z]+)([0-9]+)$/.exec(task.cell);var ev=xlEval(f.slice(1),function(c,r){return xlGet(c,r,{});});got=ev.v;used=ev.used;}catch(e){ui.xl.f[task.cell]=saved;return {ok:false,m:'Le tableur affiche une erreur : '+e+'.'};}
   var ui0=ui.xl.f;ui.xl.f=JSON.parse(JSON.stringify(ui0));ui.xl.f[task.cell]=task.sol;var exp;try{exp=xlEval(task.sol.slice(1),function(c,r){return xlGet(c,r,{});}).v;}catch(e){exp=null;}ui.xl.f=ui0;
   var same=typeof exp==='number'?(typeof got==='number'&&Math.abs(got-exp)<0.005):String(got).trim().toLowerCase()===String(exp).trim().toLowerCase();
+  if(!same&&typeof exp==='number'&&typeof got==='number'&&(task.fn||[]).indexOf('ARRONDI')>=0&&!used.fns.ARRONDI&&Math.abs(got-exp)<1){ui.xl.f[task.cell]=saved;return {ok:false,m:'Presque : ton calcul donne '+xlShow(got)+', il reste à l\'arrondir comme demandé avec ARRONDI(…;'+(/;1\)$/.test(task.sol)?'1':'2')+').'};}
   if(!same){ui.xl.f[task.cell]=saved;return {ok:false,m:'Ta formule donne '+xlShow(got)+(typeof exp==='number'?'':'')+', ce n\'est pas le résultat attendu. Vérifie les cellules et la plage utilisées.'};}
   var miss=(task.fn||[]).filter(function(fn){return !used.fns[fn];});
   if(miss.length){ui.xl.f[task.cell]=saved;return {ok:false,m:miss.indexOf('ARRONDI')>=0&&miss.length===1?'Presque : la consigne demande un arrondi au centime. Entoure ton calcul de ARRONDI(…;2).':'Le résultat est juste, mais utilise la fonction '+miss.join(' et ')+' : si les données changent, ta cellule doit se recalculer toute seule.'};}
-  if(task.needRef&&used.refs.indexOf(task.needRef)<0){ui.xl.f[task.cell]=saved;return {ok:false,m:'Le résultat est juste, mais le taux doit être figé avec '+task.needRef+' : en recopiant ta formule vers le bas, une référence relative glisserait sur H3, H4… qui sont vides.'};}
+  if(task.needRef&&!used.refs.some(function(x){return x===task.needRef||x.indexOf(task.needRef+':')===0||x.indexOf(':'+task.needRef)>=0||(task.needRef.indexOf('$')<0&&x.replace(/\$/g,'')===task.needRef);})){ui.xl.f[task.cell]=saved;return {ok:false,m:task.needRef.indexOf('$')<0?'Le résultat est juste, mais le critère doit utiliser la cellule '+task.needRef+' (par exemple ">="&'+task.needRef+') : si l\'objectif change, le décompte suit.':'Le résultat est juste, mais fige la référence avec '+task.needRef+' : en recopiant ta formule vers le bas, une référence relative glisserait sur des cellules vides ou fausses.'};}
   if(used.refs.length===0){ui.xl.f[task.cell]=saved;return {ok:false,m:'Ne tape pas le résultat : fais référence aux cellules, pour que le calcul reste juste si une donnée change.'};}
   return {ok:true,m:'Juste. '+(task.sol===f.toUpperCase()?'':'Une solution type : '+task.sol)};
 }
 function viewXlSheet(){
-  if(!ui.xl)xlNew();var X=ui.xl,task=XL_TASKS[X.i],done=Object.keys(X.res).filter(function(k){return X.res[k];}).length;
+  if(!ui.xl)xlNew();var X=ui.xl,TK=xlTasks(),SH=XL_SHEETS[X.s||0],task=TK[X.i],done=Object.keys(X.res).filter(function(k){return X.res[k];}).length;
   var hdr='<tr><th></th>'+[0,1,2,3,4,5,6,7].map(function(c){return '<th scope="col">'+xlColName(c)+'</th>';}).join('')+'</tr>';
-  var rows='';for(var r=0;r<16;r++){rows+='<tr><th scope="row">'+(r+1)+'</th>';for(var c=0;c<8;c++){var k=xlColName(c)+(r+1),v;try{v=xlShow(xlGet(c,r,{}),r>0&&(c>=3&&c<=5)&&k!=='D14');}catch(e){v='#ERR';}var cls=(task&&k===task.cell?' tgt':'')+(X.f[k]?' fx':'')+(r===0?' hd':'')+(typeof (X.d[k])==='number'||X.f[k]?' n':'');rows+='<td class="xl-c'+cls+'" data-action="xl-sel" data-k="'+k+'">'+escHtml(v)+'</td>';}rows+='</tr>';}
+  var rows='';for(var r=0;r<16;r++){rows+='<tr><th scope="row">'+(r+1)+'</th>';for(var c=0;c<8;c++){var k=xlColName(c)+(r+1),v;try{v=xlShow(xlGet(c,r,{}),SH.money(c,r,k));}catch(e){v='#ERR';}var cls=(task&&k===task.cell?' tgt':'')+(X.f[k]?' fx':'')+(r===0?' hd':'')+(typeof (X.d[k])==='number'||X.f[k]?' n':'');rows+='<td class="xl-c'+cls+'" data-action="xl-sel" data-k="'+k+'">'+escHtml(v)+'</td>';}rows+='</tr>';}
   var sel=X.sel,selF=X.f[sel]||(X.d[sel]!==undefined?String(xlShow(X.d[sel])):'');
-  var tl=XL_TASKS.map(function(t,i){return '<button class="chip'+(i===X.i?' on':'')+'" data-action="xl-task" data-k="'+i+'">'+(X.res[i]?SVG.check+' ':'')+t.cell+'</button>';}).join('');
-  var fin=done===XL_TASKS.length;
-  return '<div class="panel xl-wrap"><span class="eyebrow">Tableur d\'entraînement · '+done+' / '+XL_TASKS.length+' formules justes</span>'+
+  var tl=TK.map(function(t,i){return '<button class="chip'+(i===X.i?' on':'')+'" data-action="xl-task" data-k="'+i+'">'+(X.res[i]?SVG.check+' ':'')+t.cell+'</button>';}).join('');
+  var fin=done===TK.length;
+  return '<div class="chips" style="margin:0 0 10px">'+XL_SHEETS.map(function(sh,i){return '<button class="chip'+((X.s||0)===i?' on':'')+'" data-action="xl-sheet" data-k="'+i+'">'+escHtml(sh.titre)+'</button>';}).join('')+'</div><div class="panel xl-wrap"><span class="eyebrow">'+escHtml(SH.titre)+' · '+done+' / '+TK.length+' formules justes</span>'+
     (fin?'<div class="quiz-fb ok" style="margin:10px 0">Toutes les formules sont justes. Tu peux recommencer avec d\'autres données.</div>':
     '<p class="xl-task"><b>'+task.cell+'</b> · '+escHtml(task.t)+'</p><div class="xl-bar"><span class="mono xl-fx">fx</span><input id="xl-in" class="ji mono" autocomplete="off" spellcheck="false" aria-label="Formule pour la cellule '+task.cell+'" placeholder="=…" value="'+escHtml(X.draft||'')+'"><button class="btn btn-pri" data-action="xl-ok">Valider</button></div>'+
     (X.msg?'<div class="quiz-fb '+(X.msg.ok?'ok':'ko')+'" style="margin:8px 0" role="status">'+escHtml(X.msg.m)+'</div>':''))+
@@ -11494,12 +11513,13 @@ document.addEventListener('click',function(e){
   else if(a==='tp-go-erp'){navTerrain('erp');render();focusMain();}
   else if(a==='tp-crit'){var _tk=t.dataset.k,_tl=parseInt(t.dataset.lvl,10);if(_tk&&_tl>=0&&_tl<=2){var _y=window.scrollY;if(state.tp.crit[_tk]===_tl)delete state.tp.crit[_tk];else state.tp.crit[_tk]=_tl;save();render();window.scrollTo(0,_y);var _tb=document.querySelector('[data-action="tp-crit"][data-k="'+_tk+'"][data-lvl="'+_tl+'"]');if(_tb)try{_tb.focus({preventScroll:true});}catch(e){}}}
   else if(a==='xl-sel'){if(ui.xl){var _xi=document.getElementById('xl-in');if(_xi)ui.xl.draft=_xi.value;ui.xl.sel=t.dataset.k;var _xy=window.scrollY;render();window.scrollTo(0,_xy);}}
-  else if(a==='xl-task'){if(ui.xl){ui.xl.i=parseInt(t.dataset.k,10)||0;ui.xl.sel=XL_TASKS[ui.xl.i].cell;ui.xl.msg=null;ui.xl.draft=ui.xl.f[ui.xl.sel]||'';var _xy2=window.scrollY;render();window.scrollTo(0,_xy2);}}
-  else if(a==='xl-ok'){if(ui.xl){var _xin=document.getElementById('xl-in'),_tk=XL_TASKS[ui.xl.i],_r=xlCheck(_tk,_xin?_xin.value:'');ui.xl.msg=_r;ui.xl.draft=_xin?_xin.value:'';if(_r.ok){ui.xl.res[ui.xl.i]=true;var _nx=-1;for(var _q=1;_q<=XL_TASKS.length;_q++){var _j=(ui.xl.i+_q)%XL_TASKS.length;if(!ui.xl.res[_j]){_nx=_j;break;}}if(_nx>=0){ui.xl.i=_nx;ui.xl.sel=XL_TASKS[_nx].cell;ui.xl.draft='';}
-      var _nd=Object.keys(ui.xl.res).length;if(!state.tp.xl||typeof state.tp.xl!=='object')state.tp.xl={best:0,n:0};if(_nd>state.tp.xl.best)state.tp.xl.best=_nd;if(_nd===XL_TASKS.length){state.tp.xl.n++;logSession('excel','Tableur d\'entraînement',{n:_nd,d:XL_TASKS.length});}save();}
+  else if(a==='xl-task'){if(ui.xl){ui.xl.i=parseInt(t.dataset.k,10)||0;ui.xl.sel=xlTasks()[ui.xl.i].cell;ui.xl.msg=null;ui.xl.draft=ui.xl.f[ui.xl.sel]||'';var _xy2=window.scrollY;render();window.scrollTo(0,_xy2);}}
+  else if(a==='xl-ok'){if(ui.xl){var _XT=xlTasks(),_xin=document.getElementById('xl-in'),_tk=_XT[ui.xl.i],_r=xlCheck(_tk,_xin?_xin.value:'');ui.xl.msg=_r;ui.xl.draft=_xin?_xin.value:'';if(_r.ok){ui.xl.res[ui.xl.i]=true;var _nx=-1;for(var _q=1;_q<=_XT.length;_q++){var _j=(ui.xl.i+_q)%_XT.length;if(!ui.xl.res[_j]){_nx=_j;break;}}if(_nx>=0){ui.xl.i=_nx;ui.xl.sel=_XT[_nx].cell;ui.xl.draft='';}
+      var _nd=Object.keys(ui.xl.res).length;if(!state.tp.xl||typeof state.tp.xl!=='object')state.tp.xl={best:0,n:0};if(_nd>state.tp.xl.best)state.tp.xl.best=_nd;if(_nd===_XT.length){state.tp.xl.n++;logSession('excel','Tableur d\'entraînement : '+XL_SHEETS[ui.xl.s||0].titre,{n:_nd,d:_XT.length});}save();}
       announce(_r.m);var _xy3=window.scrollY;render();window.scrollTo(0,_xy3);var _xi2=document.getElementById('xl-in');if(_xi2)_xi2.focus();}}
-  else if(a==='xl-hint'){if(ui.xl){ui.xl.msg={ok:false,m:'Une solution possible : '+XL_TASKS[ui.xl.i].sol};var _xy4=window.scrollY;render();window.scrollTo(0,_xy4);}}
-  else if(a==='xl-new'){xlNew();var _xy5=window.scrollY;render();window.scrollTo(0,_xy5);}
+  else if(a==='xl-hint'){if(ui.xl){ui.xl.msg={ok:false,m:'Une solution possible : '+xlTasks()[ui.xl.i].sol};var _xy4=window.scrollY;render();window.scrollTo(0,_xy4);}}
+  else if(a==='xl-sheet'){if(parseInt(t.dataset.k,10)===1)xlNew2();else xlNew();var _xy6=window.scrollY;render();window.scrollTo(0,_xy6);}
+  else if(a==='xl-new'){if(ui.xl&&ui.xl.s===1)xlNew2();else xlNew();var _xy5=window.scrollY;render();window.scrollTo(0,_xy5);}
   else if(a==='coach-build'){coachBuild(parseInt(t.dataset.k,10)||20);var _cy=window.scrollY;render();window.scrollTo(0,_cy);announce('Séance construite. Commence par la première tâche.');}
   else if(a==='tp-dp-print'){ui.tpDpPrint=true;render();window.scrollTo(0,0);}
   else if(a==='tp-dp-print-close'){ui.tpDpPrint=false;render();}
