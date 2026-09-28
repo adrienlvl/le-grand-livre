@@ -4269,6 +4269,7 @@ function viewAccueil(){
     '<p class="dash-foot">'+(ui.dashEdit?'':'<button class="btn-sm" data-action="dash-edit" style="margin-right:8px">'+SVG.list+' Personnaliser l\'accueil</button>')+'Astuce : <kbd class="sc-kbd">Ctrl</kbd>+<kbd class="sc-kbd">K</kbd> pour chercher et sauter partout, <kbd class="sc-kbd">?</kbd> pour les raccourcis. Réglages : Outils &rsaquo; Apparence.</p>';
 }
 
+var MOD_AT={facture:['fac'],efacture:['fac'],reglements:['let','ba'],rapprochement:['rap'],budget:['tre'],tva:['ue','ndf'],'decla-tva':['ca3','ue'],paie:['paie','cp'],couts:['sr'],analyse:['tdb','sr'],amortissements:['amo'],depreciations:['inv'],regularisations:['inv','emp'],stocks:['inv'],financement:['emp'],resultat:['aff'],is:['aff']};
 function viewModule(){
   var m=MODULES[route.mi],lastKey=m.hasExo?'exo':'quiz';
   var steps=[['cours','Cours'],['memo','Mémo visuel'],[lastKey,m.hasExo?'Exercice':'Quiz']];
@@ -4280,6 +4281,9 @@ function viewModule(){
   else if(si===1){body='<div class="panel">'+memo(m.id)+'</div><div class="row"><button class="btn btn-gh" data-action="step" data-i="0">'+SVG.arL+' Cours</button><button class="btn btn-pri spacer" data-action="step" data-i="2">'+(m.hasExo?'Passer à l\'exercice':'Tester mes connaissances')+' '+SVG.arR+'</button></div>';}
   else{body=m.hasExo?exoHTML():quizHTML(m);}
   var success=(passed&&si===2)?successBar():'';
+  /* Titre Pro : ateliers chiffrés liés au module, pour passer du cours à la pratique. */
+  var _ma=isTP()?(MOD_AT[m.id]||[]):[];
+  if(_ma.length&&si===1)body+='<div class="panel mod-at"><span class="eyebrow">Passer à la pratique</span><p class="tool-sub" style="margin:6px 0 10px">Des cas chiffrés comme en mise en situation, générés à l\'infini, avec corrigé.</p><div class="row" style="margin:0">'+_ma.map(function(k){var a=TP_AT.filter(function(x){return x[0]===k;})[0];return a?'<button class="btn-sm" data-action="plan-at" data-k="'+k+'">'+SVG.check+' Atelier : '+escHtml(a[1])+'</button>':'';}).join('')+'</div></div>';
   return '<button class="back" data-action="home">'+SVG.arL+' Tous les modules</button>'+
     '<div class="mhead"><div class="micon">'+MICON[m.icon]+'</div><div><span class="mnum">'+CATS[m.cat]+' \u00B7 Module '+m.num+'</span><h2 class="serif">'+m.title+'</h2><div class="sub">'+m.sub+'</div></div></div>'+
     '<div class="stepper">'+stepper+'</div>'+body+success;
@@ -4513,7 +4517,7 @@ var EXAM_EXTRA=[
 {q:"Que se passe-t-il si la TVA déductible dépasse la collectée ?",o:["Une TVA à payer","Un crédit de TVA","Une amende","Rien"],c:1,e:"L'entreprise dispose d'un crédit de TVA, reporté ou remboursé.",cat:"fisc",mod:"Fiscalité"},
 {q:"Qu'implique la franchise en base de TVA ?",o:["TVA à 10 %","Pas de TVA facturée ni déduite","Déclaration mensuelle","Remboursement automatique"],c:1,e:"Sous le seuil, l'entreprise ne facture ni ne déduit la TVA.",cat:"fisc",mod:"Fiscalité"},
 {q:"Pour une prestation de services, la TVA est exigible…",o:["à la commande","à la livraison","à l'encaissement","à la clôture"],c:2,e:"Pour les services, la TVA est exigible à l'encaissement, sauf option pour les débits.",cat:"fisc",mod:"Fiscalité"},
-{q:"Que représente le compte 44567 ?",o:["TVA collectée","TVA à décaisser","Crédit de TVA à reporter","TVA déductible"],c:2,e:"44567 Crédit de TVA à reporter.",cat:"fisc",mod:"Fiscalité"},
+{q:"Ce mois-ci, la TVA déductible dépasse la TVA collectée. Où va l'excédent ?",o:["En TVA collectée","En TVA à décaisser","En crédit de TVA à reporter sur la déclaration suivante","En charge de l'exercice"],c:2,e:"L'excédent est un crédit de TVA (44567), imputé sur la déclaration suivante ou remboursé si les conditions sont remplies.",cat:"fisc",mod:"Fiscalité"},
 {q:"Écriture du paiement de la TVA à l'État ?",o:["512 débité / 44551 crédité","44551 débité / 512 crédité","44571 débité / 512 crédité","44551 débité / 44566 crédité"],c:1,e:"On solde la dette : 44551 au débit, 512 Banque au crédit.",cat:"fisc",mod:"Fiscalité"},
 {q:"Comment obtient-on le salaire net à payer ?",o:["Brut plus cotisations salariales","Brut moins cotisations salariales","Brut moins cotisations patronales","Brut plus cotisations patronales"],c:1,e:"Net à payer = salaire brut moins cotisations salariales.",cat:"soc",mod:"Paie & social"},
 {q:"Qui paie les cotisations patronales ?",o:["L'employeur, en plus du brut","Le salarié, sur son salaire brut","L'État, par des allègements","Le salarié et l'employeur à parts égales"],c:0,e:"Les cotisations patronales s'ajoutent au brut et sont payées par l'employeur.",cat:"soc",mod:"Paie & social"},
@@ -4551,7 +4555,7 @@ var EXAM_EXTRA=[
 {q:"Résultat fiscal 80 000 euros, taux 25 %. L'IS est de…",o:["16 000 euros","20 000 euros","25 000 euros","12 000 euros"],c:1,e:"80 000 multiplié par 25 % égale 20 000 euros.",cat:"fisc",mod:"Fiscalité"},
 {q:"Quel est le taux réduit d'IS des PME ?",o:["15 % jusqu'à 42 500 euros","15 % sur l'ensemble du bénéfice","10 % jusqu'à 42 500 euros","20 % jusqu'à 100 000 euros"],c:0,e:"15 % sur la fraction de bénéfice jusqu'à 42 500 euros, sous conditions.",cat:"fisc",mod:"Fiscalité"},
 {q:"Quelle écriture pour le paiement de l'IS ?",o:["512 débité / 444 crédité","444 débité / 512 crédité","695 débité / 512 crédité","444 débité / 695 crédité"],c:1,e:"444 État au débit, 512 Banque au crédit.",cat:"fisc",mod:"Fiscalité"},
-{q:"Que représente le compte 695 ?",o:["TVA à décaisser","Impôts sur les bénéfices","Charges de personnel","Dotations"],c:1,e:"695 Impôts sur les bénéfices.",cat:"fisc",mod:"Fiscalité"},
+{q:"À la clôture, une SARL calcule l'impôt sur les sociétés de l'exercice. Quelle charge enregistre-t-elle ?",o:["TVA à décaisser","Impôts sur les bénéfices","Charges de personnel","Dotations aux provisions"],c:1,e:"L'IS est une charge : Impôts sur les bénéfices (695), contre État, impôt sur les bénéfices (444). Les acomptes versés pendant l'année viennent en déduction.",cat:"fisc",mod:"Fiscalité"},
 {q:"Comment se calcule le résultat net ?",o:["Résultat avant impôt moins IS","Produits moins TVA","CA moins charges variables","Résultat plus amortissements"],c:0,e:"Résultat net = résultat avant impôt moins impôt sur les bénéfices.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Comment se calcule le coût de production ?",o:["Matières consommées plus charges de production","Prix de vente moins TVA","Coût d'achat plus distribution","CA moins charges fixes"],c:0,e:"Coût de production = coût des matières consommées plus charges de production.",cat:"gest",mod:"Analyse & gestion"},
 {q:"Comment se calcule le coût d'achat ?",o:["Prix d'achat plus frais d'achat","Prix de vente moins marge","Matières plus main-d'oeuvre","CA moins TVA"],c:0,e:"Coût d'achat = prix d'achat plus frais accessoires d'achat.",cat:"gest",mod:"Analyse & gestion"},
