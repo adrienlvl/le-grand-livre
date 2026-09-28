@@ -1548,7 +1548,7 @@ html[data-font="lisible"] body{letter-spacing:.01em}
 <script>
 (function(){
 "use strict";
-var fmt=function(n){return new Intl.NumberFormat('fr-FR').format(n)+' \u20AC';};
+var fmt=function(n){return new Intl.NumberFormat('fr-FR').format(n).replace(/\u202F/g,'\u00A0')+' \u20AC';};
 var SVG={
   check:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
   x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
@@ -4308,7 +4308,7 @@ function viewAccueil(){
     act('','data-action="dash-review"',SVG.refresh,'Réviser les cartes dues',due>0?due+' carte'+(due>1?'s':'')+' en attente':'Rien à réviser pour l\'instant',due===0)+
     (_nx!==null?act('','data-action="open" data-mi="'+_nx+'"',SVG.book,'Continuer : '+escHtml(MODULES[_nx].title),'Module '+MODULES[_nx].num+' &middot; cours, mémo, quiz'):'')+
     (isTP()?(function(){var _cd=null;CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&c&&!c.done&&c.r&&Object.keys(c.r).length)_cd=x;});if(!_cd)CAB_DOSSIERS.forEach(function(x){var c=state.tp.cab&&state.tp.cab[x.id];if(!_cd&&!(c&&c.done))_cd=x;});
-      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','12 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
+      return _cd?act('','data-action="cab-open" data-id="'+_cd.id+'"',SVG.book,(state.tp.cab&&state.tp.cab[_cd.id]&&Object.keys(state.tp.cab[_cd.id].r||{}).length?'Reprendre : ':'Dossier cabinet : ')+escHtml(_cd.client),_cd.ccp+' · '+escHtml(_cd.secteur)+' · environ '+_cd.duree+' min'):act('','data-action="tp-go" data-k="atelier"',SVG.check,'Atelier pratique Titre Pro','16 ateliers : rapprochement, CA3, paie, amortissements, affectation…');})():act('','data-action="tab-exam"',SVG.exam,'Examen blanc','Questions chronométrées et corrigées'))+
     (dErr>0?act('','data-action="dash-errors"',SVG.warn,'Refaire mes erreurs',dErr+' carte'+(dErr>1?'s':'')+' à reprendre'):act('','data-action="day-start" data-len="standard"',SVG.star,'Session standard','Environ 20 min, plus complète'))+
     act('','data-action="quick-start"',SVG.exam,'Quiz éclair · 3 min','5 questions sur ton étape en cours du plan')+
   '</div></section>';
@@ -6156,7 +6156,7 @@ function tpMsp(){
     '<div style="margin-top:16px">'+cards+'</div>';
 }
 /* ==== Ateliers pratiques Titre Pro : générateurs purs (testés par verif.mjs) ==== */
-var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['tdb','Tableau de bord','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['aff','Affectation du résultat','CCP3']];
+var TP_AT=[['fac','Facture et réductions','CCP1'],['let','Lettrage d\'un compte client','CCP1'],['ndf','Note de frais','CCP1'],['ba','Balance âgée & relances','CCP1'],['rap','Rapprochement bancaire','CCP1'],['tre','Budget de trésorerie','CCP1'],['ue','TVA dans l\'Union européenne','CCP2'],['ca3','Déclaration de TVA (CA3)','CCP2'],['paie','Bulletin de paie','CCP2'],['cp','Congés payés','CCP2'],['tdb','Tableau de bord','CCP2'],['sr','Seuil de rentabilité','CCP2'],['amo','Amortissement & cession','CCP3'],['inv','Travaux d\'inventaire','CCP3'],['emp','Emprunt et intérêts courus','CCP3'],['aff','Affectation du résultat','CCP3']];
 var TP_MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 var TP_BA_TR=['Non échu','Retard de 1 à 30 jours','Retard de 31 à 60 jours','Retard de plus de 60 jours'];
 var TP_BA_AC=['Aucune action (suivi)','Relance amiable (appel ou courriel)','Lettre de relance avec rappel des pénalités','Mise en demeure (recommandé AR)'];
@@ -6254,13 +6254,38 @@ function tpGenInv(){
   var a=tpRnd(10,50)*120,m=tpRnd(2,12),fnp=tpRnd(15,90)*10;
   return {cl:cl,d:{si:si,sf:sf,ht:ht,pp:pp,a:a,m:m,fnp:fnp},x:{vs:r2(si-sf),ttc:r2(ht*1.2),dep:r2(ht*pp/100),cca:r2(a*(m-1)/12),fnpTtc:r2(fnp*1.2)}};
 }
-var TP_AT_GEN={let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
+function tpGenTre(){
+  var v=[tpRnd(30,80)*500,tpRnd(30,80)*500,tpRnd(30,80)*500],a=v.map(function(x){return Math.round(x*(0.35+Math.random()*0.25)/100)*100;});
+  var init=tpRnd(-20,60)*250,cm=tpRnd(15,45)*500,fm=tpRnd(10,30)*600,sal=tpRnd(8,20)*500,cs=r2(sal*0.45),loyer=tpRnd(10,30)*100,tvaM=tpRnd(10,60)*100;
+  var vt=v.map(function(x){return r2(x*1.2);}),at=a.map(function(x){return r2(x*1.2);}),tva=v.map(function(x,i){return r2((x-a[i])*0.2);});
+  var enc=[r2(vt[0]*0.4+cm),r2(vt[1]*0.4+vt[0]*0.6),r2(vt[2]*0.4+vt[1]*0.6)];
+  var dec=[r2(fm+sal+cs+loyer+tvaM),r2(at[0]+sal+cs+loyer+tva[0]),r2(at[1]+sal+cs+loyer+tva[1])];
+  var fin=r2(init+enc[0]+enc[1]+enc[2]-dec[0]-dec[1]-dec[2]);
+  return {d:{v:v,a:a,init:init,cm:cm,fm:fm,sal:sal,cs:cs,loyer:loyer,tvaM:tvaM,vt:vt,at:at,tva:tva,enc:enc,dec:dec},x:{enc1:enc[0],dec1:dec[0],enc2:enc[1],dec2:dec[1],fin:fin}};
+}
+function tpGenCp(){
+  var sm=tpRnd(180,320)*10,pr=Math.random()<0.7?tpRnd(4,30)*100:0,hs=Math.random()<0.5?tpRnd(5,40)*50:0,j=tpRnd(6,24),ref=sm*12+pr+hs;
+  var dix=r2(ref*0.1*j/30),maint=r2(sm/26*j);
+  if(Math.abs(dix-maint)<1)return tpGenCp();
+  return {nom:['Yann Le Gall','Maëlle Tanguy','Erwan Guillou','Nolwenn Le Bris','Gwen Kerjean'][tpRnd(0,4)],d:{sm:sm,pr:pr,hs:hs,j:j,ref:ref},x:{ref:ref,dix:dix,maint:maint,ind:Math.max(dix,maint)}};
+}
+function tpGenEmp(){
+  var C=tpRnd(10,120)*1000,t=[3,3.5,4,4.5,5][tpRnd(0,4)],n=tpRnd(3,7),m=tpRnd(2,11),i=t/100;
+  var a=r2(C*i/(1-Math.pow(1+i,-n))),int1=r2(C*i),amo1=r2(a-int1),crd1=r2(C-amo1),icne=r2(C*i*(13-m)/12);
+  return {banque:['Crédit Maritime','Banque du Blavet','Caisse de Keryado'][tpRnd(0,2)],d:{C:C,t:t,n:n,m:m},x:{a:a,int1:int1,amo1:amo1,crd1:crd1,icne:icne}};
+}
+function tpGenSr(){
+  var ca=tpRnd(200,900)*1000,tcv=tpRnd(45,72),cv=Math.round(ca*tcv/100),mcv=ca-cv,cf=Math.round(mcv*(0.5+Math.random()*0.4)/100)*100;
+  var tm=mcv/ca,sr=r2(cf/tm),pm=Math.round(sr/ca*360);
+  return {soc:['Voilerie de Kernével','Brasserie du Moustoir','Atelier Nautique Keroman','Librairie du Faouëdic'][tpRnd(0,3)],d:{ca:ca,cv:cv,cf:cf},x:{mcv:mcv,tmcv:r2(tm*100),sr:sr,pm:pm,ms:r2(ca-sr)}};
+}
+var TP_AT_GEN={tre:tpGenTre,cp:tpGenCp,emp:tpGenEmp,sr:tpGenSr,let:tpGenLet,ndf:tpGenNdf,ue:tpGenUe,fac:tpGenFac,inv:tpGenInv,ca3:tpGenCA3,paie:tpGenPaie,tdb:tpGenTdb,ba:tpGenBa,rap:tpGenRap,amo:tpGenAmo,aff:tpGenAff};
 /* ==== fin des générateurs d'ateliers ==== */
-function fmt2(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' €';}
+function fmt2(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n).replace(/\u202F/g,'\u00A0')+' €';}
 function tpNum(v){if(v===null||v===undefined)return NaN;var s=String(v).replace(/[\s  €%]/g,'').replace(/[\u2212\u2013]/g,'-').replace(',','.');if(s==='')return NaN;return parseFloat(s);}
 function tpFrDate(iso){var p=String(iso).split('-');return p[2]+'/'+p[1]+'/'+p[0];}
 function tpAtState(k){if(!ui.tpAtData)ui.tpAtData={};if(!ui.tpAtData[k])ui.tpAtData[k]={s:TP_AT_GEN[k](),ans:{},res:null,revealed:false};return ui.tpAtData[k];}
-function tpAtFmt(k,f,v){if(k==='tdb'&&f==='vp')return String(v).replace('.',',')+' %';if(k==='tdb')return new Intl.NumberFormat('fr-FR').format(v)+' €';return fmt2(v);}
+function tpAtFmt(k,f,v){if(k==='sr'&&f==='tmcv')return String(v).replace('.',',')+' %';if(k==='sr'&&f==='pm')return v+' jours';if(k==='tdb'&&f==='vp')return String(v).replace('.',',')+' %';if(k==='tdb')return new Intl.NumberFormat('fr-FR').format(v).replace(/\u202F/g,'\u00A0')+' €';return fmt2(v);}
 function tpAtField(k,f,label,st){
   var id='tpat-'+k+'-'+f,ans=st.ans[f],res=st.res?st.res[f]:null,show=st.res||st.revealed;
   var cls=st.res?(res?' ok':' ko'):'';
@@ -6371,6 +6396,48 @@ function tpAtBody(k){
       '<p class="tool-sub">L\'acheteur déclare lui-même la TVA française (autoliquidation) et la déduit sur la même déclaration : pas de décaissement si la déduction est totale. Le fournisseur est payé HT.</p>'+
       '<h3 class="tpat-h">Livraison intracommunautaire (exonérée)</h3>'+tpAtEcr([['Clients (411)',d.ven,0],['Ventes de marchandises (707)',0,d.ven]])+
       '<p class="tool-sub">Exonérée de TVA française : la facture porte les numéros de TVA des deux parties et la mention « Exonération de TVA, article 262 ter I du CGI ». Le client autoliquide la TVA dans son pays. Ces opérations figurent aussi sur la CA3 et dans l\'état récapitulatif des livraisons.</p>';
+  }else if(k==='tre'){
+    var M=['Avril','Mai','Juin'],tr=function(lab,arr,b){return '<tr><td>'+(b?'<b>'+lab+'</b>':lab)+'</td>'+arr.map(function(v){return '<td class="mono">'+(v===''?'':(b?'<b>'+fmt2(v)+'</b>':fmt2(v)))+'</td>';}).join('')+'</tr>';};
+    en='<p>Tu prépares le <b>budget de trésorerie</b> du deuxième trimestre. Prévisions HT :</p><table class="tpat-ecr"><thead><tr><th></th><th>Avril</th><th>Mai</th><th>Juin</th></tr></thead><tbody>'+tr('Ventes HT (TVA 20 %)',d.v)+tr('Achats HT (TVA 20 %)',d.a)+'</tbody></table><ul class="tp-ul">'+
+      '<li>Clients : <b>40 %</b> payent comptant, <b>60 %</b> à 30 jours. Créances clients au 1er avril (ventes de mars) : <b>'+fmt2(d.cm)+'</b></li>'+
+      '<li>Fournisseurs payés à 30 jours. Dettes fournisseurs au 1er avril (achats de mars) : <b>'+fmt2(d.fm)+'</b></li>'+
+      '<li>Salaires nets : <b>'+fmt2(d.sal)+'</b> par mois, payés le mois même ; charges sociales : <b>'+fmt2(d.cs)+'</b> par mois, payées le mois suivant (celles de mars en avril)</li>'+
+      '<li>Loyer : <b>'+fmt2(d.loyer)+'</b> par mois, sans TVA</li>'+
+      '<li>TVA : celle d\'un mois est payée le mois suivant ; TVA de mars payée en avril : <b>'+fmt2(d.tvaM)+'</b></li>'+
+      '<li>Trésorerie au 1er avril : <b>'+fmt2(d.init)+'</b></li></ul><p class="tool-sub">Tout se raisonne en TTC, au mois où l\'argent entre ou sort. Arrondis au centime.</p>';
+    form=tpAtField(k,'enc1','Encaissements d\'avril',st)+tpAtField(k,'dec1','Décaissements d\'avril',st)+tpAtField(k,'enc2','Encaissements de mai',st)+tpAtField(k,'dec2','Décaissements de mai',st)+tpAtField(k,'fin','Trésorerie fin juin (signe moins si négative)',st);
+    var solde=[],cur0=d.init;for(var q=0;q<3;q++){cur0=r2(cur0+d.enc[q]-d.dec[q]);solde.push(cur0);}
+    cor='<h3 class="tpat-h">Budget de trésorerie</h3><table class="tpat-ecr"><thead><tr><th></th><th>Avril</th><th>Mai</th><th>Juin</th></tr></thead><tbody>'+
+      tr('Ventes comptant (40 % du TTC)',d.vt.map(function(v){return r2(v*0.4);}))+tr('Ventes à 30 jours (60 % du TTC du mois précédent)',[d.cm,r2(d.vt[0]*0.6),r2(d.vt[1]*0.6)])+tr('Total encaissements',d.enc,1)+
+      tr('Fournisseurs (achats TTC du mois précédent)',[d.fm,d.at[0],d.at[1]])+tr('Salaires nets',[d.sal,d.sal,d.sal])+tr('Charges sociales du mois précédent',[d.cs,d.cs,d.cs])+tr('Loyer',[d.loyer,d.loyer,d.loyer])+tr('TVA du mois précédent',[d.tvaM,d.tva[0],d.tva[1]])+tr('Total décaissements',d.dec,1)+
+      tr('Trésorerie début de mois',[d.init,solde[0],solde[1]])+tr('Trésorerie fin de mois',solde,1)+'</tbody></table>'+
+      '<p class="tool-sub" style="margin-top:8px">TVA d\'avril = (ventes HT − achats HT) × 20 % = '+fmt2(d.tva[0])+', payée en mai. '+(Math.min.apply(null,solde)<0?'Un mois finit dans le rouge : il faut prévoir un découvert autorisé, négocier les délais ou décaler une dépense.':'La trésorerie reste positive sur le trimestre.')+' Les dettes et créances de mars se dénouent en avril.</p>';
+  }else if(k==='cp'){
+    en='<p><b>'+s.nom+'</b>, salarié à temps plein, part <b>'+d.j+' jours ouvrables</b> de congés payés. Données de la période de référence (1er juin au 31 mai) :</p><ul class="tp-ul">'+
+      '<li>Salaire mensuel brut : <b>'+fmt2(d.sm)+'</b> sur les 12 mois</li>'+(d.pr?'<li>Prime de rendement versée dans l\'année : <b>'+fmt2(d.pr)+'</b></li>':'')+(d.hs?'<li>Heures supplémentaires payées dans l\'année : <b>'+fmt2(d.hs)+'</b></li>':'')+'</ul>'+
+      '<p class="tool-sub">Droit complet : 30 jours ouvrables. Pour le maintien de salaire, méthode simplifiée : salaire mensuel ÷ 26 jours ouvrables × jours pris. Arrondis au centime à la fin.</p>';
+    form=tpAtField(k,'ref','Rémunération brute de la période de référence',st)+tpAtField(k,'dix','Indemnité selon la règle du dixième',st)+tpAtField(k,'maint','Indemnité selon le maintien de salaire',st)+tpAtField(k,'ind','Indemnité à verser au salarié',st);
+    cor='<h3 class="tpat-h">Les deux méthodes</h3><p class="tool-sub"><b>Dixième</b> : '+fmt2(d.ref)+' × 10 % × '+d.j+' / 30 = '+fmt2(x.dix)+'. <b>Maintien</b> : '+fmt2(d.sm)+' ÷ 26 × '+d.j+' = '+fmt2(x.maint)+'. On retient la plus favorable au salarié : <b>'+fmt2(x.ind)+'</b> ('+(x.dix>x.maint?'le dixième, grâce aux éléments variables de l\'année':'le maintien de salaire')+').</p>'+
+      '<p class="tool-sub">Sur le bulletin, l\'absence est d\'abord retirée du salaire (retenue pour congés), puis l\'indemnité est ajoutée. Les primes liées au travail effectif et les heures supplémentaires entrent dans la base du dixième ; une prime annuelle versée aussi pendant les congés n\'y entre pas.</p>';
+  }else if(k==='emp'){
+    var i0=d.t/100,crd2=r2(x.crd1-r2(x.a-r2(x.crd1*i0)));
+    en='<p>Le <b>1er '+TP_MOIS[d.m-1]+' N</b>, l\'entreprise emprunte <b>'+fmt2(d.C)+'</b> auprès du '+s.banque+', au taux annuel de <b>'+String(d.t).replace('.',',')+' %</b>, remboursable en <b>'+d.n+' annuités constantes</b>. La première annuité est payée un an plus tard. L\'exercice se clôt le 31 décembre.</p>'+
+      '<p class="tool-sub">Annuité = capital × taux ÷ (1 − (1 + taux)<sup>−n</sup>). Arrondis au centime.</p>';
+    form=tpAtField(k,'a','Montant de l\'annuité constante',st)+tpAtField(k,'int1','Intérêts compris dans la 1re annuité',st)+tpAtField(k,'amo1','Remboursement de capital dans la 1re annuité',st)+tpAtField(k,'crd1','Capital restant dû après la 1re annuité',st)+tpAtField(k,'icne','Intérêts courus à comptabiliser au 31/12/N',st);
+    cor='<h3 class="tpat-h">Début du tableau d\'amortissement</h3><table class="tpat-ecr"><thead><tr><th>Année</th><th>Capital début</th><th>Intérêts</th><th>Capital remboursé</th><th>Annuité</th><th>Capital fin</th></tr></thead><tbody>'+
+      '<tr><td>1</td><td class="mono">'+fmt2(d.C)+'</td><td class="mono">'+fmt2(x.int1)+'</td><td class="mono">'+fmt2(x.amo1)+'</td><td class="mono">'+fmt2(x.a)+'</td><td class="mono">'+fmt2(x.crd1)+'</td></tr>'+
+      (d.n>1?'<tr><td>2</td><td class="mono">'+fmt2(x.crd1)+'</td><td class="mono">'+fmt2(r2(x.crd1*i0))+'</td><td class="mono">'+fmt2(r2(x.a-r2(x.crd1*i0)))+'</td><td class="mono">'+fmt2(x.a)+'</td><td class="mono">'+fmt2(crd2)+'</td></tr>':'')+'</tbody></table>'+
+      '<h3 class="tpat-h">Écritures</h3><p class="tool-sub">Réception des fonds le 1er '+TP_MOIS[d.m-1]+' N :</p>'+tpAtEcr([['Banque (512)',d.C,0],['Emprunts auprès des établissements de crédit (164)',0,d.C]])+
+      '<p class="tool-sub">Au 31/12/N, intérêts courus sur '+(13-d.m)+' mois : '+fmt2(d.C)+' × '+String(d.t).replace('.',',')+' % × '+(13-d.m)+'/12 = '+fmt2(x.icne)+'</p>'+tpAtEcr([['Charges d\'intérêts (661)',x.icne,0],['Intérêts courus sur emprunts (1688)',0,x.icne]])+
+      '<p class="tool-sub">Au 1er janvier N+1, cette écriture est extournée. À l\'échéance du 1er '+TP_MOIS[d.m-1]+' N+1 :</p>'+tpAtEcr([['Emprunts (164)',x.amo1,0],['Charges d\'intérêts (661)',x.int1,0],['Banque (512)',0,x.a]])+
+      '<p class="tool-sub">Au bilan du 31/12/N+1, la part du capital à rembourser dans l\'année suivante reste en emprunts ; seuls les intérêts sont des charges, le capital remboursé n\'en est pas une.</p>';
+  }else if(k==='sr'){
+    var jr=x.pm,mo=Math.min(11,Math.floor((Math.max(1,jr)-1)/30)),jj=Math.max(1,jr-mo*30);
+    en='<p>Compte de résultat différentiel simplifié de <b>'+s.soc+'</b> pour l\'année :</p><ul class="tp-ul"><li>Chiffre d\'affaires HT : <b>'+fmt2(d.ca)+'</b></li><li>Charges variables : <b>'+fmt2(d.cv)+'</b></li><li>Charges fixes : <b>'+fmt2(d.cf)+'</b></li></ul>'+
+      '<p class="tool-sub">Taux de marge en % avec 2 décimales ; seuil au centime en gardant le taux exact dans la calculatrice ; point mort en jours sur une année commerciale de 360 jours, arrondi au jour.</p>';
+    form=tpAtField(k,'mcv','Marge sur coût variable',st)+tpAtField(k,'tmcv','Taux de marge sur coût variable (%)',st)+tpAtField(k,'sr','Seuil de rentabilité',st)+tpAtField(k,'pm','Point mort (en jours)',st)+tpAtField(k,'ms','Marge de sécurité',st);
+    cor='<h3 class="tpat-h">Calculs</h3><p class="tool-sub">Marge sur coût variable = '+fmt2(d.ca)+' − '+fmt2(d.cv)+' = '+fmt2(x.mcv)+'. Taux = '+fmt2(x.mcv)+' ÷ '+fmt2(d.ca)+' = '+String(x.tmcv).replace('.',',')+' %. Seuil = charges fixes ÷ taux = '+fmt2(d.cf)+' ÷ '+String(x.tmcv).replace('.',',')+' % = '+fmt2(x.sr)+'. Point mort = '+fmt2(x.sr)+' ÷ '+fmt2(d.ca)+' × 360 = '+x.pm+' jours, soit vers le '+jj+' '+TP_MOIS[mo]+' si l\'activité est régulière. Marge de sécurité = CA − seuil = '+fmt2(x.ms)+'.</p>'+
+      '<p class="tool-sub">Résultat = marge sur coût variable − charges fixes = '+fmt2(r2(x.mcv-d.cf))+'. Au seuil, le résultat est nul : chaque euro de chiffre d\'affaires au delà rapporte '+String(x.tmcv).replace('.',',')+' centimes de résultat.</p>';
   }else if(k==='fac'){
     en='<p>Tu établis la facture de vente au client <b>'+s.cl+'</b> :</p><ul class="tp-ul"><li>'+d.q+' × <b>'+s.art+'</b> à '+fmt2(d.pu)+' HT l\'unité</li>'+
       '<li>Remise de <b>'+d.r1+' %</b>'+(d.r2?' puis remise supplémentaire de <b>'+d.r2+' %</b> (en cascade)':'')+'</li>'+
@@ -6457,18 +6524,18 @@ function tpAteliers(){
   var cur=ui.tpAt||'ca3';
   var chipsH='<div class="chips">'+TP_AT.map(function(a){var s=state.tp.at&&state.tp.at[a[0]],done=s&&s.ok>0;return '<button class="chip '+(cur===a[0]?'on':'')+'" data-action="tp-at" data-k="'+a[0]+'">'+escHtml(a[1])+' <span class="mono" style="font-size:10.5px;opacity:.75">'+a[2]+'</span>'+(done?' '+SVG.check:'')+'</button>';}).join('')+'</div>';
   return '<div class="tool-section"><h2 class="tool-title">Ateliers pratiques</h2>'+
-    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, rapprochement bancaire (CCP1) ; déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, tableau de bord (CCP2) ; amortissement et cession, travaux d\'inventaire, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
+    '<p class="tool-sub">Des cas chiffrés <b>générés à l\'infini</b> sur les travaux qui tombent en mise en situation, pour les 3 CCP : facture et cascade de réductions, lettrage, note de frais, balance âgée et relances, rapprochement bancaire, budget de trésorerie (CCP1) ; déclaration de TVA, TVA dans l\'Union européenne, bulletin de paie, congés payés, tableau de bord, seuil de rentabilité (CCP2) ; amortissement et cession, travaux d\'inventaire, emprunt et intérêts courus, affectation du résultat (CCP3). Saisis tes réponses, vérifie, recommence avec un nouveau cas jusqu\'au sans-faute.</p></div>'+
     '<div style="margin-top:14px">'+chipsH+'</div>'+tpAtBody(cur);
 }
 function tpAtVerify(){
   var k=ui.tpAt||'ca3',st=tpAtState(k),x=st.s.x,res={};
   var els=document.querySelectorAll('#tpat-form .tpat-in');
   for(var i=0;i<els.length;i++){st.ans[els[i].dataset.f]=els[i].value;}
-  var tol=k==='paie'?0.02:(k==='tdb'?0.5:0.011);
+  var tol=(k==='paie'||k==='emp'||k==='cp')?0.02:(k==='tdb'?0.5:(k==='sr'?1:0.011));
   Object.keys(x).forEach(function(f){
     var a=st.ans[f];
     if(typeof x[f]==='number'&&(k==='ba'&&/^(tr|ac)/.test(f)||k==='tdb'&&/^(best|worst|chart)$/.test(f)))res[f]=(a!==''&&a!=null&&parseInt(a,10)===x[f]);
-    else{var n=tpNum(a);res[f]=isFinite(n)&&Math.abs(n-x[f])<=(k==='tdb'&&f==='vp'?0.1:tol);}
+    else{var n=tpNum(a);res[f]=isFinite(n)&&Math.abs(n-x[f])<=(k==='tdb'&&f==='vp'?0.1:(k==='sr'&&f==='tmcv'?0.01:tol));}
   });
   if(k==="tdb"){var dd=st.s.d,ab=parseInt(st.ans.best,10),aw=parseInt(st.ans.worst,10);if(ab>=0&&ab<6&&dd.n[ab]===dd.n[x.best])res.best=true;if(aw>=0&&aw<6&&dd.n[aw]-dd.n1[aw]===dd.n[x.worst]-dd.n1[x.worst])res.worst=true;}
   st.res=res;
@@ -6483,11 +6550,11 @@ var FORM_PHASES=[
   {k:'fond',n:'Les fondations',s:'Bases',w:8,d:'Partie double, plan comptable, journal et balance, bilan et compte de résultat. Le socle sur lequel tout le reste s\'appuie.',
     mods:['partie-double','pcg','organisation','bilan','resultat'],at:[],msp:null,ccp:''},
   {k:'ccp1',n:'CCP1 · Le quotidien comptable',s:'CCP1',w:30,d:'Factures clients et fournisseurs, TVA, règlements, banque et rapprochement, suivi de trésorerie.',
-    mods:['tva','ecriture','facture','efacture','reglements','rapprochement','budget'],at:['fac','let','ndf','ba','rap'],msp:'CCP1',ccp:'CCP1'},
+    mods:['tva','ecriture','facture','efacture','reglements','rapprochement','budget'],at:['fac','let','ndf','ba','rap','tre'],msp:'CCP1',ccp:'CCP1'},
   {k:'ccp2',n:'CCP2 · Les travaux périodiques',s:'CCP2',w:22,d:'Déclaration de TVA, paie et déclarations sociales, tableaux de bord et indicateurs.',
-    mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','ue','paie','tdb'],msp:'CCP2',ccp:'CCP2'},
+    mods:['decla-tva','paie','couts','analyse','sic'],at:['ca3','ue','paie','cp','tdb','sr'],msp:'CCP2',ccp:'CCP2'},
   {k:'ccp3',n:'CCP3 · La fin d\'exercice',s:'CCP3',w:26,d:'Immobilisations et amortissements, stocks, dépréciations, provisions, régularisations, emprunts, affectation du résultat.',
-    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','inv','aff'],msp:'CCP3',ccp:'CCP3'},
+    mods:['amortissements','depreciations','provisions','regularisations','stocks','financement'],at:['amo','inv','emp','aff'],msp:'CCP3',ccp:'CCP3'},
   {k:'final',n:'Dossier pro & session',s:'Session',w:14,d:'Finaliser le dossier professionnel, préparer les entretiens, enchaîner les mises en situation complètes.',
     mods:[],at:[],msp:'TPCA',ccp:''}
 ];
@@ -7632,7 +7699,7 @@ var CAB_DOSSIERS=[
 (function(){var have={};PLAN_COMPTABLE.forEach(function(p){have[p.num]=1;});CAB_ACCTS_EXTRA.forEach(function(p){if(!have[p.num])PLAN_COMPTABLE.push(p);});PLAN_COMPTABLE.sort(function(a,b){return String(a.num).localeCompare(String(b.num),undefined,{numeric:true});});})();
 function cabById(id){for(var i=0;i<CAB_DOSSIERS.length;i++){if(CAB_DOSSIERS[i].id===id)return CAB_DOSSIERS[i];}return null;}
 function cabState(id){if(!state.tp.cab)state.tp.cab={};var s=state.tp.cab[id];if(!s||typeof s!=='object'){s={i:0,r:{},done:false,best:0,n:0};state.tp.cab[id]=s;}if(!s.r||typeof s.r!=='object')s.r={};return s;}
-function cabMoney(n){return new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' €';}
+function cabMoney(n){return fmt2(n);}
 function cabFact(d){var b=0;d.lignes.forEach(function(l){b+=l[1]*l[2];});b=r2(b);var rem=r2(b*(d.remise||0)/100),ht=r2(b-rem),tva=r2(ht*d.tva/100);return {b:b,rem:rem,ht:ht,tva:tva,ttc:r2(ht+tva)};}
 /* Rendu d'une pièce justificative : facture, avoir, relevé bancaire, courriel ou tableau. */
 function cabDocHTML(d){
